@@ -1,0 +1,67 @@
+:root {
+    --bg: rgba(0,0,0,0.4);
+    --line: #666;
+    --active: #00bcd4;
+    --btn-bg: #222;
+    --btn-active-bg: rgba(0, 188, 212, 0.2);
+    --btn-active-color: #00bcd4;
+    --btn-active-border: #00bcd4;
+}
+
+body {
+    background: transparent;
+    font-family: "Segoe UI", sans-serif;
+    color: #ddd;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.layout { display: none; }
+.layout.active { display: flex; }
+
+.overlay {
+    display: flex;
+    gap: 5vmin;
+    padding: 2vmin;
+    border-radius: 1.5vmin;
+    background: var(--bg);
+    box-shadow: 0 0 2vmin rgba(0,0,0,0.5);
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1vmin;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.debug {
+    font-family: monospace;
+    font-size: 1.5vmin;
+    border: 0.2vmin solid #333;
+    padding: 0.6vmin;
+    background: rgba(0,0,0,0.2);
+    color: #0f0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: fixed;
+    top: 0; left: 0;
+    white-space: pre;
+}
+.debug.active { display: block; }
