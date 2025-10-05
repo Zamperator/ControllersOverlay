@@ -16,8 +16,10 @@
 
     .controller-body {
         position: relative;
-        width: 75vmin;
-        height: 40vmin;
+        width: 66vmin;
+        height: 38vmin;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 20% / 40%;
         /*background: radial-gradient(circle at 50% 20%, #222 0%, #111 100%);
         border-radius: 40% / 55%;
         box-shadow: inset 0 0 2vmin #000, 0 0 2vmin #000;*/
@@ -37,11 +39,11 @@
     }
     .left-stick {
         left: 7vmin;
-        top: 12vmin;
+        top: 14vmin;
     }
     .right-stick {
         right: 22vmin;
-        top: 22vmin;
+        top: 24vmin;
     }
 
     .stick-base {
@@ -76,11 +78,11 @@
     .dpad {
         position: absolute;
         left: 18vmin;
-        top: 22.5vmin;
-        width: 10vmin;
-        height: 10vmin;
+        top: 24vmin;
+        width: 11vmin;
+        height: 11vmin;
         background: #111;
-        border-radius: 5vmin;
+        border-radius: 100%;
         box-shadow: inset 0 0 0.8vmin #000;
     }
 
@@ -168,7 +170,7 @@
     /* === Top: Bumper + Trigger === */
     .top-row {
         position: absolute;
-        top: 1vmin;
+        top: 3vmin;
         left: 8vmin;
         right: 8vmin;
         display: flex;
@@ -197,7 +199,7 @@
 
     .triggers {
         position: absolute;
-        top: 4vmin;
+        top: 6vmin;
         left: 8vmin;
         right: 8vmin;
         display: flex;
