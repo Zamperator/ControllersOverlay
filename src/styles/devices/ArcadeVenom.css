@@ -1,0 +1,144 @@
+.layout.arcadevenom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8vmin;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-main);
+    font-family: var(--font-family);
+
+
+    /* === STICK === */
+
+    .stick {
+        position: relative;
+        width: 18vmin;
+        height: 18vmin;
+        background: radial-gradient(circle at 50% 50%, var(--stick-bg-inner) 20%, var(--stick-bg-outer) 80%);
+        border: 0.4vmin solid var(--stick-border);
+        border-radius: 50%;
+        box-shadow: inset 0 0 2vmin var(--stick-shadow-inset), 0 0 1vmin var(--stick-shadow-glow);
+        overflow: hidden;
+    }
+
+    .stick-ball {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5vmin;
+        height: 5vmin;
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 30%, var(--ball-light), var(--ball-dark));
+        box-shadow: inset 0 0 1vmin var(--ball-shadow-inset), 0 0 1vmin var(--ball-shadow-glow);
+        transform: translate(-50%, -50%);
+        transition: transform 0.05s linear, background 0.1s linear, box-shadow 0.1s linear;
+    }
+
+    /* === BUTTONS === */
+
+    .right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .buttons-grid {
+        position: relative;
+        width: 40vmin;
+        height: 24vmin;
+    }
+
+    .row {
+        position: absolute;
+        display: flex;
+        gap: 1vmin;
+        justify-content: center;
+    }
+
+    .row-top {
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .row-bottom {
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .row-top, .row-bottom {
+        .button:nth-child(1) {
+            transform: translate(-4vmin, 1vmin);
+        }
+    }
+
+    .row-top, .row-bottom {
+        .button:nth-child(2) {
+            transform: translate(-1vmin, -1vmin);
+        }
+    }
+
+    .row-top, .row-bottom {
+        .button:nth-child(3) {
+            transform: translate(2vmin, -1vmin);
+        }
+    }
+
+    .row-top, .row-bottom {
+        .button:nth-child(4) {
+            transform: translate(5vmin, -1vmin);
+        }
+    }
+
+    .button {
+        aspect-ratio: 1 / 1;
+        width: 10vmin;
+        height: 10vmin;
+        border-radius: 50%;
+        border: 0.3vmin solid var(--btn-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4vmin;
+        font-weight: 700;
+        color: #fff;
+        background: radial-gradient(circle at 30% 30%, var(--btn-bg-inner), var(--btn-bg-outer));
+        box-shadow: 0 0 1vmin var(--btn-shadow);
+        transition: transform 0.05s, background 0.15s, box-shadow 0.15s;
+    }
+
+    .button.active {
+        background: radial-gradient(circle at 30% 30%, var(--btn-active-inner), var(--btn-active-outer));
+        box-shadow: 0 0 1vmin var(--btn-active-shadow);
+        transform: scale(0.94);
+    }
+
+    /* === Farben === */
+
+    .button.square {
+        color: var(--btn-square);
+        font-weight: 900;
+        font-size: 5vmin;
+    }
+
+    .button.triangle {
+        color: var(--btn-triangle);
+        font-weight: 100;
+        font-size: 5vmin;
+    }
+
+    .button.cross {
+        color: var(--btn-cross);
+    }
+
+    .button.circle {
+        color: var(--btn-circle);
+    }
+
+    .button.l1, .button.l2, .button.r1, .button.r2 {
+        color: var(--btn-shoulder);
+        font-size: 2.5vmin;
+    }
+}

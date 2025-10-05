@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useMemo, useState} from "react"
-import "../styles/HotasX.css"
+import "../styles/devices/HotasX.css"
 
 export default function HotasX() {
     const stickInd = useRef(null)

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react"
-import "../styles/T16000.css"
+import "../styles/devices/T16000.css"
 
 export default function T16000() {
     const stickInd = useRef(null)

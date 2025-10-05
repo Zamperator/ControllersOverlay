@@ -1,55 +1,47 @@
 import React, { useEffect, useState } from "react"
 import HotasX from "./layouts/HotasX"
 import T16000 from "./layouts/T16000"
+import ArcadeVenom from "./layouts/ArcadeVenom"
 import DebugBox from "./components/DebugBox"
-
+import MenuPanel from "./components/MenuPanel"
+import { controllerSetups } from "./config/config"
+import { useGamepads } from "./hooks/useGamepads"   // ✅ NEU
 import "./styles/style.css"
 
-const forcedDevice = null // "hotasX" | "t16000" | "dual16000"
-const isDebug = false;
+const forcedDevice = null
 
 function getDeviceFromUrl() {
     const params = new URLSearchParams(window.location.search)
-    return params.get("device")
-}
-
-function detectDevices() {
-    const pads = navigator.getGamepads()
-    const devices = { hotasX: [], t16000: [], twcs: [], pedals: [] }
-
-    for (const gp of pads) {
-        if (!gp) continue
-        if (/Hotas\s*X/i.test(gp.id)) devices.hotasX.push(gp.index)
-        else if (/T\.16000M/i.test(gp.id)) devices.t16000.push(gp.index)
-        else if (/TWCS/i.test(gp.id)) devices.twcs.push(gp.index)
-        else if (/TFRP/i.test(gp.id)) devices.pedals.push(gp.index)
-    }
-
-    return devices
+    const value = params.get("device")
+    return value ? value.toLowerCase() : forcedDevice
 }
 
 export default function App() {
-    const [activeSetup, setActiveSetup] = useState(null)
-    const [devices, setDevices] = useState({ hotasX: [], t16000: [], twcs: [], pedals: [] })
 
+    // ✅ neue Quelle für Geräteerkennung: eigener Hook
+    const { devices, activeSetup: detectedSetup } = useGamepads(30)
+    const [activeSetup, setActiveSetup] = useState(null)
+    const [showDeviceSelect, setShowDeviceSelect] = useState(false)
+    const [debug, setDebug] = useState(true)
+
+    // URL & forcedDevice behandeln
     useEffect(() => {
+        const urlDevice = getDeviceFromUrl()
+        const validUrlDevice = urlDevice && controllerSetups[urlDevice]
+
         if (forcedDevice) {
             setActiveSetup(forcedDevice)
+        } else if (validUrlDevice) {
+            setActiveSetup(urlDevice)
+        } else if (detectedSetup) {
+            setActiveSetup(detectedSetup)
         } else {
-            const urlDevice = getDeviceFromUrl()
-            if (urlDevice) {
-                setActiveSetup(urlDevice)
-            }
+            setShowDeviceSelect(true)
         }
+    }, [detectedSetup])
 
-        function poll() {
-            setDevices(detectDevices())
-            requestAnimationFrame(poll)
-        }
-        poll()
-    }, [])
-
-    if(!activeSetup) {
+    const hasAnyDevice = Object.values(devices).some(arr => arr.length > 0)
+    if (!hasAnyDevice && !activeSetup) {
         return (
             <div className="debug active">
                 <strong>No devices detected</strong>
@@ -57,14 +49,39 @@ export default function App() {
         )
     }
 
+    const layoutComponents = {
+        HotasX,
+        T16000,
+        ArcadeVenom
+    }
+
+    let SelectedLayout = null
+
+    if (activeSetup) {
+        const setup = controllerSetups[activeSetup.toLowerCase()]
+        if (setup && layoutComponents[setup.layout]) {
+            SelectedLayout = layoutComponents[setup.layout]
+        }
+    }
+
     return (
         <div id="overlay">
-            {activeSetup.toLowerCase() === "hotasx" && <HotasX />}
-            {activeSetup.toLowerCase() === "t16000" && <T16000 />}
-            {!activeSetup && <p style={{ color: "#aaa" }}>Press any button or move a stick…</p>}
-            {isDebug && (
-                <DebugBox devices={devices} activeSetup={activeSetup} />
+            <MenuPanel
+                showDeviceSelect={showDeviceSelect}
+                setShowDeviceSelect={setShowDeviceSelect}
+                activeSetup={activeSetup}
+                setActiveSetup={setActiveSetup}
+                debug={debug}
+                setDebug={setDebug}
+            />
+
+            {SelectedLayout && <SelectedLayout />}
+
+            {!SelectedLayout && !showDeviceSelect && (
+                <p style={{ color: "#aaa" }}>Press any button or move a stick…</p>
             )}
+
+            {debug && <DebugBox devices={devices} activeSetup={activeSetup} />}
         </div>
     )
 }

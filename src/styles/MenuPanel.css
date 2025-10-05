@@ -1,0 +1,65 @@
+.menu-panel-zone {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 12vmin;
+    height: 10vmin;
+    z-index: 100;
+}
+
+.menu-panel {
+    position: absolute;
+    top: 1vmin;
+    right: -25vmin;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8vmin;
+    background: rgba(0, 0, 0, 0.7);
+    border: 0.2vmin solid #333;
+    border-radius: 1vmin;
+    padding: 1vmin 1.2vmin;
+    font-family: 'Orbitron', sans-serif;
+    color: #fff;
+    z-index: 110;
+    transition: right 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+}
+
+.menu-panel.visible {
+    right: 1vmin;
+    opacity: 1;
+}
+
+.menu-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1vmin;
+}
+
+.menu-section label {
+    font-size: 1.6vmin;
+    opacity: 0.8;
+    white-space: nowrap;
+}
+
+.menu-section select {
+    width: 15vmin;
+    background: #111;
+    color: #fff;
+    border: 0.2vmin solid #444;
+    border-radius: 0.5vmin;
+    font-size: 1.6vmin;
+    padding: 0.3vmin 0.6vmin;
+    outline: none;
+}
+
+.menu-section select:focus {
+    border-color: #f00;
+}
+
+.debug-toggle input[type="checkbox"] {
+    width: 2vmin;
+    height: 2vmin;
+    cursor: pointer;
+}
