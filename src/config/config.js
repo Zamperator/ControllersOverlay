@@ -1,9 +1,10 @@
 export const controllerDevices = {
     hotasx: [],
+    arcadevenom: [],
+    xbox: [],
     t16000: [],
     twcs: [],
     pedals: [],
-    arcadevenom: []
 }
 
 export const controllerSetups = {
@@ -17,6 +18,12 @@ export const controllerSetups = {
         name: "PS3/PS4 Arcade Joystick",
         layout: "ArcadeVenom",
         regex: /Arcade\s*Joystick/i,
+        active: true,
+    },
+    xbox: {
+        name: "XBox Controller",
+        layout: "Xbox",
+        regex: /Xbox.*360/i,
         active: true,
     },
     t16000: {

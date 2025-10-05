@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import HotasX from "./layouts/HotasX"
 import T16000 from "./layouts/T16000"
 import ArcadeVenom from "./layouts/ArcadeVenom"
+import Xbox from "./layouts/Xbox";
 import DebugBox from "./components/DebugBox"
 import MenuPanel from "./components/MenuPanel"
 import { controllerSetups } from "./config/config"
@@ -52,8 +53,9 @@ export default function App() {
 
     const layoutComponents = {
         HotasX,
+        ArcadeVenom,
+        Xbox,
         T16000,
-        ArcadeVenom
     }
 
     let SelectedLayout = null
