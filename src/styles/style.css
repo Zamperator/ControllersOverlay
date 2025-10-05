@@ -8,6 +8,31 @@
     --btn-active-border: #00bcd4;
 }
 
+:root, [data-theme] {
+    transition:
+            --stick-bg-inner 0.25s ease,
+            --stick-bg-outer 0.25s ease,
+            --stick-border 0.25s ease,
+            --stick-shadow-inset 0.25s ease,
+            --stick-shadow-glow 0.25s ease,
+            --ball-light 0.25s ease,
+            --ball-dark 0.25s ease,
+            --ball-shadow-inset 0.25s ease,
+            --ball-shadow-glow 0.25s ease,
+            --btn-bg-inner 0.25s ease,
+            --btn-bg-outer 0.25s ease,
+            --btn-border 0.25s ease,
+            --btn-shadow 0.25s ease,
+            --btn-active-inner 0.25s ease,
+            --btn-active-outer 0.25s ease,
+            --btn-active-shadow 0.25s ease,
+            --btn-square 0.25s ease,
+            --btn-triangle 0.25s ease,
+            --btn-circle 0.25s ease,
+            --btn-cross 0.25s ease,
+            --btn-shoulder 0.25s ease;
+}
+
 :root {
     /* === BASE === */
     --font-family: 'Orbitron', sans-serif;
@@ -179,10 +204,10 @@
     /*--btn-square: #0ff;
     --btn-triangle: #9ff;
     --btn-circle: #6ff;
-    --btn-cross: #fff;*/
+    --btn-cross: #fff;
     --btn-shoulder: #cff;
+    */
 }
-
 
 body {
     background: transparent;

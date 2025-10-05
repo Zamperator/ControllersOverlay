@@ -52,7 +52,7 @@
     .row {
         position: absolute;
         display: flex;
-        gap: 1vmin;
+        /*gap: 1vmin;*/
         justify-content: center;
     }
 
@@ -70,7 +70,7 @@
 
     .row-top, .row-bottom {
         .button:nth-child(1) {
-            transform: translate(-4vmin, 1vmin);
+            transform: translate(-4vmin, 2vmin);
         }
     }
 
@@ -140,5 +140,73 @@
     .button.l1, .button.l2, .button.r1, .button.r2 {
         color: var(--btn-shoulder);
         font-size: 2.5vmin;
+    }
+
+    /* === System Buttons (Start/Select) === */
+    .row-system {
+        position: absolute;
+        top: -9vmin;
+        left: 7vmin;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 4vmin;
+
+        .button.small {
+            width: 12vmin;
+            height: 3vmin;
+            border-radius: 1vmin;
+            font-size: 1.8vmin;
+            color: var(--btn-shoulder);
+            border: 0.25vmin solid var(--btn-border);
+            background: radial-gradient(circle at 30% 30%, var(--btn-bg-inner), var(--btn-bg-outer));
+            box-shadow: 0 0 0.6vmin var(--btn-shadow);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .button.small.active {
+            background: radial-gradient(circle at 30% 30%, var(--btn-active-inner), var(--btn-active-outer));
+            box-shadow: 0 0 1vmin var(--btn-active-shadow);
+        }
+    }
+
+    /* === Zentraler PS-Button === */
+    /* === PS BUTTON (oben rechts, glänzend schwarz mit weißem Logo) === */
+    .ps-button {
+        position: absolute;
+        top: -12vmin;
+        right: -5vmin;
+        width: 8vmin;
+        height: 8vmin;
+        border-radius: 50%;
+        border: 0.3vmin solid #222;
+        background:
+                radial-gradient(circle at 30% 30%, #444, #000 80%);
+        box-shadow:
+                inset 0 0.6vmin 0.8vmin rgba(255,255,255,0.1),
+                0 0 1vmin rgba(0,0,0,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 2.8vmin;
+        font-family: "Orbitron", sans-serif;
+        letter-spacing: -0.1vmin;
+        transition: transform 0.1s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .ps-button::before {
+        content: "PS";
+        font-weight: 800;
+        color: #fff;
+        text-shadow: 0 0 0.8vmin rgba(255,255,255,0.6);
+    }
+
+    .ps-button.active {
+        transform: scale(0.95);
+        background: radial-gradient(circle at 30% 30%, #222, #000);
+        box-shadow:
+                inset 0 0.6vmin 0.8vmin rgba(255,255,255,0.15),
+                0 0 1.5vmin rgba(255,255,255,0.4);
     }
 }

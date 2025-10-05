@@ -24,6 +24,9 @@ export default defineConfig({
         },
     },
     server: {
+        fs: {
+            allow: ['..']
+        },
         watch: {
             usePolling: true,  // Aktiviert Polling, nützlich in virtuellen Umgebungen
             interval: 100,     // Setzt das Polling-Intervall auf 100ms

@@ -51,7 +51,7 @@ export default function HotasX() {
                 const box = rudderInd.current.parentElement.getBoundingClientRect()
                 const r = gp.axes[5] // –1 … +1
                 const pos = ((r + 1) / 2) * box.width
-                rudderInd.current.style.left = pos + "px"
+                rudderInd.current.style.left = `${pos}px`
             }
 
             // === Throttle (axis 2) ===
@@ -62,7 +62,7 @@ export default function HotasX() {
 
                 // Höhe (invertiert, damit Hoch = Hoch)
                 const heightPct = (pct + 100) / 200 * 100
-                throttleFill.current.style.height = heightPct + "%"
+                throttleFill.current.style.height = `${heightPct}%`
 
                 // Farbe (Hue 0 = Rot → 120 = Grün)
                 const hue = (pct + 100) * 0.6     // -100 = 0, 0 = 60, +100 = 120
@@ -88,7 +88,7 @@ export default function HotasX() {
                 const box = sliderHandle.current.parentElement.getBoundingClientRect()
                 const s = gp.axes[6]
                 const pos = ((s + 1) / 2) * box.width
-                sliderHandle.current.style.left = pos + "px"
+                sliderHandle.current.style.left = `${pos}px`
             }
 
             // === Hat (Coolie, Axis 9) ===

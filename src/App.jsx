@@ -7,6 +7,7 @@ import MenuPanel from "./components/MenuPanel"
 import { controllerSetups } from "./config/config"
 import { useGamepads } from "./hooks/useGamepads"   // ✅ NEU
 import "./styles/style.css"
+import {L8N} from "./lib/Localization";
 
 const forcedDevice = null
 
@@ -19,7 +20,7 @@ function getDeviceFromUrl() {
 export default function App() {
 
     // ✅ neue Quelle für Geräteerkennung: eigener Hook
-    const { devices, activeSetup: detectedSetup } = useGamepads(30)
+    const { devices, activeSetup: detectedSetup } = useGamepads()
     const [activeSetup, setActiveSetup] = useState(null)
     const [showDeviceSelect, setShowDeviceSelect] = useState(false)
     const [debug, setDebug] = useState(true)
@@ -44,7 +45,7 @@ export default function App() {
     if (!hasAnyDevice && !activeSetup) {
         return (
             <div className="debug active">
-                <strong>No devices detected</strong>
+                <strong>{L8N.get('error.no_devices_detected')}</strong>
             </div>
         )
     }
@@ -67,7 +68,6 @@ export default function App() {
     return (
         <div id="overlay">
             <MenuPanel
-                showDeviceSelect={showDeviceSelect}
                 setShowDeviceSelect={setShowDeviceSelect}
                 activeSetup={activeSetup}
                 setActiveSetup={setActiveSetup}
@@ -78,7 +78,7 @@ export default function App() {
             {SelectedLayout && <SelectedLayout />}
 
             {!SelectedLayout && !showDeviceSelect && (
-                <p style={{ color: "#aaa" }}>Press any button or move a stick…</p>
+                <p style={{ color: "#aaa" }}>{L8N.get('press_key_or_stick')}</p>
             )}
 
             {debug && <DebugBox devices={devices} activeSetup={activeSetup} />}

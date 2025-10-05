@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { controllerSetups } from "../config/config"
 import "../styles/DebugBox.css"
+import { L8N } from "../lib/Localization"
 
 export default function DebugBox({ devices, activeSetup }) {
     const [debugText, setDebugText] = useState("")
@@ -8,38 +9,41 @@ export default function DebugBox({ devices, activeSetup }) {
 
     useEffect(() => {
         let lastFrame = performance.now()
-        let frameCount = 0
-        let lastFpsUpdate = performance.now()
+        const frameTimes = []
         let raf
 
-        function updatePerf() {
-            const now = performance.now()
-            frameCount++
+        function updatePerf(now) {
+            const delta = now - lastFrame
+            lastFrame = now
 
-            // FPS Berechnung alle 500 ms
-            if (now - lastFpsUpdate >= 500) {
-                const fps = Math.round((frameCount * 1000) / (now - lastFpsUpdate))
-                frameCount = 0
-                lastFpsUpdate = now
-
-                // RAM (Chrome only)
-                let ramMB = 0
-                if (performance.memory) {
-                    const used = performance.memory.usedJSHeapSize / 1048576
-                    ramMB = Math.round(used)
-                }
-
-                // CPU-Estimate (Δ zwischen Frames)
-                const frameDelta = now - lastFrame
-                const cpuLoad = Math.min(100, Math.round((frameDelta - 16.7) * 10))
-                setPerf({ fps, ram: ramMB, cpu: cpuLoad < 0 ? 0 : cpuLoad })
+            // Letzte 60 Frames sammeln (ca. 1 s)
+            frameTimes.push(delta)
+            if (frameTimes.length > 60) {
+                frameTimes.shift()
             }
 
-            lastFrame = now
+            // Durchschnitts-FPS
+            const avg = frameTimes.reduce((a, b) => a + b, 0) / frameTimes.length
+            const fps = Math.round(1000 / avg)
+
+            // Jitter = Framezeit-Schwankung = „gefühlte“ CPU-Last
+            const deviation =
+                frameTimes.reduce((a, b) => a + Math.abs(b - avg), 0) /
+                frameTimes.length
+            const cpuLoad = Math.min(100, Math.round((deviation / 16.7) * 100))
+
+            // RAM (nur Chrome)
+            let ramMB = 0
+            if (performance.memory) {
+                const used = performance.memory.usedJSHeapSize / 1048576
+                ramMB = Math.round(used)
+            }
+
+            setPerf({ fps, ram: ramMB, cpu: cpuLoad })
             raf = requestAnimationFrame(updatePerf)
         }
 
-        updatePerf()
+        raf = requestAnimationFrame(updatePerf)
         return () => cancelAnimationFrame(raf)
     }, [])
 
@@ -52,12 +56,12 @@ export default function DebugBox({ devices, activeSetup }) {
 
             const hasDevices = Object.values(devices).some(arr => arr.length > 0)
             if (!hasDevices) {
-                setDebugText("No devices detected")
+                setDebugText(L8N.get("error.no_devices_detected"))
                 frame = requestAnimationFrame(update)
                 return
             }
 
-            lines.push(`Active Setup: ${activeSetup || "none"}`)
+            lines.push(L8N.get("debug.active_setup", [activeSetup || "none"]))
             lines.push("")
 
             function dumpDevice(title, indices) {
@@ -72,27 +76,29 @@ export default function DebugBox({ devices, activeSetup }) {
                         return
                     }
 
-                    // lines.push(`ID: ${gp.id}`)
+                    lines.push(`ID: ${gp.id}`)
                     lines.push(`Index: ${index}`)
 
                     // Filter unrealistische Achsen (z. B. leere Dummywerte)
                     const axes = gp.axes.length > 10 ? gp.axes.slice(0, 4) : gp.axes
 
-                    lines.push(`Axes (${gp.axes.length})`)
+                    lines.push(L8N.get('debug.axes', [gp.axes.length]))
                     axes.forEach((val, i) => {
-                        lines.push(`  Axis ${i}: ${val.toFixed(3)}`)
+                        lines.push(`  ${L8N.get("debug.axis", [i, val.toFixed(3)])}`)
                     })
 
-                    lines.push(`Buttons (${gp.buttons.length})`)
+                    lines.push(L8N.get('debug.buttons', [gp.buttons.length]))
                     gp.buttons.forEach((btn, i) => {
-                        lines.push(`  Button ${i}: ${btn.pressed ? "Pressed" : "Released"}`)
+                        const state = btn.pressed ? "pressed" : "released"
+                        lines.push(
+                            `  ${L8N.get("debug.button", [i, L8N.get(`debug.${state}`)])}`
+                        )
                     })
 
                     lines.push("")
                 })
             }
 
-            // Nur aktive Controller anzeigen
             Object.entries(devices).forEach(([key, indices]) => {
                 if (indices && indices.length > 0) {
                     const setup = controllerSetups[key]
@@ -113,9 +119,17 @@ export default function DebugBox({ devices, activeSetup }) {
         <div className="debug-wrapper">
             <pre className="debug active">{debugText}</pre>
             <div className="perf-panel">
-                <div>FPS: <strong>{perf.fps}</strong></div>
-                <div>RAM: <strong>{perf.ram} MB</strong></div>
-                <div>CPU: <strong>{perf.cpu}%</strong></div>
+                <div>
+                    FPS: <strong>{perf.fps}</strong>
+                </div>
+                {perf.ram > 0 && (
+                    <div>
+                        RAM: <strong>{perf.ram} MB</strong>
+                    </div>
+                )}
+                <div>
+                    CPU: <strong>{perf.cpu}%</strong>
+                </div>
             </div>
         </div>
     )

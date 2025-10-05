@@ -1,0 +1,23 @@
+{
+  "title": "Twitch Controllers Overlay",
+  "description": "Overlay application for displaying controller inputs on Twitch streams.",
+  "press_key_or_stick": "Press a key or move a stick",
+  "device": "Device",
+  "choose_device": "Choose Device",
+  "default": "Default",
+  "debug": {
+    "title": "Debug Mode",
+    "description": "Show additional debug information",
+    "active_setup": "Active Setup: {1}",
+    "axis": "Axis {1}: {2}",
+    "axes": "Axes ({1})",
+    "button": "Button {1}: {2}",
+    "buttons": "Buttons ({1})",
+    "calibration": "Calibration",
+    "pressed": "pressed",
+    "released": "released"
+  },
+  "error": {
+    "no_devices_detected": "No devices detected"
+  }
+}

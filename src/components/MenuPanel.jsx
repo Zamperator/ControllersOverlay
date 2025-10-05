@@ -1,23 +1,65 @@
-import React, {useEffect, useState} from "react"
-import {controllerSetups} from "../config/config"
+import React, { useEffect, useState } from "react"
+import { controllerSetups } from "../config/config"
 import "../styles/MenuPanel.css"
+import { L8N } from "../lib/Localization"
 
-export default function MenuPanel({showDeviceSelect, setShowDeviceSelect, activeSetup, setActiveSetup, debug, setDebug}) {
-    const [theme, setTheme] = useState(localStorage.getItem("arcadeTheme") || "")
+export default function MenuPanel({
+                                      showDeviceSelect,
+                                      setShowDeviceSelect,
+                                      activeSetup,
+                                      setActiveSetup,
+                                      debug,
+                                      setDebug
+                                  }) {
+    const [theme, setTheme] = useState("")
     const [visible, setVisible] = useState(false)
 
+    // === Initialisierung: URL > localStorage ===
     useEffect(() => {
-        if (theme) {
-            document.documentElement.setAttribute("data-theme", theme)
-        } else {
-            document.documentElement.removeAttribute("data-theme")
+        const params = new URLSearchParams(window.location.search)
+        const urlTheme = params.get("theme")
+        const storedTheme = localStorage.getItem("arcadeTheme")
+
+        if (urlTheme) {
+            setTheme(urlTheme)
+        } else if (storedTheme) {
+            setTheme(storedTheme)
         }
-        localStorage.setItem("arcadeTheme", theme)
+    }, [])
+
+    // === Theme anwenden + speichern + URL synchronisieren ===
+    useEffect(() => {
+        if (!theme) {
+            document.documentElement.removeAttribute("data-theme")
+        } else {
+            document.documentElement.setAttribute("data-theme", theme)
+        }
+
+        if (theme) {
+            localStorage.setItem("arcadeTheme", theme)
+        } else {
+            localStorage.removeItem("arcadeTheme")
+        }
+
+        const params = new URLSearchParams(window.location.search)
+        if (theme) {
+            params.set("theme", theme)
+        } else {
+            params.delete("theme")
+        }
+        const newUrl = `${window.location.pathname}?${params.toString()}`
+        window.history.replaceState({}, "", newUrl)
     }, [theme])
 
+    // === Debug-Zustand laden ===
     useEffect(() => {
         const storedDebug = localStorage.getItem("arcadeDebug")
-        if (storedDebug !== null) {
+
+        if (storedDebug === null) {
+            // kein gespeicherter Wert → Default false
+            setDebug(false)
+            localStorage.setItem("arcadeDebug", "false")
+        } else {
             const parsed = storedDebug === "true"
             setDebug(parsed)
         }
@@ -36,6 +78,10 @@ export default function MenuPanel({showDeviceSelect, setShowDeviceSelect, active
 
             const params = new URLSearchParams(window.location.search)
             params.set("device", selected)
+            if (theme) {
+                params.set("theme", theme)
+            }
+
             const newUrl = `${window.location.pathname}?${params.toString()}`
             window.history.pushState({}, "", newUrl)
         }
@@ -62,10 +108,11 @@ export default function MenuPanel({showDeviceSelect, setShowDeviceSelect, active
             onMouseLeave={handleMouseLeave}
         >
             <div className={`menu-panel ${visible ? "visible" : ""}`}>
+                {/* === THEME === */}
                 <div className="menu-section">
                     <label htmlFor="themeSelect">Theme:</label>
                     <select id="themeSelect" onChange={handleThemeChange} value={theme}>
-                        <option value="">Default</option>
+                        <option value="">{L8N.get("default")}</option>
                         <option value="icy">Icy</option>
                         <option value="matrix">Matrix</option>
                         <option value="inferno">Inferno</option>
@@ -74,22 +121,33 @@ export default function MenuPanel({showDeviceSelect, setShowDeviceSelect, active
                     </select>
                 </div>
 
+                {/* === DEVICE === */}
                 <div className="menu-section">
-                    <label htmlFor="deviceSelect">Device:</label>
+                    <label htmlFor="deviceSelect">{L8N.get("device")}:</label>
                     <select
                         id="deviceSelect"
                         onChange={handleDeviceSelect}
                         defaultValue={activeSetup || ""}
                     >
-                        <option value="" disabled>Choose device...</option>
-                        {Object.entries(controllerSetups).map(([key, setup]) => (
-                            <option key={key} value={key}>{setup.name}</option>
-                        ))}
+                        <option value="" disabled>
+                            {L8N.get("choose_device")}...
+                        </option>
+                        {Object.entries(controllerSetups).map(([key, setup]) => {
+                            if (!setup.active) {
+                                return null
+                            }
+                            return (
+                                <option key={key} value={key}>
+                                    {setup.name}
+                                </option>
+                            )
+                        })}
                     </select>
                 </div>
 
+                {/* === DEBUG === */}
                 <div className="menu-section debug-toggle">
-                    <label htmlFor="debugToggle">Debug:</label>
+                    <label htmlFor="debugToggle">{L8N.get("debug.title")}:</label>
                     <input
                         id="debugToggle"
                         type="checkbox"
