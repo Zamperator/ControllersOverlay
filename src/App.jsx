@@ -46,6 +46,13 @@ export default function App() {
     if (!hasAnyDevice && !activeSetup) {
         return (
             <div className="debug active">
+                <MenuPanel
+                    setShowDeviceSelect={setShowDeviceSelect}
+                    activeSetup={activeSetup}
+                    setActiveSetup={setActiveSetup}
+                    debug={debug}
+                    setDebug={setDebug}
+                />
                 <strong>{L8N.get('error.no_devices_detected')}</strong>
             </div>
         )

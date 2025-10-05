@@ -1,14 +1,13 @@
-import React, { useEffect, useRef, useMemo } from "react"
+import React, {useEffect, useRef, useMemo} from "react"
 import "../styles/devices/Xbox.css"
 
 export default function Xbox() {
-    const leftStickHat = useRef(null)
-    const rightStickHat = useRef(null)
     const leftStickBase = useRef(null)
     const rightStickBase = useRef(null)
-    const triggers = useRef({ LT: null, RT: null })
-    const buttons = useRef({})
+    const leftStickHat = useRef(null)
+    const rightStickHat = useRef(null)
     const dpad = useRef(null)
+    const buttons = useRef({})
 
     const buttonMap = useMemo(() => ({
         0: "A",
@@ -31,143 +30,105 @@ export default function Xbox() {
     }), [])
 
     useEffect(() => {
-        let raf = null
-
-        function normalizeAxisTo01(a) {
-            // axes can be -1..1 (stick) or 0..1 (some triggers). Convert to 0..1 robustly.
-            if (a === undefined || a === null) return 0
-            if (a >= -1 && a <= 1) {
-                // if it's near -1..1 assume center -> (-1..1) => (0..1)
-                return (a + 1) / 2
-            }
-            return 0
-        }
-
-        function update() {
-            const pads = navigator.getGamepads ? navigator.getGamepads() : []
+        let raf
+        const update = () => {
+            const pads = navigator.getGamepads?.() || []
             const gp = Array.from(pads).find(p => p && /xbox|microsoft|xinput/i.test(p.id))
-            if (!gp) {
-                raf = requestAnimationFrame(update)
-                return
-            }
+            if (!gp) return (raf = requestAnimationFrame(update))
 
-            // ---------- LEFT STICK (axes 0,1) ----------
-            if (leftStickHat.current && leftStickBase.current) {
-                try {
-                    const baseRect = leftStickBase.current.getBoundingClientRect()
-                    const hatRect = leftStickHat.current.getBoundingClientRect()
-                    const rangeX = (baseRect.width - hatRect.width) / 2
-                    const rangeY = (baseRect.height - hatRect.height) / 2
-                    const x = gp.axes[0] ?? 0
-                    const y = gp.axes[1] ?? 0
-                    leftStickHat.current.style.transform =
-                        `translate(calc(-50% + ${x * rangeX}px), calc(-50% + ${y * rangeY}px))`
-                } catch (e) {
-                    // defensive: if element unmounted or measurement failed
-                }
+            // === Sticks ===
+            const moveStick = (base, hat, xAxis, yAxis) => {
+                if (!base || !hat) return
+                const box = base.getBoundingClientRect()
+                const ind = hat.getBoundingClientRect()
+                const rangeX = (box.width - ind.width) / 2
+                const rangeY = (box.height - ind.height) / 2
+                const x = gp.axes[xAxis] ?? 0
+                const y = gp.axes[yAxis] ?? 0
+                hat.style.transform = `translate(calc(-50% + ${x * rangeX}px), calc(-50% + ${y * rangeY}px))`
             }
+            moveStick(leftStickBase.current, leftStickHat.current, 0, 1)
+            moveStick(rightStickBase.current, rightStickHat.current, 2, 3)
 
-            // ---------- RIGHT STICK (axes 2,3) ----------
-            if (rightStickHat.current && rightStickBase.current) {
-                try {
-                    const baseRect = rightStickBase.current.getBoundingClientRect()
-                    const hatRect = rightStickHat.current.getBoundingClientRect()
-                    const rangeX = (baseRect.width - hatRect.width) / 2
-                    const rangeY = (baseRect.height - hatRect.height) / 2
-                    const x = gp.axes[2] ?? 0
-                    const y = gp.axes[3] ?? 0
-                    rightStickHat.current.style.transform =
-                        `translate(calc(-50% + ${x * rangeX}px), calc(-50% + ${y * rangeY}px))`
-                } catch (e) {}
-            }
-
-            // ---------- TRIGGERS (analog axes) ----------
-            // Many Xbox controllers expose triggers as axes[4] (LT) & axes[5] (RT) possibly in -1..1 range.
-            if (triggers.current.LT) {
-                const raw = gp.axes[4]
-                const val = normalizeAxisTo01(raw) // 0..1
-                triggers.current.LT.style.setProperty("--fill", `${Math.round(val * 100)}%`)
-            }
-            if (triggers.current.RT) {
-                const raw = gp.axes[5]
-                const val = normalizeAxisTo01(raw)
-                triggers.current.RT.style.setProperty("--fill", `${Math.round(val * 100)}%`)
-            }
-
-            // ---------- BUTTONS ----------
+            // === Buttons (inkl. Trigger) ===
             Object.entries(buttonMap).forEach(([i, name]) => {
                 const el = buttons.current[name]
-                if (!el) return
-                const pressed = !!gp.buttons[i]?.pressed
-                el.classList.toggle("active", pressed)
+                if (el) el.classList.toggle("active", !!gp.buttons[i]?.pressed)
             })
 
-            // ---------- DPAD (treat as digital buttons 12..15) ----------
+            // === D-Pad ===
             if (dpad.current) {
-                dpad.current.classList.toggle("active-up", !!gp.buttons[12]?.pressed)
-                dpad.current.classList.toggle("active-down", !!gp.buttons[13]?.pressed)
-                dpad.current.classList.toggle("active-left", !!gp.buttons[14]?.pressed)
-                dpad.current.classList.toggle("active-right", !!gp.buttons[15]?.pressed)
+                dpad.current.classList.toggle("active-up", gp.buttons[12]?.pressed)
+                dpad.current.classList.toggle("active-down", gp.buttons[13]?.pressed)
+                dpad.current.classList.toggle("active-left", gp.buttons[14]?.pressed)
+                dpad.current.classList.toggle("active-right", gp.buttons[15]?.pressed)
             }
 
             raf = requestAnimationFrame(update)
         }
 
         update()
-
-        return () => {
-            if (raf) cancelAnimationFrame(raf)
-        }
+        return () => raf && cancelAnimationFrame(raf)
     }, [buttonMap])
 
     return (
         <div className="overlay xbox">
             <div className="controller-body">
 
-                {/* BUMPERS (LB / RB) */}
-                <div className="bumpers">
+                {/* Bumper + Trigger */}
+                <div className="top-row">
                     <div ref={el => buttons.current.LB = el} className="bumper">LB</div>
                     <div ref={el => buttons.current.RB = el} className="bumper">RB</div>
                 </div>
-
-                {/* TRIGGERS (LT / RT) */}
                 <div className="triggers">
-                    <div ref={el => triggers.current.LT = el} className="trigger lt"></div>
-                    <div ref={el => triggers.current.RT = el} className="trigger rt"></div>
+                    <div ref={el => buttons.current.LT = el} className="trigger">LT</div>
+                    <div ref={el => buttons.current.RT = el} className="trigger">RT</div>
                 </div>
 
-                {/* CENTER BUTTONS */}
-                <div className="center-buttons">
-                    <div ref={el => buttons.current.Back = el} className="button button-back">Back</div>
-                    <div ref={el => buttons.current.Xbox = el} className="button button-xbox"></div>
-                    <div ref={el => buttons.current.Start = el} className="button button-start">Start</div>
+                {/* Center Buttons */}
+                <div className="center">
+                    <div ref={el => buttons.current.Back = el} className="small-btn">⧉</div>
+                    <div ref={el => buttons.current.Xbox = el} className="xbox-btn">
+                        <svg viewBox="0 0 76 76" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path
+                                d="M19,10.2917C27.3776,9.99247 34.8506,14.4426 38,16.6332C41.1494,14.4426 48.6224,9.99247 57,10.2917
+               C60.1667,11.4792 60.5625,12.2709 60.5625,12.2709C60.5625,12.2709 51.8542,15.0417 45.5208,22.9583
+               C53.8333,33.6458 65.3125,48.2917 63.7292,60.9583C55.4167,46.3125 45.8739,35.2702 38,30.6145
+               C30.1261,35.2702 20.5833,46.3125 12.2708,60.9583C10.6875,48.2917 22.1667,33.6458 30.4792,22.9583
+               C24.1458,15.0417 15.4375,12.2709 15.4375,12.2709C15.4375,12.2709 15.8333,11.4792 19,10.2917Z"
+                            />
+                        </svg>
+                    </div>
+                    <div ref={el => buttons.current.Start = el} className="small-btn">≡</div>
                 </div>
 
-                {/* LEFT STICK */}
+                {/* Sticks */}
                 <div className="left-stick">
                     <div ref={leftStickBase} className="stick-base">
-                        <div ref={leftStickHat} className="stick-hat"></div>
+                        <div ref={leftStickHat} className="stick-hat"/>
                     </div>
                 </div>
-
-                {/* RIGHT STICK */}
                 <div className="right-stick">
                     <div ref={rightStickBase} className="stick-base">
-                        <div ref={rightStickHat} className="stick-hat"></div>
+                        <div ref={rightStickHat} className="stick-hat"/>
                     </div>
                 </div>
 
-                {/* D-PAD (single cross element) */}
-                <div ref={dpad} className="dpad" aria-hidden="true"></div>
-
-                {/* FACE BUTTONS (A,B,X,Y) — classes match buttonMap names */}
-                <div className="buttons">
-                    <div ref={el => buttons.current.X = el} className="button button-x">X</div>
-                    <div ref={el => buttons.current.Y = el} className="button button-y">Y</div>
-                    <div ref={el => buttons.current.A = el} className="button button-a">A</div>
-                    <div ref={el => buttons.current.B = el} className="button button-b">B</div>
+                {/* D-Pad */}
+                <div ref={dpad} className="dpad">
+                    <span className="up"></span>
+                    <span className="down"></span>
+                    <span className="left"></span>
+                    <span className="right"></span>
                 </div>
 
+                {/* Face Buttons */}
+                <div className="face">
+                    <div ref={el => buttons.current.Y = el} className="btn y">Y</div>
+                    <div ref={el => buttons.current.B = el} className="btn b">B</div>
+                    <div ref={el => buttons.current.A = el} className="btn a">A</div>
+                    <div ref={el => buttons.current.X = el} className="btn x">X</div>
+                </div>
             </div>
         </div>
     )

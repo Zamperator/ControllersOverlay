@@ -237,8 +237,8 @@ body {
     gap: 5vmin;
     padding: 2vmin;
     border-radius: 1.5vmin;
-    background: var(--bg);
-    box-shadow: 0 0 2vmin rgba(0,0,0,0.5);
+    /*background: var(--bg);
+    box-shadow: 0 0 2vmin rgba(0,0,0,0.5);*/
     align-items: flex-start;
     justify-content: center;
 }
