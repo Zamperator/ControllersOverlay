@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useMemo } from "react"
 import { controllerSetups } from "../config/config"
 import "../styles/MenuPanel.css"
 import { L8N } from "../lib/Localization"
@@ -14,6 +14,13 @@ export default function MenuPanel({
     const [theme, setTheme] = useState("")
     const [visible, setVisible] = useState(false)
 
+    // Ableitung: Darf das aktive Device Themes nutzen?
+    const allowTheme = useMemo(() => {
+        if (!activeSetup) return false
+        const cfg = controllerSetups[activeSetup]
+        return !!cfg?.useThemes
+    }, [activeSetup])
+
     // === Initialisierung: URL > localStorage ===
     useEffect(() => {
         const params = new URLSearchParams(window.location.search)
@@ -27,36 +34,42 @@ export default function MenuPanel({
         }
     }, [])
 
-    // === Theme anwenden + speichern + URL synchronisieren ===
+    // === Theme anwenden/speichern/URL sync (nur wenn erlaubt) ===
     useEffect(() => {
-        if (!theme) {
+        // Wenn Themes nicht erlaubt sind, alles bereinigen
+        if (!allowTheme) {
+            if (theme) setTheme("")
             document.documentElement.removeAttribute("data-theme")
-        } else {
-            document.documentElement.setAttribute("data-theme", theme)
+
+            const params = new URLSearchParams(window.location.search)
+            params.delete("theme")
+            const newUrl = `${window.location.pathname}?${params.toString()}`
+            window.history.replaceState({}, "", newUrl)
+
+            localStorage.removeItem("arcadeTheme")
+            return
         }
 
-        if (theme) {
-            localStorage.setItem("arcadeTheme", theme)
-        } else {
+        // Themes erlaubt → anwenden + persistieren + URL sync
+        if (!theme) {
+            document.documentElement.removeAttribute("data-theme")
             localStorage.removeItem("arcadeTheme")
+        } else {
+            document.documentElement.setAttribute("data-theme", theme)
+            localStorage.setItem("arcadeTheme", theme)
         }
 
         const params = new URLSearchParams(window.location.search)
-        if (theme) {
-            params.set("theme", theme)
-        } else {
-            params.delete("theme")
-        }
+        if (theme) params.set("theme", theme)
+        else params.delete("theme")
         const newUrl = `${window.location.pathname}?${params.toString()}`
         window.history.replaceState({}, "", newUrl)
-    }, [theme])
+    }, [theme, allowTheme])
 
-    // === Debug-Zustand laden ===
+    // === Debug-Zustand laden (Default: false) ===
     useEffect(() => {
         const storedDebug = localStorage.getItem("arcadeDebug")
-
         if (storedDebug === null) {
-            // kein gespeicherter Wert → Default false
             setDebug(false)
             localStorage.setItem("arcadeDebug", "false")
         } else {
@@ -78,12 +91,17 @@ export default function MenuPanel({
 
             const params = new URLSearchParams(window.location.search)
             params.set("device", selected)
-            if (theme) {
-                params.set("theme", theme)
-            }
+
+            // Nur an URL hängen, wenn das neue Device Themes erlaubt
+            const nextAllowsTheme = !!controllerSetups[selected]?.useThemes
+            if (nextAllowsTheme && theme) params.set("theme", theme)
+            else params.delete("theme")
 
             const newUrl = `${window.location.pathname}?${params.toString()}`
             window.history.pushState({}, "", newUrl)
+
+            // Falls das neue Device keine Themes erlaubt → lokalen State direkt leeren
+            if (!nextAllowsTheme && theme) setTheme("")
         }
     }
 
@@ -108,18 +126,20 @@ export default function MenuPanel({
             onMouseLeave={handleMouseLeave}
         >
             <div className={`menu-panel ${visible ? "visible" : ""}`}>
-                {/* === THEME === */}
-                <div className="menu-section">
-                    <label htmlFor="themeSelect">Theme:</label>
-                    <select id="themeSelect" onChange={handleThemeChange} value={theme}>
-                        <option value="">{L8N.get("default")}</option>
-                        <option value="icy">Icy</option>
-                        <option value="matrix">Matrix</option>
-                        <option value="inferno">Inferno</option>
-                        <option value="retro">Retro</option>
-                        <option value="aqua">Aqua</option>
-                    </select>
-                </div>
+                {/* === THEME (nur wenn erlaubt) === */}
+                {allowTheme && (
+                    <div className="menu-section">
+                        <label htmlFor="themeSelect">Theme:</label>
+                        <select id="themeSelect" onChange={handleThemeChange} value={theme}>
+                            <option value="">{L8N.get("default")}</option>
+                            <option value="icy">Icy</option>
+                            <option value="matrix">Matrix</option>
+                            <option value="inferno">Inferno</option>
+                            <option value="retro">Retro</option>
+                            <option value="aqua">Aqua</option>
+                        </select>
+                    </div>
+                )}
 
                 {/* === DEVICE === */}
                 <div className="menu-section">
@@ -133,9 +153,7 @@ export default function MenuPanel({
                             {L8N.get("choose_device")}...
                         </option>
                         {Object.entries(controllerSetups).map(([key, setup]) => {
-                            if (!setup.active) {
-                                return null
-                            }
+                            if (!setup.active) return null
                             return (
                                 <option key={key} value={key}>
                                     {setup.name}

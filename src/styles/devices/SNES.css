@@ -3,8 +3,8 @@
     --dark: #222;
     --btn-a: #d32f2f; /* Rot */
     --btn-b: #fbc02d; /* Gelb */
-    --btn-x: #1976d2; /* Blau */
-    --btn-y: #388e3c; /* Grün */
+    --btn-x: #132166; /* Blau */
+    --btn-y: #1e6824; /* Grün */
     --btn-gray: #666;
     --text: #222;
 
@@ -22,7 +22,6 @@
         height: 28vmin;
         background: rgba(0, 0, 0, 0.2);
         border-radius: 14vmin;
-        box-shadow: inset 0 0 1vmin #222, 0 0 1vmin #222;
     }
 
     /* === D-Pad === */
@@ -105,7 +104,7 @@
         align-items: center;
         justify-content: center;
         font-weight: 900;
-        font-size: 1.8vmin;
+        font-size: 2.5vmin;
         color: #fff;
         background: radial-gradient(circle at 30% 30%, #aaa, #555);
         box-shadow: 0 0 0.6vmin rgba(0, 0, 0, 0.6);

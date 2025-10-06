@@ -18,6 +18,7 @@
     "released": "released"
   },
   "error": {
-    "no_devices_detected": "No devices detected"
+    "no_devices_detected": "No devices detected",
+    "device_currently_not_supported": "The selected device is currently not supported"
   }
 }

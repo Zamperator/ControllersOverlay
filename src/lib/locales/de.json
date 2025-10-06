@@ -18,6 +18,7 @@
     "released": "losgelassen"
   },
   "error": {
-    "no_devices_detected": "Keine Eingabegeräte erkannt"
+    "no_devices_detected": "Keine Eingabegeräte erkannt",
+    "device_currently_not_supported": "Das ausgewählte Gerät wird derzeit nicht unterstützt"
   }
 }

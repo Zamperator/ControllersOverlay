@@ -22,6 +22,7 @@ export const controllerSetups = {
         layout: "ArcadeVenom",
         regex: /Arcade\s*Joystick/i,
         active: true,
+        useThemes: true,
     },
     xbox: {
         name: "XBox Controller",
@@ -51,7 +52,7 @@ export const controllerSetups = {
         name: "Thrustmaster T.16000M + TWCS",
         layout: "T16000",
         regex: /T\.16000M/i,
-        active: true,
+        active: false,
     },
     dual16000: {
         name: "Dual Thrustmaster T.16000M",

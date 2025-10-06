@@ -76,6 +76,22 @@ export default function App() {
     if (activeSetup) {
         const setup = controllerSetups[activeSetup.toLowerCase()]
         if (setup && layoutComponents[setup.layout]) {
+
+            if(!setup.active) {
+                return (
+                    <div className="debug active">
+                        <MenuPanel
+                            setShowDeviceSelect={setShowDeviceSelect}
+                            activeSetup={activeSetup}
+                            setActiveSetup={setActiveSetup}
+                            debug={debug}
+                            setDebug={setDebug}
+                        />
+                        <strong>{L8N.get('error.device_currently_not_supported', [setup.name])}</strong>
+                    </div>
+                )
+            }
+
             SelectedLayout = layoutComponents[setup.layout]
         }
     }
