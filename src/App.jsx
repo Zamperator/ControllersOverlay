@@ -3,6 +3,9 @@ import HotasX from "./layouts/HotasX"
 import T16000 from "./layouts/T16000"
 import ArcadeVenom from "./layouts/ArcadeVenom"
 import Xbox from "./layouts/Xbox";
+import SNES from "./layouts/SNES";
+import N64 from "./layouts/N64";
+import Genesis from "./layouts/Genesis";
 import DebugBox from "./components/DebugBox"
 import MenuPanel from "./components/MenuPanel"
 import { controllerSetups } from "./config/config"
@@ -62,6 +65,9 @@ export default function App() {
         HotasX,
         ArcadeVenom,
         Xbox,
+        SNES,
+        N64,
+        Genesis,
         T16000,
     }
 

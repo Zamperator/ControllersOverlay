@@ -1,0 +1,181 @@
+.overlay.snes {
+    --body: #d0d0d0;
+    --dark: #222;
+    --btn-a: #d32f2f; /* Rot */
+    --btn-b: #fbc02d; /* Gelb */
+    --btn-x: #1976d2; /* Blau */
+    --btn-y: #388e3c; /* Grün */
+    --btn-gray: #666;
+    --text: #222;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font-family: 'Orbitron', sans-serif;
+    background: transparent;
+
+    .controller-body {
+        position: relative;
+        width: 66vmin;
+        height: 28vmin;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 14vmin;
+        box-shadow: inset 0 0 1vmin #222, 0 0 1vmin #222;
+    }
+
+    /* === D-Pad === */
+    .dpad {
+        position: absolute;
+        left: 6vmin;
+        top: 10vmin;
+        width: 12vmin;
+        height: 12vmin;
+        /*background: #333;*/
+        border-radius: 50%;
+        box-shadow: inset 0 0 1vmin #000;
+    }
+
+    .dpad span {
+        position: absolute;
+        background: #666;
+        transition: background 0.1s, box-shadow 0.1s;
+    }
+
+    .dpad span.up {
+        top: 1.4vmin;
+        left: 40%;
+        right: 40%;
+        height: 25%;
+        border-radius: 0.5vmin;
+    }
+
+    .dpad span.down {
+        bottom: 1.4vmin;
+        left: 40%;
+        right: 40%;
+        height: 25%;
+        border-radius: 0.5vmin;
+    }
+
+    .dpad span.left {
+        left: 1.4vmin;
+        top: 40%;
+        bottom: 40%;
+        width: 25%;
+        border-radius: 0.5vmin;
+    }
+
+    .dpad span.right {
+        right: 1.4vmin;
+        top: 40%;
+        bottom: 40%;
+        width: 25%;
+        border-radius: 0.5vmin;
+    }
+
+    .dpad.active-up span.up,
+    .dpad.active-down span.down,
+    .dpad.active-left span.left,
+    .dpad.active-right span.right {
+        background: #999;
+        box-shadow: 0 0 1vmin #fff inset;
+    }
+
+    /* === Face Buttons (A,B,X,Y) === */
+    .face-buttons {
+        position: absolute;
+        right: 11vmin;
+        top: 7vmin;
+        width: 10vmin;
+        height: 10vmin;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        justify-items: center;
+        align-items: center;
+    }
+
+    .btn {
+        width: 5.5vmin;
+        height: 5.5vmin;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 1.8vmin;
+        color: #fff;
+        background: radial-gradient(circle at 30% 30%, #aaa, #555);
+        box-shadow: 0 0 0.6vmin rgba(0, 0, 0, 0.6);
+        transition: transform 0.05s, box-shadow 0.1s;
+    }
+
+    .btn.y { grid-area: 2 / 1; background: var(--btn-y); }
+    .btn.x { grid-area: 1 / 2; background: var(--btn-x); }
+    .btn.b { grid-area: 3 / 2; background: var(--btn-b); color: #000; }
+    .btn.a { grid-area: 2 / 3; background: var(--btn-a); }
+
+    .btn.active {
+        transform: translateY(0.2vmin) scale(0.95);
+        box-shadow: inset 0 0 0.6vmin rgba(0, 0, 0, 0.6);
+        filter: brightness(0.85);
+    }
+
+    /* === Select & Start === */
+    .center-buttons {
+        position: absolute;
+        left: 32vmin;
+        top: 14vmin;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 2.5vmin;
+    }
+
+    .btn.small {
+        width: 8vmin;
+        height: 2.8vmin;
+        border-radius: 0.8vmin;
+        background: var(--btn-gray);
+        font-size: 1.3vmin;
+        color: #fff;
+        text-transform: uppercase;
+        box-shadow: inset 0 0 0.5vmin rgba(255, 255, 255, 0.2), 0 0 0.6vmin rgba(0, 0, 0, 0.3);
+        transition: transform 0.1s;
+    }
+
+    .btn.small.active {
+        background: #aaa;
+        transform: scale(0.92);
+    }
+
+    /* === Shoulder Buttons === */
+    .shoulders {
+        position: absolute;
+        top: 2.5vmin;
+        left: 8vmin;
+        right: 8vmin;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .btn.shoulder {
+        width: 12vmin;
+        height: 2.5vmin;
+        border-radius: 1.4vmin;
+        background: #bbb;
+        color: #333;
+        font-size: 1.2vmin;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: inset 0 0 0.5vmin #fff, 0 0 0.6vmin #000;
+        transition: transform 0.08s;
+    }
+
+    .btn.shoulder.active {
+        background: #888;
+        transform: scale(0.93);
+    }
+}

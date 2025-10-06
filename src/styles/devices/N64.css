@@ -1,0 +1,305 @@
+/* Alles scoped. Keine Shapes, nur Positionen + sparsame Defaults */
+.overlay.n64 {
+    --a: #1b5fff;
+    --b: #19b23a;
+    --c: #ffd200;
+    --text: #e9e9e9;
+    --dark: #2e2f31;
+
+    font-family: Orbitron, sans-serif;
+
+    .controller-body {
+        position: relative;
+        width: 76vmin; /* Arbeitsfläche */
+        height: 42vmin;
+        margin: 0 auto;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 7vmin;
+        box-shadow: inset 0 0 1vmin #222, 0 0 1vmin #222;
+    }
+
+    /* ---------- Positionen ---------- */
+
+    /* D-Pad links */
+
+    .dpad {
+        position: absolute;
+        left: 9.6vmin;
+        top: 18.6vmin;
+        width: 11vmin;
+        height: 11vmin;
+        border-radius: 5vmin;
+        background: #2b2b2c;
+        box-shadow: inset 0 0 1vmin rgba(0, 0, 0, .8);
+    }
+
+    .dpad span {
+        position: absolute;
+        background: #999;
+        transition: background .1s;
+    }
+
+    .dpad .up {
+        top: 1.5vmin;
+        left: 40%;
+        right: 40%;
+        height: 24%;
+        border-radius: .4vmin .4vmin 0 0;
+    }
+
+    .dpad .down {
+        bottom: 1.5vmin;
+        left: 40%;
+        right: 40%;
+        height: 24%;
+        border-radius: 0 0 .4vmin .4vmin;
+    }
+
+    .dpad .left {
+        left: 1.5vmin;
+        top: 40%;
+        bottom: 40%;
+        width: 24%;
+        border-radius: .4vmin 0 0 .4vmin;
+    }
+
+    .dpad .right {
+        right: 1.5vmin;
+        top: 40%;
+        bottom: 40%;
+        width: 24%;
+        border-radius: 0 .4vmin .4vmin 0;
+    }
+
+    .dpad.active-up .up,
+    .dpad.active-right .right,
+    .dpad.active-down .down,
+    .dpad.active-left .left {
+        background: orange;
+    }
+
+    /* Analog-Stick mittig unten */
+
+    .stick-base {
+        position: absolute;
+        left: 50%;
+        top: 34.6vmin;
+        transform: translate(-50%, -50%);
+        width: 9.4vmin;
+        height: 9.4vmin;
+        border-radius: 50%;
+        background: radial-gradient(circle at 45% 35%, #56585a, #2e2f31);
+        box-shadow: inset 0 0 1vmin #000;
+    }
+
+    .stick-hat {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 3.2vmin;
+        height: 3.2vmin;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(circle at 50% 40%, #d2d2d2, #8e8e8e);
+        box-shadow: 0 0 .6vmin rgba(0, 0, 0, .55);
+        transition: transform .05s linear;
+    }
+
+    /* A/B (B oben-links, A unten-rechts) */
+
+    .btn {
+        position: absolute;
+        width: 5.2vmin;
+        height: 5.2vmin;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 2vmin;
+        box-shadow: 0 0 .7vmin rgba(0, 0, 0, .45);
+        user-select: none;
+        /* kleines Inset-Highlight für „Plastik“ */
+        overflow: hidden;
+    }
+
+    .btn::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(90% 90% at 30% 25%, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0) 55%);
+        mix-blend-mode: screen;
+        pointer-events: none;
+    }
+
+    .btn.b {
+        font-size: 2.3vmin;
+        right: 23.8vmin;
+        top: 21.8vmin;
+        background: var(--b);
+        color: #0f551d;
+    }
+
+    .btn.a {
+        font-size: 2.3vmin;
+        right: 19.0vmin;
+        top: 26.2vmin;
+        background: var(--a);
+        color: #2444ac;
+    }
+
+    .btn.active {
+        box-shadow: 0 0 1.5vmin rgba(0, 0, 0, .6), inset 0 .2vmin .5vmin rgba(0, 0, 0, .35);
+        transform: translateY(.1vmin);
+    }
+
+    /* C-Cluster: dichter + Pfeile via ::after */
+
+    .btn.c {
+        width: 3.8vmin;
+        height: 3.8vmin;
+        background: var(--c);
+        color: #222;
+        font-size: 0; /* Text „C“ ausblenden */
+        letter-spacing: 0;
+    }
+
+    .btn.c::after {
+        position: relative;
+        display: block;
+        font-size: 1.9vmin;
+        font-weight: 900;
+        line-height: 3.8vmin;
+        text-align: center;
+        color: #504202;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, .35), 0 -1px 0 rgba(0, 0, 0, .4);
+    }
+
+    /* engeres Rhombus-Layout um einen engeren Mittelpunkt */
+
+    /* Mittelpunkt + Abstände */
+    --c-center-right: 13vmin;
+    --c-center-top: 17.5vmin;
+    --c-gap-x: 4.2vmin;   /* vorher 5.2vmin */
+    --c-gap-y: 4.2vmin;   /* vorher 5.3vmin */
+
+    /* Positionen aus dem Zentrum gerechnet */
+    .btn.cup   { right: var(--c-center-right);               top: calc(var(--c-center-top) - var(--c-gap-y)); }
+    .btn.cright{ right: calc(var(--c-center-right) - var(--c-gap-x)); top: var(--c-center-top); }
+    .btn.cdown { right: var(--c-center-right);               top: calc(var(--c-center-top) + var(--c-gap-y)); }
+    .btn.cleft { right: calc(var(--c-center-right) + var(--c-gap-x)); top: var(--c-center-top); }
+
+    .btn.cup::after {
+        content: "▲";
+    }
+
+    .btn.cright::after {
+        content: "▶";
+    }
+
+    .btn.cdown::after {
+        content: "▼";
+    }
+
+    .btn.cleft::after {
+        content: "◀";
+    }
+
+    .btn.c.active {
+        box-shadow: 0 0 1.2vmin #ffea00;
+        transform: translateY(.08vmin);
+    }
+
+    /* L/R oben */
+
+    .shoulder {
+        position: absolute;
+        top: 6.8vmin;
+        width: 13vmin;
+        height: 4vmin;
+        border-radius: .8vmin;
+        background: linear-gradient(#5c5e60, #4e4f51);
+        color: var(--text);
+        font-size: 2.0vmin;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 .3vmin .6vmin rgba(0, 0, 0, .35), inset 0 .2vmin .4vmin rgba(255, 255, 255, .08);
+    }
+
+    .shoulder.l {
+        left: 12.2vmin;
+    }
+
+    .shoulder.r {
+        right: 12.2vmin;
+    }
+
+    .shoulder.active {
+        background: linear-gradient(#707274, #5a5b5d);
+    }
+
+    /* Z unten mittig – wertiger Trigger */
+
+    .trigger-z {
+        position: absolute;
+        left: 48vmin;
+        bottom: 3.2vmin;
+        transform: translateX(-50%);
+        width: 4vmin;
+        height: 5.8vmin;
+        padding: 0 1.2vmin;
+        border-radius: 1.4vmin;
+        background: linear-gradient(#585a5c, #3f4042);
+        color: #d7dbde;
+        font-weight: 800;
+        letter-spacing: .06em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 .3vmin .6vmin rgba(0, 0, 0, .45), inset 0 .18vmin .45vmin rgba(255, 255, 255, .08), inset 0 -.18vmin .45vmin rgba(0, 0, 0, .25);
+        text-shadow: 0 1px 0 rgba(0, 0, 0, .55);
+    }
+
+    .trigger-z.active {
+        background: linear-gradient(#6a6c6e, #4c4d4f);
+        transform: translateX(-50%) translateY(.08vmin);
+        box-shadow: 0 .15vmin .4vmin rgba(0, 0, 0, .45),
+        inset 0 .2vmin .5vmin rgba(0, 0, 0, .35);
+    }
+
+    /* START mittig oben – kleines graues Oval, geprägt */
+
+    .start {
+        position: absolute;
+        left: 50%;
+        top: 18.6vmin;
+        transform: translateX(-50%);
+        width: 5.9vmin;
+        height: 5.9vmin;
+        border-radius: 50%;
+        background: linear-gradient(#ff0000, darkred);
+        color: #ff0000;
+        letter-spacing: .01em;
+        font-weight: 800;
+        font-size: 1.2vmin;
+        opacity: .95;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, .0), 0 -1px 0 rgba(0, 0, 0, .35);
+        box-shadow: 0 .25vmin .5vmin rgba(0, 0, 0, .35),
+        inset 0 .15vmin .35vmin rgba(255, 255, 255, .35),
+        inset 0 -.15vmin .35vmin rgba(0, 0, 0, .25);
+        user-select: none;
+    }
+
+    .start.active {
+        background: linear-gradient(#c8cdd1, #a4aab0);
+        box-shadow: 0 .15vmin .35vmin rgba(0, 0, 0, .35),
+        inset 0 .2vmin .45vmin rgba(0, 0, 0, .25);
+        transform: translateX(-50%) translateY(.06vmin);
+        color: #1e2226;
+    }
+}
