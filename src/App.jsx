@@ -4,6 +4,7 @@ import T16000 from "./layouts/T16000"
 import ArcadeVenom from "./layouts/ArcadeVenom"
 import Xbox from "./layouts/Xbox";
 import SNES from "./layouts/SNES";
+import NES from "./layouts/NES";
 import N64 from "./layouts/N64";
 import Genesis from "./layouts/Genesis";
 import DebugBox from "./components/DebugBox"
@@ -66,6 +67,7 @@ export default function App() {
         ArcadeVenom,
         Xbox,
         SNES,
+        NES,
         N64,
         Genesis,
         T16000,

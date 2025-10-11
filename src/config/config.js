@@ -3,6 +3,7 @@ export const controllerDevices = {
     arcadevenom: [],
     xbox: [],
     snes: [],
+    nes: [],
     n64: [],
     genesis: [],
     t16000: [],
@@ -33,6 +34,12 @@ export const controllerSetups = {
     snes: {
         name: "SNES Controller",
         layout: "SNES",
+        regex: /Vendor:\s*0583\s*Product:\s*2060/i,
+        active: true,
+    },
+    nes: {
+        name: "NES Controller",
+        layout: "NES",
         regex: /Vendor:\s*0583\s*Product:\s*2060/i,
         active: true,
     },
