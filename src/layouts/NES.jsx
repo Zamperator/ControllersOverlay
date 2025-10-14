@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useMemo } from "react"
+import React, { useEffect, useLayoutEffect, useMemo, useRef } from "react"
 import "../styles/devices/NES.css"
 
 export default function NES() {
-    const dpad = useRef(null)
+    const dpad = useRef(null)        // bleibt auf .dpad-ring
+    const dpadWrap = useRef(null)    // neu: wrapper
+    const dpadLobe = useRef(null)    // neu: lobe (Basis 250x250 fürs Scaling)
     const buttons = useRef({})
 
     const buttonMap = useMemo(() => ({
@@ -13,8 +15,42 @@ export default function NES() {
         4: "L",
         5: "R",
         8: "Select",
-        9: "Start",
+        9: "Start"
     }), [])
+
+    // === Pixel->Wrapper-Scaling: skaliert die Lobe proportional in die vmin-Box ===
+    useLayoutEffect(() => {
+        if (!dpadWrap.current || !dpadLobe.current) return
+
+        const BASE_W = 250
+        const BASE_H = 250
+
+        const applyScale = () => {
+            const wrap = dpadWrap.current
+            const lobe = dpadLobe.current
+            const rect = wrap.getBoundingClientRect()
+            const sx = rect.width / BASE_W
+            const sy = rect.height / BASE_H
+            const s = Math.min(sx, sy)
+
+            lobe.style.transformOrigin = "top left"
+            lobe.style.transform = `scale(${s})`
+            // zentriert in der Wrapper-Box (falls Wrapper nicht exakt quadratisch ist)
+            lobe.style.left = `${(rect.width - BASE_W * s) / 2}px`
+            lobe.style.top  = `${(rect.height - BASE_H * s) / 2}px`
+        }
+
+        // initial + bei Resize/Container-Änderung
+        const ro = new ResizeObserver(applyScale)
+        ro.observe(dpadWrap.current)
+        applyScale()
+
+        window.addEventListener("resize", applyScale)
+        return () => {
+            window.removeEventListener("resize", applyScale)
+            ro.disconnect()
+        }
+    }, [])
 
     useEffect(() => {
         let raf
@@ -46,25 +82,27 @@ export default function NES() {
     return (
         <div className="overlay nes">
             <div className="controller-body">
+
                 {/* D-Pad */}
-                <div className="dpad-lobe">
-                    <div ref={dpad} className="dpad-ring">
-                        <div className="dir-l-r"></div>
-                        <div className="dpad-hub"></div>
-                        <div className="hub"></div>
+                <div className="dpad-wrap" ref={dpadWrap}>
+                    <div className="dpad-lobe" ref={dpadLobe}>
+                        <div ref={dpad} className="dpad-ring">
+                            <div className="dir-l-r"></div>
+                            <div className="dpad-hub"></div>
+                            <div className="hub"></div>
 
-                        <div className="arrow-r"></div>
-                        <div className="arrow-l"></div>
-                        <div className="arrow-u"></div>
-                        <div className="arrow-d"></div>
+                            <div className="arrow-r"></div>
+                            <div className="arrow-l"></div>
+                            <div className="arrow-u"></div>
+                            <div className="arrow-d"></div>
 
-                        <div className="dir-u-d"></div>
+                            <div className="dir-u-d"></div>
 
-                        {/* unsichtbare Overlays für Active-Effekt */}
-                        <span className="hit up"></span>
-                        <span className="hit down"></span>
-                        <span className="hit left"></span>
-                        <span className="hit right"></span>
+                            <span className="hit up"></span>
+                            <span className="hit down"></span>
+                            <span className="hit left"></span>
+                            <span className="hit right"></span>
+                        </div>
                     </div>
                 </div>
 
@@ -74,7 +112,7 @@ export default function NES() {
                     <span className="label-start">START</span>
                 </div>
 
-                {/* Select/Start – Taster mit eigener Box + Unterleiste */}
+                {/* Select/Start */}
                 <div className="center-buttons">
                     <div ref={el => buttons.current.Select = el} className="btn small select" aria-label="Select"/>
                     <div ref={el => buttons.current.Start = el} className="btn small start" aria-label="Start"/>
@@ -82,10 +120,10 @@ export default function NES() {
 
                 {/* A/B */}
                 <div className="face-buttons">
-                    <div className={"button-box"}>
+                    <div className="button-box">
                         <div ref={el => buttons.current.Y = el} className="btn b" aria-label="B"/>
                     </div>
-                    <div className={"button-box"}>
+                    <div className="button-box">
                         <div ref={el => buttons.current.B = el} className="btn a" aria-label="A"/>
                     </div>
                 </div>
