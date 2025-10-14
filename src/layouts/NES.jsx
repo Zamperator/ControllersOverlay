@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef } from "react"
+import React, {useEffect, useLayoutEffect, useMemo, useRef} from "react"
 import "../styles/devices/NES.css"
 
 export default function NES() {
@@ -20,34 +20,55 @@ export default function NES() {
 
     // === Pixel->Wrapper-Scaling: skaliert die Lobe proportional in die vmin-Box ===
     useLayoutEffect(() => {
-        if (!dpadWrap.current || !dpadLobe.current) return
+
+        if (!dpadWrap.current || !dpadLobe.current) {
+            return
+        }
 
         const BASE_W = 250
         const BASE_H = 250
 
+        let lastW = -1
+        let lastH = -1
+        let raf = 0
+
         const applyScale = () => {
             const wrap = dpadWrap.current
             const lobe = dpadLobe.current
-            const rect = wrap.getBoundingClientRect()
-            const sx = rect.width / BASE_W
-            const sy = rect.height / BASE_H
-            const s = Math.min(sx, sy)
+            if (!wrap || !lobe) {
+                return
+            }
 
-            lobe.style.transformOrigin = "top left"
-            lobe.style.transform = `scale(${s})`
-            // zentriert in der Wrapper-Box (falls Wrapper nicht exakt quadratisch ist)
-            lobe.style.left = `${(rect.width - BASE_W * s) / 2}px`
-            lobe.style.top  = `${(rect.height - BASE_H * s) / 2}px`
+            const w = wrap.clientWidth
+            const h = wrap.clientHeight
+            if (w === lastW && h === lastH) {
+                return
+            }
+            lastW = w
+            lastH = h
+
+            const s = Math.min(w / BASE_W, h / BASE_H)
+            const dx = (w - BASE_W * s) / 2
+            const dy = (h - BASE_H * s) / 2
+
+            lobe.style.transformOrigin = 'top left'
+            lobe.style.transform = `translate(${dx}px, ${dy}px) scale(${s})`
         }
 
-        // initial + bei Resize/Container-Änderung
-        const ro = new ResizeObserver(applyScale)
+        const ro = new ResizeObserver(() => {
+            if (raf) {
+                cancelAnimationFrame(raf)
+            }
+            raf = requestAnimationFrame(applyScale)
+        })
+
         ro.observe(dpadWrap.current)
         applyScale()
 
-        window.addEventListener("resize", applyScale)
         return () => {
-            window.removeEventListener("resize", applyScale)
+            if (raf) {
+                cancelAnimationFrame(raf)
+            }
             ro.disconnect()
         }
     }, [])
@@ -57,20 +78,24 @@ export default function NES() {
         const update = () => {
             const pads = navigator.getGamepads?.() || []
             const gp = Array.from(pads).find(p => p && /Vendor:\s*0583\s*Product:\s*2060/i.test(p.id))
-            if (!gp) return (raf = requestAnimationFrame(update))
+            if (!gp) {
+                return (raf = requestAnimationFrame(update))
+            }
 
             if (dpad.current) {
                 const x = gp.axes[0] ?? 0
                 const y = gp.axes[1] ?? 0
-                dpad.current.classList.toggle("active-left",  x < -0.5)
-                dpad.current.classList.toggle("active-right", x >  0.5)
-                dpad.current.classList.toggle("active-up",    y < -0.5)
-                dpad.current.classList.toggle("active-down",  y >  0.5)
+                dpad.current.classList.toggle("active-left", x < -0.5)
+                dpad.current.classList.toggle("active-right", x > 0.5)
+                dpad.current.classList.toggle("active-up", y < -0.5)
+                dpad.current.classList.toggle("active-down", y > 0.5)
             }
 
             Object.entries(buttonMap).forEach(([index, name]) => {
                 const el = buttons.current[name]
-                if (el) el.classList.toggle("active", !!gp.buttons[index]?.pressed)
+                if (el) {
+                    el.classList.toggle("active", !!gp.buttons[index]?.pressed)
+                }
             })
 
             raf = requestAnimationFrame(update)
