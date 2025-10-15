@@ -71,7 +71,9 @@ export default function Genesis() {
                 </div>
 
                 {/* === START BUTTON === */}
-                <div ref={el => buttons.current.Start = el} className="start-btn">START</div>
+                <div ref={el => buttons.current.Start = el} className="start-btn">
+                    <div className={"start-label"}>START</div>
+                </div>
 
                 {/* === FACE BUTTONS === */}
                 <div className="face-buttons">
@@ -90,6 +92,7 @@ export default function Genesis() {
                 {/* === MODE BUTTON === */}
                 <div className="extra-buttons">
                     <div ref={el => buttons.current.Mode = el} className="extra-btn"></div>
+                    <div className={"extra-label"}>MODE</div>
                 </div>
 
             </div>

@@ -180,14 +180,30 @@
     /* Mittelpunkt + Abstände */
     --c-center-right: 13vmin;
     --c-center-top: 17.5vmin;
-    --c-gap-x: 4.2vmin;   /* vorher 5.2vmin */
-    --c-gap-y: 4.2vmin;   /* vorher 5.3vmin */
+    --c-gap-x: 4.2vmin; /* vorher 5.2vmin */
+    --c-gap-y: 4.2vmin; /* vorher 5.3vmin */
 
     /* Positionen aus dem Zentrum gerechnet */
-    .btn.cup   { right: var(--c-center-right);               top: calc(var(--c-center-top) - var(--c-gap-y)); }
-    .btn.cright{ right: calc(var(--c-center-right) - var(--c-gap-x)); top: var(--c-center-top); }
-    .btn.cdown { right: var(--c-center-right);               top: calc(var(--c-center-top) + var(--c-gap-y)); }
-    .btn.cleft { right: calc(var(--c-center-right) + var(--c-gap-x)); top: var(--c-center-top); }
+
+    .btn.cup {
+        right: var(--c-center-right);
+        top: calc(var(--c-center-top) - var(--c-gap-y));
+    }
+
+    .btn.cright {
+        right: calc(var(--c-center-right) - var(--c-gap-x));
+        top: var(--c-center-top);
+    }
+
+    .btn.cdown {
+        right: var(--c-center-right);
+        top: calc(var(--c-center-top) + var(--c-gap-y));
+    }
+
+    .btn.cleft {
+        right: calc(var(--c-center-right) + var(--c-gap-x));
+        top: var(--c-center-top);
+    }
 
     .btn.cup::after {
         content: "▲";
@@ -265,8 +281,7 @@
     .trigger-z.active {
         background: linear-gradient(#6a6c6e, #4c4d4f);
         transform: translateX(-50%) translateY(.08vmin);
-        box-shadow: 0 .15vmin .4vmin rgba(0, 0, 0, .45),
-        inset 0 .2vmin .5vmin rgba(0, 0, 0, .35);
+        box-shadow: 0 .15vmin .4vmin rgba(0, 0, 0, .45), inset 0 .2vmin .5vmin rgba(0, 0, 0, .35);
     }
 
     /* START mittig oben – kleines graues Oval, geprägt */
@@ -289,16 +304,13 @@
         align-items: center;
         justify-content: center;
         text-shadow: 0 1px 0 rgba(255, 255, 255, .0), 0 -1px 0 rgba(0, 0, 0, .35);
-        box-shadow: 0 .25vmin .5vmin rgba(0, 0, 0, .35),
-        inset 0 .15vmin .35vmin rgba(255, 255, 255, .35),
-        inset 0 -.15vmin .35vmin rgba(0, 0, 0, .25);
+        box-shadow: 0 .25vmin .5vmin rgba(0, 0, 0, .35), inset 0 .15vmin .35vmin rgba(255, 255, 255, .35), inset 0 -.15vmin .35vmin rgba(0, 0, 0, .25);
         user-select: none;
     }
 
     .start.active {
         background: linear-gradient(#c8cdd1, #a4aab0);
-        box-shadow: 0 .15vmin .35vmin rgba(0, 0, 0, .35),
-        inset 0 .2vmin .45vmin rgba(0, 0, 0, .25);
+        box-shadow: 0 .15vmin .35vmin rgba(0, 0, 0, .35), inset 0 .2vmin .45vmin rgba(0, 0, 0, .25);
         transform: translateX(-50%) translateY(.06vmin);
         color: #1e2226;
     }

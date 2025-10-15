@@ -89,7 +89,7 @@
 
             /* Skaliere von deiner Basis (250px x 250px) auf die Wrapper-Größe */
             /* calc( ) liefert eine dimensionslose Zahl für scale() */
-            transform: scale(calc( min(100% , 100%) / 250px ));
+            transform: scale(calc( min(100% , 100%) / 250 ));
             /* 100% ist die Wrapper-Breite/Höhe; wir nutzen ein quadratisches Ziel,
                daher reicht ein einheitlicher Scale-Faktor. */
         }
