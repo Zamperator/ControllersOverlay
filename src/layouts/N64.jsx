@@ -105,8 +105,8 @@ export default function N64() {
                 <div ref={el => (buttons.current.cLeft = el)} className="btn c cleft">C</div>
 
                 {/* Schultertasten & Z */}
-                <div ref={el => (buttons.current.L = el)} className="shoulder l">L</div>
-                <div ref={el => (buttons.current.R = el)} className="shoulder r">R</div>
+                <div ref={el => (buttons.current.L = el)} className="shoulder l"></div>
+                <div ref={el => (buttons.current.R = el)} className="shoulder r"></div>
                 <div ref={el => (buttons.current.Z = el)} className="trigger-z">Z</div>
 
                 {/* START */}
