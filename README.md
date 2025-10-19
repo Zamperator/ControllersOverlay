@@ -33,6 +33,12 @@ yarn install
 ```shell
 yarn dev
 ```
+5. Open your web browser and go to `http://localhost:3000` to view the application.
+6. Connect your controller and test its functionality.
+7. To build the project for production, run:
+```shell
+yarn build
+```
 
 ### Requirements:
   * React
