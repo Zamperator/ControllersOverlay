@@ -6,6 +6,7 @@ import Xbox from "./layouts/Xbox";
 import SNES from "./layouts/SNES";
 import NES from "./layouts/NES";
 import N64 from "./layouts/N64";
+import GameCube from "./layouts/GameCube";
 import Genesis from "./layouts/Genesis";
 import DebugBox from "./components/DebugBox"
 import MenuPanel from "./components/MenuPanel"
@@ -69,6 +70,7 @@ export default function App() {
         SNES,
         NES,
         N64,
+        GameCube,
         Genesis,
         T16000,
     }

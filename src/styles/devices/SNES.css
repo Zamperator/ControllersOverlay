@@ -1,38 +1,76 @@
 @import url("https://fonts.googleapis.com/css2?family=Anton&display=swap");
 
+/* ========================= THEMES ========================= */
+
+/* === PAL (EU): X blau, Y grün, A rot, B gelb; Teller bleibt dunkel === */
+:root {
+    .overlay.snes {
+        --island-bg: #727089;
+
+        --btnX-bg: #2f6de1;
+        --btnX-border: #1e50a8;
+        --btnX-shadow: rgba(47, 109, 225, .6);
+        --btnX-hover: #295ec2;
+        --btnX-active: #204b9a;
+
+        --btnY-bg: #1e8e3e;
+        --btnY-border: #176c2f;
+        --btnY-shadow: rgba(30, 142, 62, .6);
+        --btnY-hover: #197a35;
+        --btnY-active: #145f2a;
+
+        --btnA-bg: #d32f2f;
+        --btnA-border: #9f2323;
+        --btnA-shadow: rgba(211, 47, 47, .55);
+        --btnA-hover: #b82929;
+        --btnA-active: #951f1f;
+
+        --btnB-bg: #f4c20d;
+        --btnB-border: #c49c0a;
+        --btnB-shadow: rgba(244, 194, 13, .55);
+        --btnB-hover: #d8ab0c;
+        --btnB-active: #b18b0a;
+    }
+}
+
+/* === JP (Super Famicom): gleiche Farben, aber Teller heller/grauer === */
+[data-theme="ntsc"] {
+    .overlay.snes {
+        /* ====== COLOR TOKENS (NTSC = US/SNES: X/Y lavender, A/B purple) ====== */
+        --island-bg: #727089;
+
+        /* X */
+        --btnX-bg: #BEB5E0;
+        --btnX-border: #8983A2;
+        --btnX-shadow: #8983A2;
+        --btnX-hover: #8983A2;
+        --btnX-active: #7e78a1;
+
+        /* Y */
+        --btnY-bg: #BEB5E0;
+        --btnY-border: #8983A2;
+        --btnY-shadow: #8983A2;
+        --btnY-hover: #8983A2;
+        --btnY-active: #7e78a1;
+
+        /* A */
+        --btnA-bg: #5E4197;
+        --btnA-border: #39256D;
+        --btnA-shadow: #39256D;
+        --btnA-hover: #39256D;
+        --btnA-active: #3b2872;
+
+        /* B */
+        --btnB-bg: #5E4197;
+        --btnB-border: #39256D;
+        --btnB-shadow: #39256D;
+        --btnB-hover: #39256D;
+        --btnB-active: #3b2872;
+    }
+}
+
 /* === Canvas / Scaling + Default (US/SNES) Token === */
 .overlay.snes {
-
-    /* ====== COLOR TOKENS (Default = US/SNES: X/Y lavender, A/B purple) ====== */
-    --island-bg: #727089;
-
-    /* X */
-    --btnX-bg:        #BEB5E0;
-    --btnX-border:    #8983A2;
-    --btnX-shadow:    #8983A2;
-    --btnX-hover:     #8983A2;
-    --btnX-active:    #7e78a1;
-
-    /* Y */
-    --btnY-bg:        #BEB5E0;
-    --btnY-border:    #8983A2;
-    --btnY-shadow:    #8983A2;
-    --btnY-hover:     #8983A2;
-    --btnY-active:    #7e78a1;
-
-    /* A */
-    --btnA-bg:        #5E4197;
-    --btnA-border:    #39256D;
-    --btnA-shadow:    #39256D;
-    --btnA-hover:     #39256D;
-    --btnA-active:    #3b2872;
-
-    /* B */
-    --btnB-bg:        #5E4197;
-    --btnB-border:    #39256D;
-    --btnB-shadow:    #39256D;
-    --btnB-hover:     #39256D;
-    --btnB-active:    #3b2872;
 
     /* ====== LAYOUT ====== */
     display: flex;
@@ -125,6 +163,50 @@
         border-radius: 3px;
     }
 
+    .dpad-ring .hit {
+        position: absolute;
+        background: transparent;
+    }
+
+    .dpad-ring .hit.up {
+        left: 36px;
+        right: 36px;
+        top: 8px;
+        height: 46px;
+    }
+
+    .dpad-ring .hit.down {
+        left: 36px;
+        right: 36px;
+        bottom: 8px;
+        height: 46px;
+    }
+
+    .dpad-ring .hit.left {
+        top: 36px;
+        bottom: 36px;
+        left: 8px;
+        width: 46px;
+    }
+
+    .dpad-ring .hit.right {
+        top: 36px;
+        bottom: 36px;
+        right: 8px;
+        width: 46px;
+    }
+
+    /* optisches Feedback über die Pfeilspitzen */
+
+    .dpad-ring.active-up .arrow-u::before,
+    .dpad-ring.active-down .arrow-d::before,
+    .dpad-ring.active-left .arrow-l::before,
+    .dpad-ring.active-right .arrow-r::before {
+        border-left-color: #00aaff;
+    }
+
+    /*** Button lobe ****/
+
     .button-lobe {
         width: 250px;
         height: 250px;
@@ -141,7 +223,7 @@
         width: 50px;
         height: 135px;
         border-radius: 25px;
-        background: #CACCD2;            /* vom Gehäuse – Kapsel */
+        background: #CACCD2; /* vom Gehäuse – Kapsel */
         -webkit-transform: rotate(50deg);
         transform: rotate(50deg);
         margin: 15px 0 0 59px;
@@ -154,10 +236,11 @@
     }
 
     /* ===== Teller (face button island) mit Variable ===== */
+
     .face-btns {
         width: 225px;
         height: 225px;
-        background: var(--island-bg);  /* << variable */
+        background: var(--island-bg); /* << variable */
         border-radius: 50%;
         z-index: 9999;
         position: relative;
@@ -168,6 +251,7 @@
     }
 
     /* ===== Buttons: X / Y (hell), A / B (dunkel) mit per-Button-Variablen ===== */
+
     .btn-x, .btn-y, .btn-a, .btn-b {
         width: 45px;
         height: 45px;
@@ -182,31 +266,50 @@
         border-bottom: 1px solid var(--btnX-border);
         box-shadow: 0 0 5px var(--btnX-shadow);
     }
-    .btn-x:hover { background: var(--btnX-hover); border-bottom-color: var(--btnX-hover); }
+
+    .btn-x:hover {
+        background: var(--btnX-hover);
+        border-bottom-color: var(--btnX-hover);
+    }
 
     .btn-y {
         background: var(--btnY-bg);
         border-bottom: 1px solid var(--btnY-border);
         box-shadow: 0 0 5px var(--btnY-shadow);
     }
-    .btn-y:hover { background: var(--btnY-hover); border-bottom-color: var(--btnY-hover); }
+
+    .btn-y:hover {
+        background: var(--btnY-hover);
+        border-bottom-color: var(--btnY-hover);
+    }
 
     .btn-a {
         background: var(--btnA-bg);
         border-bottom: 1px solid var(--btnA-border);
         box-shadow: 0 0 5px var(--btnA-shadow);
     }
-    .btn-a:hover { background: var(--btnA-hover); border-bottom-color: var(--btnA-hover); }
+
+    .btn-a:hover {
+        background: var(--btnA-hover);
+        border-bottom-color: var(--btnA-hover);
+    }
 
     .btn-b {
         background: var(--btnB-bg);
         border-bottom: 1px solid var(--btnB-border);
         box-shadow: 0 0 5px var(--btnB-shadow);
     }
-    .btn-b:hover { background: var(--btnB-hover); border-bottom-color: var(--btnB-hover); }
+
+    .btn-b:hover {
+        background: var(--btnB-hover);
+        border-bottom-color: var(--btnB-hover);
+    }
 
     /* Reihenversatz wie Vorlage */
-    .btn-y, .btn-b { margin: 38px 0 0 2px; }
+
+    .btn-y, .btn-b {
+        margin: 38px 0 0 2px;
+    }
 
     .label-btn {
         -webkit-transform: rotate(-50deg);
@@ -225,12 +328,15 @@
     .btn-x .label-btn {
         margin: -45px 0 0 4px;
     }
+
     .btn-y .label-btn {
         margin: 44px 0 0 5px;
     }
+
     .btn-a .label-btn {
         margin: -40px 0 0 4px;
     }
+
     .btn-b .label-btn {
         margin: 50px 0 0 5px;
     }
@@ -382,18 +488,21 @@
         transform: translateY(1px) scale(.97);
         box-shadow: inset 0 0 6px rgba(0, 0, 0, .45);
     }
+
     .btn-y.active {
         background: var(--btnY-active);
         border-bottom-color: var(--btnY-active);
         transform: translateY(1px) scale(.97);
         box-shadow: inset 0 0 6px rgba(0, 0, 0, .45);
     }
+
     .btn-a.active {
         background: var(--btnA-active);
         border-bottom-color: var(--btnA-active);
         transform: translateY(1px) scale(.97);
         box-shadow: inset 0 0 6px rgba(0, 0, 0, .45);
     }
+
     .btn-b.active {
         background: var(--btnB-active);
         border-bottom-color: var(--btnB-active);
@@ -410,81 +519,4 @@
         filter: brightness(.7);
         background: #00aaff;
     }
-
-    .dpad-ring .hit {
-        position: absolute;
-        background: transparent;
-    }
-
-    .dpad-ring .hit.up {
-        left: 36px;
-        right: 36px;
-        top: 8px;
-        height: 46px;
-    }
-
-    .dpad-ring .hit.down {
-        left: 36px;
-        right: 36px;
-        bottom: 8px;
-        height: 46px;
-    }
-
-    .dpad-ring .hit.left {
-        top: 36px;
-        bottom: 36px;
-        left: 8px;
-        width: 46px;
-    }
-
-    .dpad-ring .hit.right {
-        top: 36px;
-        bottom: 36px;
-        right: 8px;
-        width: 46px;
-    }
-
-    /* optisches Feedback über die Pfeilspitzen */
-    .dpad-ring.active-up .arrow-u::before,
-    .dpad-ring.active-down .arrow-d::before,
-    .dpad-ring.active-left .arrow-l::before,
-    .dpad-ring.active-right .arrow-r::before {
-        border-left-color: #00aaff;
-    }
-}
-
-/* ========================= THEMES ========================= */
-
-/* === PAL (EU): X blau, Y grün, A rot, B gelb; Teller bleibt dunkel === */
-.overlay.snes.theme-pal{
-    --island-bg: #727089;
-
-    --btnX-bg:     #2f6de1;  --btnX-border: #1e50a8; --btnX-shadow: rgba(47,109,225,.6);
-    --btnX-hover:  #295ec2;  --btnX-active: #204b9a;
-
-    --btnY-bg:     #1e8e3e;  --btnY-border: #176c2f; --btnY-shadow: rgba(30,142,62,.6);
-    --btnY-hover:  #197a35;  --btnY-active: #145f2a;
-
-    --btnA-bg:     #d32f2f;  --btnA-border: #9f2323; --btnA-shadow: rgba(211,47,47,.55);
-    --btnA-hover:  #b82929;  --btnA-active: #951f1f;
-
-    --btnB-bg:     #f4c20d;  --btnB-border: #c49c0a; --btnB-shadow: rgba(244,194,13,.55);
-    --btnB-hover:  #d8ab0c;  --btnB-active: #b18b0a;
-}
-
-/* === JP (Super Famicom): gleiche Farben, aber Teller heller/grauer === */
-.overlay.snes.theme-jp{
-    --island-bg: #caccd2; /* nahezu Gehäusefarbe */
-
-    --btnX-bg:     #2f6de1;  --btnX-border: #1e50a8; --btnX-shadow: rgba(47,109,225,.6);
-    --btnX-hover:  #295ec2;  --btnX-active: #204b9a;
-
-    --btnY-bg:     #1e8e3e;  --btnY-border: #176c2f; --btnY-shadow: rgba(30,142,62,.6);
-    --btnY-hover:  #197a35;  --btnY-active: #145f2a;
-
-    --btnA-bg:     #d32f2f;  --btnA-border: #9f2323; --btnA-shadow: rgba(211,47,47,.55);
-    --btnA-hover:  #b82929;  --btnA-active: #951f1f;
-
-    --btnB-bg:     #f4c20d;  --btnB-border: #c49c0a; --btnB-shadow: rgba(244,194,13,.55);
-    --btnB-hover:  #d8ab0c;  --btnB-active: #b18b0a;
 }

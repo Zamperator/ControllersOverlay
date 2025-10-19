@@ -1,3 +1,66 @@
+:root, [data-theme] {
+    .overlay.hotasx {
+        transition: --btn-bg 0.3s ease,
+        --btn-active-bg 0.3s ease,
+        --btn-active-color 0.3s ease,
+        --btn-active-border 0.3s ease,
+        --bg 0.3s ease,
+        --line 0.3s ease;
+    }
+}
+
+:root {
+    .overlay.hotasx {
+        --bg: rgba(0, 0, 0, 0.8);
+        --line: #660000;
+        --active: #b30000;
+        --text: #eee;
+        --btn-bg: #222;
+        --btn-active-bg: rgba(179, 0, 0, 0.2);
+        --btn-active-color: #b30000;
+        --btn-active-border: #b30000;
+    }
+}
+
+[data-theme="space"] {
+    .overlay.hotasx {
+        --bg: rgba(0, 50, 0, 0.8);
+        --line: #009900;
+        --active: #00ff00;
+        --text: #00ff00;
+        --btn-bg: #003300;
+        --btn-active-bg: rgba(0, 255, 0, 0.2);
+        --btn-active-color: #00ff00;
+        --btn-active-border: #00ff00;
+    }
+}
+
+[data-theme="desert"] {
+    .overlay.hotasx {
+        --bg: rgba(50, 25, 0, 0.8);
+        --line: #cc9900;
+        --active: #ffcc00;
+        --text: #ffcc00;
+        --btn-bg: #332200;
+        --btn-active-bg: rgba(255, 204, 0, 0.2);
+        --btn-active-color: #ffcc00;
+        --btn-active-border: #ffcc00;
+    }
+}
+
+[data-theme="ocean"] {
+    .overlay.hotasx {
+        --bg: rgba(0, 50, 50, 0.8);
+        --line: #006666;
+        --active: #00ffff;
+        --text: #00ffff;
+        --btn-bg: #003333;
+        --btn-active-bg: rgba(0, 255, 255, 0.2);
+        --btn-active-color: #00ffff;
+        --btn-active-border: #00ffff;
+    }
+}
+
 .overlay.hotasx {
 
     --bg: rgba(0, 0, 0, 0.8);

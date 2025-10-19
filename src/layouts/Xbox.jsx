@@ -33,7 +33,7 @@ export default function Xbox() {
         let raf
         const update = () => {
             const pads = navigator.getGamepads?.() || []
-            const gp = Array.from(pads).find(p => p && /xbox|microsoft|xinput/i.test(p.id))
+            const gp = Array.from(pads).find(p => p && /xbox 360.*xinput/i.test(p.id))
             if (!gp) return (raf = requestAnimationFrame(update))
 
             // === Sticks ===

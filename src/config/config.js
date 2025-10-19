@@ -5,6 +5,7 @@ export const controllerDevices = {
     snes: [],
     nes: [],
     n64: [],
+    gamecube: [],
     genesis: [],
     t16000: [],
     twcs: [],
@@ -17,18 +18,31 @@ export const controllerSetups = {
         layout: "HotasX",
         regex: /Hotas\s*X/i,
         active: true,
+        themes: {
+            default: "Default",
+            space: "Space",
+            desert: "Desert",
+            ocean: "Ocean",
+        }
     },
     arcadevenom: {
         name: "PS3/PS4 Arcade Joystick",
         layout: "ArcadeVenom",
         regex: /Arcade\s*Joystick/i,
         active: true,
-        useThemes: true,
+        themes: {
+            default: "Default",
+            icy: "Icy",
+            matrix: "Matrix",
+            inferno: "Inferno",
+            retro: "Retro",
+            aqua: "Aqua",
+        }
     },
     xbox: {
         name: "XBox Controller",
         layout: "Xbox",
-        regex: /Xbox.*360/i,
+        regex: /Xbox.*360.*XInput/i,
         active: true,
     },
     snes: {
@@ -36,6 +50,9 @@ export const controllerSetups = {
         layout: "SNES",
         regex: /Vendor:\s*0583\s*Product:\s*2060/i,
         active: true,
+        themes: {
+            ntsc: "NTSC",
+        }
     },
     nes: {
         name: "NES Controller",
@@ -47,6 +64,13 @@ export const controllerSetups = {
         name: "N64 Controller",
         layout: "N64",
         regex: /Vendor:\s*0079\s*Product:\s*0006/i,
+        active: true,
+    },
+    gamecube:  {
+        name: "GameCube Controller",
+        layout: "GameCube",
+        // Detect: Xbox 360-Controller für Windows (STANDARD GAMEPAD)
+        regex: /Xbox\s*360-Controller.*\(STANDARD\s*GAMEPAD\)/i,
         active: true,
     },
     genesis: {
