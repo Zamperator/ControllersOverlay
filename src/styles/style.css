@@ -1,5 +1,24 @@
+/* Place the WOFF2 file(s) in /public/fonts (Vite/React: served at site root) */
+@font-face {
+    font-family: "Orbitron";
+    src: local("Orbitron"),
+    url("/fonts/orbitron-v35-latin-regular.woff2") format("woff2");
+    font-weight: 400 900; /* variable range */
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Anton";
+    src: local("Anton"),
+    url("/fonts/anton-v27-latin-regular.woff2") format("woff2");
+    font-weight: 400 900; /* variable range */
+    font-style: normal;
+    font-display: swap;
+}
+
 :root {
-    --bg: rgba(0,0,0,0.4);
+    --bg: rgba(0, 0, 0, 0.4);
     --line: #666;
     --active: #00bcd4;
     --btn-bg: #222;
@@ -28,8 +47,13 @@ body {
     box-sizing: border-box;
 }
 
-.layout { display: none; }
-.layout.active { display: flex; }
+.layout {
+    display: none;
+}
+
+.layout.active {
+    display: flex;
+}
 
 .overlay {
     display: flex;
