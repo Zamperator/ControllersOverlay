@@ -78,8 +78,8 @@ https://fonts.google.com/specimen/Anton
 ```
 public/
   fonts/
-    Orbitron-VariableFont_wght.woff2
-    Orbitron-Italic-VariableFont_wght.woff2  (optional)
+    anton-v27-latin-regular.woff2
+    obitron-v35-latin-regular.woff2
 ```
 
 
