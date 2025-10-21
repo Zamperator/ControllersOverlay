@@ -509,8 +509,9 @@
     }
 
     .btn-l.active, .btn-r.active {
-        transform: translateY(1px);
+        transform: translateY(4px);
         filter: brightness(.92);
+        background: var(--btnX-active);
     }
 
     .select.active, .start.active {

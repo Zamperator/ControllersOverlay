@@ -174,11 +174,11 @@
     /* Aktive Richtungen */
 
     .dpad.active-up span.up {
-        background: var(--y);
+        background: var(--x);
     }
 
     .dpad.active-down span.down {
-        background: var(--a);
+        background: var(--x);
     }
 
     .dpad.active-left span.left {
@@ -186,18 +186,29 @@
     }
 
     .dpad.active-right span.right {
-        background: var(--b);
+        background: var(--x);
     }
 
     /* === Top: Bumper + Trigger === */
 
-    .top-row {
+    .top-left, .top-right {
         position: absolute;
-        top: 3vmin;
-        left: 8vmin;
-        right: 8vmin;
+        width: 12vmin;
         display: flex;
         justify-content: space-between;
+        /*border: 1px solid;*/
+    }
+
+    .top-left {
+        left: 18vmin;
+        top: 17vmin;
+        transform: rotate(-18deg);
+    }
+
+    .top-right {
+        left: 50vmin;
+        top: 17vmin;
+        transform: rotate(18deg);
     }
 
     .bumper,
@@ -216,19 +227,23 @@
         transition: all 0.1s;
     }
 
+    .lb {
+        border-radius: 20px 0 0 20px;
+    }
+    .lt {
+        border-radius: 0 20px 20px 0;
+    }
+    .rb {
+        border-radius: 20px 0 0 20px;
+    }
+    .rt {
+        border-radius: 0 20px 20px 0;
+    }
+
     .bumper.active,
     .trigger.active {
         background: linear-gradient(#0c0, #040);
         box-shadow: 0 0 1vmin #0f0;
-    }
-
-    .triggers {
-        position: absolute;
-        top: 6vmin;
-        left: 8vmin;
-        right: 8vmin;
-        display: flex;
-        justify-content: space-between;
     }
 
     /* === Center Buttons === */

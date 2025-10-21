@@ -76,13 +76,13 @@ export default function Xbox() {
             <div className="controller-body">
 
                 {/* Bumper + Trigger */}
-                <div className="top-row">
-                    <div ref={el => buttons.current.LB = el} className="bumper">LB</div>
-                    <div ref={el => buttons.current.RB = el} className="bumper">RB</div>
+                <div className="top-left">
+                    <div ref={el => buttons.current.LB = el} className="bumper lb">LB</div>
+                    <div ref={el => buttons.current.LT = el} className="trigger lt">LT</div>
                 </div>
-                <div className="triggers">
-                    <div ref={el => buttons.current.LT = el} className="trigger">LT</div>
-                    <div ref={el => buttons.current.RT = el} className="trigger">RT</div>
+                <div className="top-right">
+                    <div ref={el => buttons.current.RB = el} className="bumper rb">RB</div>
+                    <div ref={el => buttons.current.RT = el} className="trigger rt">RT</div>
                 </div>
 
                 {/* Center Buttons */}

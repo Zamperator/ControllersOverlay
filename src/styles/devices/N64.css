@@ -271,11 +271,11 @@
 
     .trigger-z {
         position: absolute;
-        left: 48vmin;
+        left: 38vmin;
         bottom: 3.2vmin;
         transform: translateX(-50%);
         width: 4vmin;
-        height: 5.8vmin;
+        height: 10vmin;
         padding: 0 1.2vmin;
         border-radius: 1.4vmin;
         background: linear-gradient(#585a5c, #3f4042);
