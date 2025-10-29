@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react"
 import "../styles/devices/ArcadeVenom.css"
-import {controllerSetups} from "@/config/config";
+import {getControllerSetup} from "@/config/config";
 
 export default function ArcadeVenom() {
     const stickBall = useRef(null)
@@ -20,7 +20,7 @@ export default function ArcadeVenom() {
         12: "PSButton"  // großer Playstation-Button
     }), [])
 
-    const setup = controllerSetups('arcadevenom')
+    const setup = getControllerSetup('arcadevenom')
 
     useEffect(() => {
         function update() {

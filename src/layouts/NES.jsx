@@ -1,6 +1,6 @@
 import React, {useEffect, useLayoutEffect, useMemo, useRef} from "react"
 import "../styles/devices/NES.css"
-import {controllerSetups} from "@/config/config";
+import {getControllerSetup} from "@/config/config";
 
 export default function NES() {
     const dpad = useRef(null)        // bleibt auf .dpad-ring
@@ -19,7 +19,7 @@ export default function NES() {
         9: "Start"
     }), [])
 
-    const setup = controllerSetups('nes')
+    const setup = getControllerSetup('nes')
 
     // === Pixel->Wrapper-Scaling: skaliert die Lobe proportional in die vmin-Box ===
     useLayoutEffect(() => {

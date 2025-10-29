@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useMemo, useState} from "react"
 import "../styles/devices/HotasX.css"
-import {controllerSetups} from "@/config/config";
+import {getControllerSetup} from "@/config/config";
 
 export default function HotasX() {
     const stickInd = useRef(null)
@@ -27,7 +27,7 @@ export default function HotasX() {
         11: "ST"
     }), [])
 
-    const setup = controllerSetups('hotasx')
+    const setup = getControllerSetup('hotasx')
 
     useEffect(() => {
         function update() {

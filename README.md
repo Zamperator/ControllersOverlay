@@ -3,7 +3,7 @@
 > Overlay & input visualizer for Twitch streams using the HTML5 Gamepad API.  
 > Built with React (JSX), styled with CSS3.
 
-**Version:** 0.12  
+**Version:** 0.1.3
 **Author:** Zamperator
 
 ## Running example

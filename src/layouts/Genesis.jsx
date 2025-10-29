@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useMemo} from "react"
 import "../styles/devices/Genesis.css"
-import {controllerSetups} from "@/config/config";
+import {getControllerSetup} from "@/config/config";
 
 export default function Genesis() {
     const dpad = useRef(null)
@@ -22,7 +22,7 @@ export default function Genesis() {
         15: "dpadRight",
     }), [])
 
-    const setup = controllerSetups('genesis')
+    const setup = getControllerSetup('genesis')
 
     useEffect(() => {
         let raf

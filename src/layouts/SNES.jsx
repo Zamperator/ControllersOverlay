@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import "../styles/devices/SNES.css";
-import {controllerSetups} from "@/config/config";
+import {getControllerSetup} from "@/config/config";
 
 export default function SNES() {
     const buttons = useRef({});
@@ -18,7 +18,7 @@ export default function SNES() {
         9: "Start",
     }), []);
 
-    const setup = controllerSetups('snes')
+    const setup = getControllerSetup('snes')
 
     useEffect(() => {
         let raf;

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react"
 import "../styles/devices/GameCube.css"
-import {controllerSetups} from "@/config/config";
+import {getControllerSetup} from "@/config/config";
 
 export default function GameCube() {
     const dpad = useRef(null)
@@ -39,7 +39,7 @@ export default function GameCube() {
 
     // helper: clamp
     const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-    const setup = controllerSetups('gamecube')
+    const setup = getControllerSetup('gamecube')
 
     useEffect(() => {
         let raf

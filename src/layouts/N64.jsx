@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react"
-import "../styles/devices/N64.css"   // nur Layout + leichte Defaults
+import "../styles/devices/N64.css"
+import {getControllerSetup} from "@/config/config";   // nur Layout + leichte Defaults
 
 export default function N64() {
     const dpad = useRef(null)
@@ -21,7 +22,7 @@ export default function N64() {
         9: "Start",
     }), [])
 
-    const setup = controllerSetups('n64')
+    const setup = getControllerSetup('n64')
 
     useEffect(() => {
         let raf
