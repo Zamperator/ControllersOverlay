@@ -28,7 +28,7 @@ export function useGamepads(updateInterval = 100) {
                 const pads = navigator.getGamepads()
                 const detected = {}
 
-                console.log(pads)
+                // console.log(pads)
 
                 // neue, saubere Struktur erzeugen
                 for (const key of Object.keys(controllerDevices)) {

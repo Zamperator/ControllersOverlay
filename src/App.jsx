@@ -25,7 +25,7 @@ function getDeviceFromUrl() {
 
 export default function App() {
 
-    // ✅ neue Quelle für Geräteerkennung: eigener Hook
+    // Neue Quelle für Geräteerkennung: eigener Hook
     const { devices, activeSetup: detectedSetup } = useGamepads()
     const [activeSetup, setActiveSetup] = useState(null)
     const [showDeviceSelect, setShowDeviceSelect] = useState(false)
