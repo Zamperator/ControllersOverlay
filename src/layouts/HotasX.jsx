@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useMemo, useState} from "react"
 import "../styles/devices/HotasX.css"
+import {controllerSetups} from "@/config/config";
 
 export default function HotasX() {
     const stickInd = useRef(null)
@@ -26,10 +27,12 @@ export default function HotasX() {
         11: "ST"
     }), [])
 
+    const setup = controllerSetups('hotasx')
+
     useEffect(() => {
         function update() {
             const pads = navigator.getGamepads()
-            const gp = Array.from(pads).find(p => p && /Hotas\s*X/i.test(p.id))
+            const gp = Array.from(pads).find(p => p && setup.getRegEx().test(p.id))
             if (!gp) {
                 requestAnimationFrame(update)
                 return

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { controllerSetups } from "../config/config"
+import {getControllerSetup} from "../config/config"
 import "../styles/DebugBox.css"
 import { L8N } from "../lib/Localization"
 
@@ -101,7 +101,7 @@ export default function DebugBox({ devices, activeSetup }) {
 
             Object.entries(devices).forEach(([key, indices]) => {
                 if (indices && indices.length > 0) {
-                    const setup = controllerSetups[key]
+                    const setup = getControllerSetup(key)
                     const title = setup ? setup.name : key
                     dumpDevice(title, indices)
                 }

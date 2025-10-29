@@ -1,3 +1,5 @@
+import ctrlConfig from './ctrlConfig.js'
+
 export const controllerDevices = {
     hotasx: [],
     arcadevenom: [],
@@ -28,7 +30,7 @@ export const controllerSetups = {
     arcadevenom: {
         name: "PS3/PS4 Arcade Joystick",
         layout: "ArcadeVenom",
-        regex: /Arcade\s*Joystick/i,
+        regex: /PS[345]\s*\/?\s*Arcade\s*Joystick/i,
         active: true,
         themes: {
             default: "Default",
@@ -66,7 +68,7 @@ export const controllerSetups = {
         regex: /Vendor:\s*0079\s*Product:\s*0006/i,
         active: true,
     },
-    gamecube:  {
+    gamecube: {
         name: "GameCube Controller",
         layout: "GameCube",
         // Detect: Xbox 360-Controller für Windows (STANDARD GAMEPAD)
@@ -97,4 +99,24 @@ export const controllerSetups = {
         regex: /TFRP/i,
         active: false,
     },
+}
+
+export function getControllerSetup(name) {
+
+    const setup = controllerSetups[name] ?? null
+
+    if (setup) {
+        setup.getRegEx = () => {
+
+            let savedSetup = ctrlConfig.get(name, 'regex') ?? null;
+
+            if (savedSetup) {
+                return JSON.parse(savedSetup).regex ?? setup.regex
+            }
+
+            return setup.regex
+        }
+    }
+
+    return setup
 }

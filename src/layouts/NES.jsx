@@ -1,5 +1,6 @@
 import React, {useEffect, useLayoutEffect, useMemo, useRef} from "react"
 import "../styles/devices/NES.css"
+import {controllerSetups} from "@/config/config";
 
 export default function NES() {
     const dpad = useRef(null)        // bleibt auf .dpad-ring
@@ -17,6 +18,8 @@ export default function NES() {
         8: "Select",
         9: "Start"
     }), [])
+
+    const setup = controllerSetups('nes')
 
     // === Pixel->Wrapper-Scaling: skaliert die Lobe proportional in die vmin-Box ===
     useLayoutEffect(() => {
@@ -77,7 +80,7 @@ export default function NES() {
         let raf
         const update = () => {
             const pads = navigator.getGamepads?.() || []
-            const gp = Array.from(pads).find(p => p && /Vendor:\s*0583\s*Product:\s*2060/i.test(p.id))
+            const gp = Array.from(pads).find(p => p && setup.getRegEx().test(p.id))
             if (!gp) {
                 return (raf = requestAnimationFrame(update))
             }

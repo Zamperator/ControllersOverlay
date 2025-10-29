@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react"
 import "../styles/devices/GameCube.css"
+import {controllerSetups} from "@/config/config";
 
 export default function GameCube() {
     const dpad = useRef(null)
@@ -8,13 +9,6 @@ export default function GameCube() {
     const cstickBase = useRef(null)
     const cstickHat = useRef(null)
     const buttons = useRef({})
-
-    const setBtnRef = key => el => {
-        if (!buttons.current) {
-            buttons.current = {}
-        }
-        buttons.current[key] = el
-    }
 
     // Button-Index-Mapping deines Pads
     const buttonMap = useMemo(() => ({
@@ -41,11 +35,11 @@ export default function GameCube() {
 
     // === Config ===
     const AXIS_BIAS = { 0: 0.0, 1: 0.249, 2: 0.0, 3: 0.0 };   // dein Offset: Achse 1 = +0.249
-    const DEADZONE = { left: 0.12, c: 0.18 };                 // radial; GC C-Stick meist etwas größer
     const SMOOTH = 0.35;                                      // 0 = sofort, 1 = sehr träge
 
     // helper: clamp
     const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+    const setup = controllerSetups('gamecube')
 
     useEffect(() => {
         let raf
@@ -100,7 +94,7 @@ export default function GameCube() {
 
         const update = () => {
             const pads = navigator.getGamepads?.() || []
-            const gp = Array.from(pads).find(p => p && /xbox 360.*\(STANDARD GAMEPAD\)/i.test(p.id))
+            const gp = Array.from(pads).find(p => p && setup.getRegEx().test(p.id))
             if (!gp) {
                 raf = requestAnimationFrame(update)
                 return

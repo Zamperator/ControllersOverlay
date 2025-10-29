@@ -1,64 +1,84 @@
-import React, { useEffect, useState } from "react"
+import React, {useEffect, useState} from "react"
 import HotasX from "./layouts/HotasX"
 import T16000 from "./layouts/T16000"
 import ArcadeVenom from "./layouts/ArcadeVenom"
-import Xbox from "./layouts/Xbox";
-import SNES from "./layouts/SNES";
-import NES from "./layouts/NES";
-import N64 from "./layouts/N64";
-import GameCube from "./layouts/GameCube";
-import Genesis from "./layouts/Genesis";
+import Xbox from "./layouts/Xbox"
+import SNES from "./layouts/SNES"
+import NES from "./layouts/NES"
+import N64 from "./layouts/N64"
+import GameCube from "./layouts/GameCube"
+import Genesis from "./layouts/Genesis"
 import DebugBox from "./components/DebugBox"
 import MenuPanel from "./components/MenuPanel"
-import { controllerSetups } from "./config/config"
-import { useGamepads } from "./hooks/useGamepads"   // ✅ NEU
+import {controllerSetups} from "./config/config"
+import {useGamepads} from "./hooks/useGamepads"
 import "./styles/style.css"
-import {L8N} from "./lib/Localization";
+import {L8N} from "./lib/Localization"
 
 const forcedDevice = null
 
 function getDeviceFromUrl() {
     const params = new URLSearchParams(window.location.search)
     const value = params.get("device")
+
     return value ? value.toLowerCase() : forcedDevice
 }
 
 export default function App() {
-
-    // Neue Quelle für Geräteerkennung: eigener Hook
-    const { devices, activeSetup: detectedSetup } = useGamepads()
+    const {devices, activeSetup: detectedSetup} = useGamepads()
     const [activeSetup, setActiveSetup] = useState(null)
     const [showDeviceSelect, setShowDeviceSelect] = useState(false)
     const [debug, setDebug] = useState(true)
 
-    // URL & forcedDevice behandeln
+    // Lokale Menü-Komponente, damit nicht 3x duplizieren
+    const Menu = () => {
+        return (
+            <MenuPanel
+                setShowDeviceSelect={setShowDeviceSelect}
+                activeSetup={activeSetup}
+                setActiveSetup={setActiveSetup}
+                debug={debug}
+                setDebug={setDebug}
+                leftLinks={[
+                    {label: "Imprint"},
+                    {label: "Description"},
+                    {label: "Help"}
+                ]}
+            />
+        )
+    }
+
     useEffect(() => {
         const urlDevice = getDeviceFromUrl()
         const validUrlDevice = urlDevice && controllerSetups[urlDevice]
 
         if (forcedDevice) {
             setActiveSetup(forcedDevice)
-        } else if (validUrlDevice) {
-            setActiveSetup(urlDevice)
-        } else if (detectedSetup) {
-            setActiveSetup(detectedSetup)
-        } else {
-            setShowDeviceSelect(true)
+        }
+        else {
+            if (validUrlDevice) {
+                setActiveSetup(urlDevice)
+            }
+            else {
+                if (detectedSetup) {
+                    setActiveSetup(detectedSetup)
+                }
+                else {
+                    setShowDeviceSelect(true)
+                }
+            }
         }
     }, [detectedSetup])
 
-    const hasAnyDevice = Object.values(devices).some(arr => arr.length > 0)
+    const hasAnyDevice = Object.values(devices).some(arr => {
+        return arr.length > 0
+    })
+
     if (!hasAnyDevice && !activeSetup) {
         return (
             <div className="debug active">
-                <MenuPanel
-                    setShowDeviceSelect={setShowDeviceSelect}
-                    activeSetup={activeSetup}
-                    setActiveSetup={setActiveSetup}
-                    debug={debug}
-                    setDebug={setDebug}
-                />
-                <strong>{L8N.get('error.no_devices_detected')}</strong>
+                <Menu/>
+                <strong>{L8N.get("error.no_devices_detected")}</strong>
             </div>
         )
     }
@@ -72,7 +92,7 @@ export default function App() {
         N64,
         GameCube,
         Genesis,
-        T16000,
+        T16000
     }
 
     let SelectedLayout = null
@@ -80,43 +100,29 @@ export default function App() {
     if (activeSetup) {
         const setup = controllerSetups[activeSetup.toLowerCase()]
         if (setup && layoutComponents[setup.layout]) {
-
-            if(!setup.active) {
+            if (!setup.active) {
                 return (
                     <div className="debug active">
-                        <MenuPanel
-                            setShowDeviceSelect={setShowDeviceSelect}
-                            activeSetup={activeSetup}
-                            setActiveSetup={setActiveSetup}
-                            debug={debug}
-                            setDebug={setDebug}
-                        />
-                        <strong>{L8N.get('error.device_currently_not_supported', [setup.name])}</strong>
+                        <Menu/>
+                        <strong>{L8N.get("error.device_currently_not_supported", [setup.name])}</strong>
                     </div>
                 )
             }
-
             SelectedLayout = layoutComponents[setup.layout]
         }
     }
 
     return (
         <div id="overlay">
-            <MenuPanel
-                setShowDeviceSelect={setShowDeviceSelect}
-                activeSetup={activeSetup}
-                setActiveSetup={setActiveSetup}
-                debug={debug}
-                setDebug={setDebug}
-            />
+            <Menu/>
 
-            {SelectedLayout && <SelectedLayout />}
+            {SelectedLayout && <SelectedLayout/>}
 
             {!SelectedLayout && !showDeviceSelect && (
-                <p style={{ color: "#aaa" }}>{L8N.get('press_key_or_stick')}</p>
+                <p style={{color: "#aaa"}}>{L8N.get("press_key_or_stick")}</p>
             )}
 
-            {debug && <DebugBox devices={devices} activeSetup={activeSetup} />}
+            {debug && <DebugBox devices={devices} activeSetup={activeSetup}/>}
         </div>
     )
 }

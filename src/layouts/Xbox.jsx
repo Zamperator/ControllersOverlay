@@ -1,7 +1,9 @@
 import React, {useEffect, useRef, useMemo} from "react"
+import {getControllerSetup} from "../config/config";
 import "../styles/devices/Xbox.css"
 
 export default function Xbox() {
+
     const leftStickBase = useRef(null)
     const rightStickBase = useRef(null)
     const leftStickHat = useRef(null)
@@ -29,11 +31,13 @@ export default function Xbox() {
         16: "Xbox"
     }), [])
 
+    const setup = getControllerSetup('xbox')
+
     useEffect(() => {
         let raf
         const update = () => {
             const pads = navigator.getGamepads?.() || []
-            const gp = Array.from(pads).find(p => p && /xbox 360.*xinput/i.test(p.id))
+            const gp = Array.from(pads).find(p => p && setup.getRegEx().test(p.id))
             if (!gp) return (raf = requestAnimationFrame(update))
 
             // === Sticks ===

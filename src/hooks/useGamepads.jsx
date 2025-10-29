@@ -8,6 +8,7 @@ import { controllerDevices, controllerSetups } from "../config/config"
  * @returns {object} { devices, activeSetup }
  */
 export function useGamepads(updateInterval = 100) {
+
     const [devices, setDevices] = useState(() => {
         const init = {}
         for (const key of Object.keys(controllerDevices)) {

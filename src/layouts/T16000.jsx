@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from "react"
+import React, {useEffect, useRef} from "react"
+import {getControllerSetup} from "../config/config";
 import "../styles/devices/T16000.css"
 
 export default function T16000() {
@@ -13,10 +14,12 @@ export default function T16000() {
     const sideParam = new URLSearchParams(window.location.search).get("side")
     const twcsSide = sideParam === "right" ? "right" : "left"
 
+    const setup = getControllerSetup('t16000')
+
     useEffect(() => {
         function update() {
             const pads = navigator.getGamepads()
-            const stick = [...pads].find(gp => gp && /T\.16000M/i.test(gp.id))
+            const stick = [...pads].find(gp => gp && setup.getRegEx().test(gp.id))
             const twcs = [...pads].find(gp => gp && /TWCS/i.test(gp.id))
 
             // === Stick ===
@@ -35,14 +38,30 @@ export default function T16000() {
                 const pov = stick.axes[9]
                 hatArrow.current.classList.remove("active")
                 let angle = null
-                if (Math.abs(pov - (-1)) < 0.05) angle = 0
-                else if (Math.abs(pov - (-0.714)) < 0.05) angle = 45
-                else if (Math.abs(pov - (-0.428)) < 0.05) angle = 90
-                else if (Math.abs(pov - (-0.143)) < 0.05) angle = 135
-                else if (Math.abs(pov - (0.143)) < 0.05) angle = 180
-                else if (Math.abs(pov - (0.428)) < 0.05) angle = 225
-                else if (Math.abs(pov - (0.714)) < 0.05) angle = 270
-                else if (Math.abs(pov - (1)) < 0.05) angle = 315
+                if (Math.abs(pov - (-1)) < 0.05) {
+                    angle = 0
+                }
+                else if (Math.abs(pov - (-0.714)) < 0.05) {
+                    angle = 45
+                }
+                else if (Math.abs(pov - (-0.428)) < 0.05) {
+                    angle = 90
+                }
+                else if (Math.abs(pov - (-0.143)) < 0.05) {
+                    angle = 135
+                }
+                else if (Math.abs(pov - (0.143)) < 0.05) {
+                    angle = 180
+                }
+                else if (Math.abs(pov - (0.428)) < 0.05) {
+                    angle = 225
+                }
+                else if (Math.abs(pov - (0.714)) < 0.05) {
+                    angle = 270
+                }
+                else if (Math.abs(pov - (1)) < 0.05) {
+                    angle = 315
+                }
                 if (angle !== null) {
                     hatArrow.current.classList.add("active")
                     hatArrow.current.style.transform =
@@ -51,7 +70,9 @@ export default function T16000() {
 
                 stick.buttons.forEach((btn, i) => {
                     const el = document.getElementById(`stick-btn-${i}`)
-                    if (el) el.classList.toggle("active", btn.pressed)
+                    if (el) {
+                        el.classList.toggle("active", btn.pressed)
+                    }
                 })
             }
 
@@ -77,12 +98,15 @@ export default function T16000() {
 
                 twcs.buttons.forEach((btn, i) => {
                     const el = document.getElementById(`twcs-btn-${i}`)
-                    if (el) el.classList.toggle("active", btn.pressed)
+                    if (el) {
+                        el.classList.toggle("active", btn.pressed)
+                    }
                 })
             }
 
             requestAnimationFrame(update)
         }
+
         update()
     }, [])
 
@@ -90,40 +114,50 @@ export default function T16000() {
         <div className={`overlay t16000 ${twcsSide}`}>
             {/* === Stick === */}
             <div className="stick-block">
-                <div className="stick"><div ref={stickInd} className="stick-indicator"></div></div>
-                <div className="rudder"><div ref={rudderInd} className="rudder-indicator"></div></div>
+                <div className="stick">
+                    <div ref={stickInd} className="stick-indicator"></div>
+                </div>
+                <div className="rudder">
+                    <div ref={rudderInd} className="rudder-indicator"></div>
+                </div>
 
                 <div className="hat-group">
                     <div id="stick-btn-2" className="button">2</div>
-                    <div className="hat"><div ref={hatArrow} className="hat-arrow"></div></div>
+                    <div className="hat">
+                        <div ref={hatArrow} className="hat-arrow"></div>
+                    </div>
                     <div id="stick-btn-3" className="button">3</div>
                 </div>
                 <div id="stick-btn-1" className="button under-hat">1</div>
                 <div id="stick-btn-0" className="button trigger">TRG</div>
 
-                <div className="button-grid left">{[4,5,6,9,8,7].map(n =>
+                <div className="button-grid left">{[4, 5, 6, 9, 8, 7].map(n =>
                     <div key={n} id={`stick-btn-${n}`} className="button">{n}</div>)}
                 </div>
-                <div className="button-grid right">{[10,11,12,13,14,15].map(n =>
+                <div className="button-grid right">{[10, 11, 12, 13, 14, 15].map(n =>
                     <div key={n} id={`stick-btn-${n}`} className="button">{n}</div>)}
                 </div>
             </div>
 
             {/* === TWCS === */}
             <div className="twcs-block">
-                <div className="throttle"><div ref={throttleHandle} className="throttle-handle"></div></div>
-                <div className="mini-stick"><div ref={miniStickInd} className="mini-stick-indicator"></div></div>
+                <div className="throttle">
+                    <div ref={throttleHandle} className="throttle-handle"></div>
+                </div>
+                <div className="mini-stick">
+                    <div ref={miniStickInd} className="mini-stick-indicator"></div>
+                </div>
 
                 <div className="cooliehats">
-                    <div className="cooliehat">{[6,7,8,9].map(i =>
+                    <div className="cooliehat">{[6, 7, 8, 9].map(i =>
                         <div key={i} id={`twcs-btn-${i}`} className="button">{i}</div>)}
                     </div>
-                    <div className="cooliehat">{[10,11,12,13].map(i =>
+                    <div className="cooliehat">{[10, 11, 12, 13].map(i =>
                         <div key={i} id={`twcs-btn-${i}`} className="button">{i}</div>)}
                     </div>
                 </div>
 
-                <div className="orange-buttons">{[0,1,2].map(i =>
+                <div className="orange-buttons">{[0, 1, 2].map(i =>
                     <div key={i} id={`twcs-btn-${i}`} className="button orange">{i}</div>)}
                 </div>
 
@@ -132,9 +166,13 @@ export default function T16000() {
                     <div id="twcs-btn-4" className="button">↓</div>
                 </div>
 
-                <div className="flip-switch"><div ref={flipHandle} className="flip-handle"></div></div>
+                <div className="flip-switch">
+                    <div ref={flipHandle} className="flip-handle"></div>
+                </div>
 
-                <div className="dial"><div ref={dialHandle} className="dial-handle"></div></div>
+                <div className="dial">
+                    <div ref={dialHandle} className="dial-handle"></div>
+                </div>
             </div>
         </div>
     )

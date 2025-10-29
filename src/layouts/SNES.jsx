@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import "../styles/devices/SNES.css";
+import {controllerSetups} from "@/config/config";
 
 export default function SNES() {
     const buttons = useRef({});
@@ -17,11 +18,13 @@ export default function SNES() {
         9: "Start",
     }), []);
 
+    const setup = controllerSetups('snes')
+
     useEffect(() => {
         let raf;
         const loop = () => {
             const pads = navigator.getGamepads?.() || [];
-            const gp = Array.from(pads).find(p => p && /Vendor:\s*0583\s*Product:\s*2060/i.test(p.id));
+            const gp = Array.from(pads).find(p => p && setup.getRegEx().test(p.id));
             if (!gp) { raf = requestAnimationFrame(loop); return; }
 
             // D-Pad (Axes)

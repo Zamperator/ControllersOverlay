@@ -21,6 +21,8 @@ export default function N64() {
         9: "Start",
     }), [])
 
+    const setup = controllerSetups('n64')
+
     useEffect(() => {
         let raf
 
@@ -39,7 +41,7 @@ export default function N64() {
         function update() {
             const pads = navigator.getGamepads?.() || []
             // 0079:0006 ist ein häufiger N64-USB-Adapter; Regex kannst du anpassen
-            const gp = Array.from(pads).find(p => p && /nintendo|n64|0079.*0006/i.test(p.id))
+            const gp = Array.from(pads).find(p => p && setup.getRegEx().test(p.id))
             if (!gp) { raf = requestAnimationFrame(update); return }
 
             // Stick (axes 0/1)

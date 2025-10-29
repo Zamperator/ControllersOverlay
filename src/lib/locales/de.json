@@ -5,6 +5,7 @@
   "device": "Gerät",
   "choose_device": "Gerät auswählen",
   "default": "Standard",
+  "always_pin_menu": "Menü immer anzeigen",
   "debug": {
     "title": "Debug-Modus",
     "description": "Zeigt zusätzliche Debug-Informationen an",

@@ -5,6 +5,7 @@
   "device": "Device",
   "choose_device": "Choose Device",
   "default": "Default",
+  "always_pin_menu": "Always show menu",
   "debug": {
     "title": "Debug Mode",
     "description": "Show additional debug information",

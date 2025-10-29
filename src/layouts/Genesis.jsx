@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useMemo} from "react"
 import "../styles/devices/Genesis.css"
+import {controllerSetups} from "@/config/config";
 
 export default function Genesis() {
     const dpad = useRef(null)
@@ -21,13 +22,15 @@ export default function Genesis() {
         15: "dpadRight",
     }), [])
 
+    const setup = controllerSetups('genesis')
+
     useEffect(() => {
         let raf
 
         function update() {
             const pads = navigator.getGamepads ? navigator.getGamepads() : []
             // Suche Controller per Vendor/Product ID
-            const gp = Array.from(pads).find(p => p && /Vendor:\s*0079\s*Product:\s*0011/i.test(p.id))
+            const gp = Array.from(pads).find(p => p && setup.getRegEx().test(p.id))
             if (!gp) {
                 raf = requestAnimationFrame(update)
                 return

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react"
 import "../styles/devices/ArcadeVenom.css"
+import {controllerSetups} from "@/config/config";
 
 export default function ArcadeVenom() {
     const stickBall = useRef(null)
@@ -19,11 +20,13 @@ export default function ArcadeVenom() {
         12: "PSButton"  // großer Playstation-Button
     }), [])
 
+    const setup = controllerSetups('arcadevenom')
+
     useEffect(() => {
         function update() {
             const pads = navigator.getGamepads()
             const gp = Array.from(pads).find(
-                p => p && /PS[345]\s*\/?\s*Arcade\s*Joystick/i.test(p.id)
+                p => p && setup.getRegEx().test(p.id)
             )
 
             if (!gp) {

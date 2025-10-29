@@ -1,7 +1,7 @@
 /** DEBUG ***/
 .debug-wrapper {
     position: fixed;
-    top: 0.5vh;
+    bottom: 0.5vh;
     left: 0.5vw;
     display: flex;
     flex-direction: column;
