@@ -5,7 +5,6 @@
   "device": "Device",
   "layout": "Layout",
   "type": "Type",
-  "help": "Help",
   "choose_device": "Choose Device",
   "default": "Default",
   "always_pin_menu": "Always show menu",
@@ -20,6 +19,15 @@
     "calibration": "Calibration",
     "pressed": "pressed",
     "released": "released"
+  },
+  "help": {
+    "title": "Help",
+    "controls": "Controls & Notes",
+    "change_device": "Select device in menu",
+    "debug_toggle": "Debug on/off in menu",
+    "troubleshoot": "Troubleshooting",
+    "browser_input": "Move a stick / press a button to detect the pad.",
+    "usb": "Change adapter/USB port, reload browser"
   },
   "error": {
     "no_devices_detected": "No devices detected",

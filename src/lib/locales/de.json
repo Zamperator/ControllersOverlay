@@ -5,7 +5,6 @@
   "device": "Gerät",
   "layout": "Layout",
   "type": "Typ",
-  "help": "Hilfe",
   "choose_device": "Gerät auswählen",
   "default": "Standard",
   "always_pin_menu": "Menü immer anzeigen",
@@ -20,6 +19,15 @@
     "calibration": "Kalibrierung",
     "pressed": "gedrückt",
     "released": "losgelassen"
+  },
+  "help": {
+    "title": "Hilfe",
+    "controls": "Steuerung & Hinweise",
+    "change_device": "Gerät im Menü auswählen",
+    "debug_toggle": "Debug im Menü an/aus",
+    "troubleshoot": "Troubleshooting",
+    "browser_input": "Bewege einen Stick / drücke eine Taste, damit das Pad erkannt wird.",
+    "usb": "Adapter/USB-Port wechseln, Browser neu laden"
   },
   "error": {
     "no_devices_detected": "Keine Eingabegeräte erkannt",

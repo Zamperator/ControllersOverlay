@@ -1,6 +1,6 @@
 {
   "name": "controllers-overlays",
-  "version": "0.1.3",
+  "version": "0.1.8",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
