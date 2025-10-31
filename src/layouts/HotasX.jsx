@@ -1,8 +1,9 @@
 import React, {useEffect, useRef, useMemo, useState} from "react"
 import "../styles/devices/HotasX.css"
-import {getControllerSetup} from "@/config/config";
+import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
 
 export default function HotasX() {
+
     const stickInd = useRef(null)
     const rudderInd = useRef(null)
     const throttleFill = useRef(null)
@@ -27,15 +28,17 @@ export default function HotasX() {
         11: "ST"
     }), [])
 
-    const setup = getControllerSetup('hotasx')
+    const activeController = useMemo(() => makeActiveGamepadPicker({timeoutMs: 2000, deadzone: .15}), [])
 
     useEffect(() => {
+        let raf;
+
         function update() {
-            const pads = navigator.getGamepads()
-            const gp = Array.from(pads).find(p => p && setup.getRegEx().test(p.id))
+            const pads = navigator.getGamepads?.() || [];
+            const gp = activeController(pads)
             if (!gp) {
-                requestAnimationFrame(update)
-                return
+                raf = requestAnimationFrame(update);
+                return;
             }
 
             // === Stick (X/Y) ===
@@ -100,14 +103,30 @@ export default function HotasX() {
                 let angle = null
 
                 // Mapping Axis9 → Angle
-                if (Math.abs(pov - (-1.0)) < 0.05) angle = 0
-                else if (Math.abs(pov - (-0.714)) < 0.05) angle = 45
-                else if (Math.abs(pov - (-0.428)) < 0.05) angle = 90
-                else if (Math.abs(pov - (-0.143)) < 0.05) angle = 135
-                else if (Math.abs(pov - (0.143)) < 0.05) angle = 180
-                else if (Math.abs(pov - (0.428)) < 0.05) angle = 225
-                else if (Math.abs(pov - (0.714)) < 0.05) angle = 270
-                else if (Math.abs(pov - (1.0)) < 0.05) angle = 315
+                if (Math.abs(pov - (-1.0)) < 0.05) {
+                    angle = 0
+                }
+                else if (Math.abs(pov - (-0.714)) < 0.05) {
+                    angle = 45
+                }
+                else if (Math.abs(pov - (-0.428)) < 0.05) {
+                    angle = 90
+                }
+                else if (Math.abs(pov - (-0.143)) < 0.05) {
+                    angle = 135
+                }
+                else if (Math.abs(pov - (0.143)) < 0.05) {
+                    angle = 180
+                }
+                else if (Math.abs(pov - (0.428)) < 0.05) {
+                    angle = 225
+                }
+                else if (Math.abs(pov - (0.714)) < 0.05) {
+                    angle = 270
+                }
+                else if (Math.abs(pov - (1.0)) < 0.05) {
+                    angle = 315
+                }
 
                 if (angle !== null) {
                     if (lastHatAngle.current !== null) {
@@ -116,7 +135,8 @@ export default function HotasX() {
                         // Sprung über 360° → korrigieren
                         if (diff > 180) {
                             angle -= 360
-                        } else if (diff < -180) {
+                        }
+                        else if (diff < -180) {
                             angle += 360
                         }
                     }
@@ -126,7 +146,8 @@ export default function HotasX() {
                     hatArrow.current.classList.add("active")
                     hatArrow.current.style.transform =
                         `translate(-50%, -50%) rotate(${lastHatAngle.current}deg)`
-                } else {
+                }
+                else {
                     hatArrow.current.classList.remove("active")
                     lastHatAngle.current = null
                 }
@@ -140,10 +161,13 @@ export default function HotasX() {
                 }
             })
 
-            requestAnimationFrame(update)
+            raf = requestAnimationFrame(update);
         }
 
         update()
+
+        return () => cancelAnimationFrame(raf);
+
     }, [buttonMap])
 
     return (

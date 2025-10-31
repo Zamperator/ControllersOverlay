@@ -7,6 +7,7 @@
     flex-direction: column;
     gap: 4px;
     z-index: 999;
+    max-height: 90vh;
 }
 
 .debug {
@@ -20,9 +21,14 @@
     margin: 0;
     box-sizing: border-box;
     flex: 1;
+    overflow: hidden;
+    overflow-y: auto;
 }
 
 .perf-panel {
+    position: sticky;
+    bottom: 1vh;
+    right: 1vw;
     align-self: flex-end;
     background: rgba(0, 0, 0, 0.6);
     border: 0.1vmin solid #444;

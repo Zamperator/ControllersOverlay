@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useMemo} from "react"
 import {getControllerSetup} from "../config/config";
 import "../styles/devices/Xbox.css"
+import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
 
 export default function Xbox() {
 
@@ -31,18 +32,23 @@ export default function Xbox() {
         16: "Xbox"
     }), [])
 
-    const setup = getControllerSetup('xbox')
+    const activeController = useMemo(() => makeActiveGamepadPicker({timeoutMs: 2000, deadzone: .15}), [])
 
     useEffect(() => {
         let raf
         const update = () => {
-            const pads = navigator.getGamepads?.() || []
-            const gp = Array.from(pads).find(p => p && setup.getRegEx().test(p.id))
-            if (!gp) return (raf = requestAnimationFrame(update))
+            const pads = navigator.getGamepads?.() || [];
+            const gp = activeController(pads)
+            if (!gp) {
+                raf = requestAnimationFrame(update);
+                return;
+            }
 
             // === Sticks ===
             const moveStick = (base, hat, xAxis, yAxis) => {
-                if (!base || !hat) return
+                if (!base || !hat) {
+                    return
+                }
                 const box = base.getBoundingClientRect()
                 const ind = hat.getBoundingClientRect()
                 const rangeX = (box.width - ind.width) / 2
@@ -57,7 +63,9 @@ export default function Xbox() {
             // === Buttons (inkl. Trigger) ===
             Object.entries(buttonMap).forEach(([i, name]) => {
                 const el = buttons.current[name]
-                if (el) el.classList.toggle("active", !!gp.buttons[i]?.pressed)
+                if (el) {
+                    el.classList.toggle("active", !!gp.buttons[i]?.pressed)
+                }
             })
 
             // === D-Pad ===

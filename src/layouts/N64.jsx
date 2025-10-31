@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useRef } from "react"
+import React, {useEffect, useMemo, useRef} from "react"
 import "../styles/devices/N64.css"
-import {getControllerSetup} from "@/config/config";   // nur Layout + leichte Defaults
+import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
 
 export default function N64() {
     const dpad = useRef(null)
@@ -22,13 +22,15 @@ export default function N64() {
         9: "Start",
     }), [])
 
-    const setup = getControllerSetup('n64')
+    const activeController = useMemo(() => makeActiveGamepadPicker({timeoutMs: 2000, deadzone: .15}), [])
 
     useEffect(() => {
         let raf
 
         function setHat(x, y) {
-            if (!stickHat.current || !stickBase.current) return
+            if (!stickHat.current || !stickBase.current) {
+                return
+            }
             const base = stickBase.current.getBoundingClientRect()
             const hat = stickHat.current.getBoundingClientRect()
             const rx = (base.width - hat.width) / 2
@@ -40,10 +42,12 @@ export default function N64() {
         const near = (a, b, eps = 0.08) => Math.abs(a - b) <= eps
 
         function update() {
-            const pads = navigator.getGamepads?.() || []
-            // 0079:0006 ist ein häufiger N64-USB-Adapter; Regex kannst du anpassen
-            const gp = Array.from(pads).find(p => p && setup.getRegEx().test(p.id))
-            if (!gp) { raf = requestAnimationFrame(update); return }
+            const pads = navigator.getGamepads?.() || [];
+            const gp = activeController(pads)
+            if (!gp) {
+                raf = requestAnimationFrame(update);
+                return;
+            }
 
             // Stick (axes 0/1)
             setHat(gp.axes[0] ?? 0, gp.axes[1] ?? 0)
@@ -51,25 +55,27 @@ export default function N64() {
             // D-Pad (Axis 9 Werte; inkl. Diagonalen)
             if (dpad.current) {
                 const v = gp.axes[9]
-                const up    = near(v, -1.000)
-                const upR   = near(v, -0.714)
+                const up = near(v, -1.000)
+                const upR = near(v, -0.714)
                 const right = near(v, -0.428)
                 const downR = near(v, -0.143)
-                const down  = near(v,  0.143)
-                const downL = near(v,  0.428)
-                const left  = near(v,  0.714)
-                const upL   = near(v,  1.000)
+                const down = near(v, 0.143)
+                const downL = near(v, 0.428)
+                const left = near(v, 0.714)
+                const upL = near(v, 1.000)
 
-                dpad.current.classList.toggle("active-up",    up || upR || upL)
+                dpad.current.classList.toggle("active-up", up || upR || upL)
                 dpad.current.classList.toggle("active-right", right || upR || downR)
-                dpad.current.classList.toggle("active-down",  down || downR || downL)
-                dpad.current.classList.toggle("active-left",  left || upL || downL)
+                dpad.current.classList.toggle("active-down", down || downR || downL)
+                dpad.current.classList.toggle("active-left", left || upL || downL)
             }
 
             // Buttons
             Object.entries(buttonMap).forEach(([idx, name]) => {
                 const el = buttons.current[name]
-                if (!el) return
+                if (!el) {
+                    return
+                }
                 el.classList.toggle("active", !!gp.buttons[idx]?.pressed)
             })
 
@@ -86,15 +92,15 @@ export default function N64() {
 
                 {/* D-Pad */}
                 <div ref={dpad} className="dpad">
-                    <span className="up" />
-                    <span className="right" />
-                    <span className="down" />
-                    <span className="left" />
+                    <span className="up"/>
+                    <span className="right"/>
+                    <span className="down"/>
+                    <span className="left"/>
                 </div>
 
                 {/* Analog-Stick */}
                 <div ref={stickBase} className="stick-base">
-                    <div ref={stickHat} className="stick-hat" />
+                    <div ref={stickHat} className="stick-hat"/>
                 </div>
 
                 {/* A / B */}

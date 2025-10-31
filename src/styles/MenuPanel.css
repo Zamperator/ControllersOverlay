@@ -20,12 +20,12 @@
 
 .left-pill {
     display: inline-flex;
-    align-items: center;
+    align-items: baseline;
     gap: 0.6vmin;
     padding: 0.5vmin 0.9vmin;
     border: 0.2vmin solid #3a3a3a;
     border-radius: 999px;
-    background: linear-gradient(180deg, rgba(20,20,20,.9), rgba(10,10,10,.9));
+    background: linear-gradient(180deg, rgba(20, 20, 20, .9), rgba(10, 10, 10, .9));
     color: #fff;
     font-size: 1.4vmin;
     letter-spacing: .02em;
@@ -41,7 +41,7 @@
     &:focus-visible {
         outline: none;
         border-color: #f00;
-        box-shadow: 0 0 0 .3vmin rgba(255,0,0,.55);
+        box-shadow: 0 0 0 .3vmin rgba(255, 0, 0, .55);
     }
 
 }
@@ -65,7 +65,7 @@
     position: absolute;
     top: 1vmin;
     right: -25vmin;
-    width: 30vmin;
+    width: 40vmin;
     display: flex;
     flex-direction: column;
     gap: 0.8vmin;

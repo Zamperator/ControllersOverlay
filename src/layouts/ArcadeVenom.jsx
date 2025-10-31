@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef } from "react"
 import "../styles/devices/ArcadeVenom.css"
 import {getControllerSetup} from "@/config/config";
+import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
 
 export default function ArcadeVenom() {
     const stickBall = useRef(null)
@@ -20,18 +21,17 @@ export default function ArcadeVenom() {
         12: "PSButton"  // großer Playstation-Button
     }), [])
 
-    const setup = getControllerSetup('arcadevenom')
+    const activeController = useMemo(() => makeActiveGamepadPicker({timeoutMs: 2000, deadzone: .15}), [])
 
     useEffect(() => {
-        function update() {
-            const pads = navigator.getGamepads()
-            const gp = Array.from(pads).find(
-                p => p && setup.getRegEx().test(p.id)
-            )
+        let raf;
 
+        function update() {
+            const pads = navigator.getGamepads?.() || [];
+            const gp = activeController(pads)
             if (!gp) {
-                requestAnimationFrame(update)
-                return
+                raf = requestAnimationFrame(update);
+                return;
             }
 
             // === Stick Movement (Ball) ===
@@ -81,10 +81,13 @@ export default function ArcadeVenom() {
                 }
             })
 
-            requestAnimationFrame(update)
+            raf = requestAnimationFrame(update);
         }
 
         update()
+
+        return () => cancelAnimationFrame(raf);
+
     }, [buttonMap])
 
     return (

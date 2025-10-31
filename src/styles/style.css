@@ -25,6 +25,7 @@
     --btn-active-bg: rgba(0, 188, 212, 0.2);
     --btn-active-color: #00bcd4;
     --btn-active-border: #00bcd4;
+    color-scheme: dark light;
 }
 
 body {

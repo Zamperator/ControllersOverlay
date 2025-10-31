@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useMemo} from "react"
 import "../styles/devices/Genesis.css"
-import {getControllerSetup} from "@/config/config";
+import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
 
 export default function Genesis() {
     const dpad = useRef(null)
@@ -22,18 +22,17 @@ export default function Genesis() {
         15: "dpadRight",
     }), [])
 
-    const setup = getControllerSetup('genesis')
+    const activeController = useMemo(() => makeActiveGamepadPicker({timeoutMs: 2000, deadzone: .15}), [])
 
     useEffect(() => {
         let raf
 
         function update() {
-            const pads = navigator.getGamepads ? navigator.getGamepads() : []
-            // Suche Controller per Vendor/Product ID
-            const gp = Array.from(pads).find(p => p && setup.getRegEx().test(p.id))
+            const pads = navigator.getGamepads?.() || [];
+            const gp = activeController(pads)
             if (!gp) {
-                raf = requestAnimationFrame(update)
-                return
+                raf = requestAnimationFrame(update);
+                return;
             }
 
             // === BUTTONS ===

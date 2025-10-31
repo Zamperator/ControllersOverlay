@@ -4,37 +4,6 @@ import "../styles/MenuPanel.css"
 import { L8N } from "../lib/Localization"
 import ctrlConfig from "@/config/ctrlConfig";
 
-// Helper: Regex-Input parsen und validieren
-function parseRegexInput(input) {
-    if (typeof input !== "string") {
-        return { valid: false }
-    }
-
-    const s = input.trim()
-    if (s === "") {
-        // Leeres Feld erlaubt: löscht die Regex
-        return { valid: true, source: "", flags: "" }
-    }
-
-    let source = s
-    let flags = ""
-
-    // /pattern/flags – Syntax unterstützen
-    if (s.startsWith("/") && s.lastIndexOf("/") > 0) {
-        const last = s.lastIndexOf("/")
-        source = s.slice(1, last)
-        flags = s.slice(last + 1)
-    }
-
-    try {
-        // Testweise kompilieren
-        new RegExp(source, flags)
-        return { valid: true, source, flags }
-    } catch (e) {
-        return { valid: false, error: String(e && e.message ? e.message : e) }
-    }
-}
-
 export default function MenuPanel({
                                       showDeviceSelect,
                                       setShowDeviceSelect,
@@ -47,6 +16,8 @@ export default function MenuPanel({
     const [theme, setTheme] = useState("")
     const [visible, setVisible] = useState(false)
     const [pinned, setPinned] = useState(false)
+    const [gamepads, setGamepads] = useState([])
+    const [selectedPadKey, setSelectedPadKey] = useState('')
 
     const cfg = getControllerSetup(activeSetup)
 
@@ -57,6 +28,49 @@ export default function MenuPanel({
         }
         return !!cfg?.themes
     }, [activeSetup, cfg])
+
+    function snapshotGamepads() {
+        const list = Array.from(navigator.getGamepads ? navigator.getGamepads() : [])
+            .filter(Boolean)
+            .map(gp => ({
+                key: `${gp.index}:${gp.id}`,
+                index: gp.index,
+                id: gp.id,
+                mapping: gp.mapping || 'standard',
+                buttons: gp.buttons?.length || 0,
+                axes: gp.axes?.length || 0,
+                label: gp.id?.trim() || `Gamepad ${gp.index}`
+            }))
+            // stabile Sortierung: zuerst „standard“, dann Name, dann Index
+            .sort((a, b) => (a.mapping === b.mapping ? 0 : a.mapping === 'standard' ? -1 : 1)
+                || a.label.localeCompare(b.label)
+                || a.index - b.index)
+        setGamepads(list)
+        return list
+    }
+
+    function loadStoredPadKey() {
+        // bevorzugt ctrlConfig, sonst localStorage
+        try {
+            const idx = ctrlConfig.get?.('input', 'gamepadIndex')
+            const id = ctrlConfig.get?.('input', 'gamepadId')
+            if (typeof idx === 'number' && id) return `${idx}:${id}`
+        } catch {}
+        const k = localStorage.getItem('arcadeSelectedGamepadKey')
+        return k || ''
+    }
+
+    function persistPadSelection(pad) {
+        try {
+            ctrlConfig.set?.('input', 'gamepadIndex', pad?.index ?? null)
+            ctrlConfig.set?.('input', 'gamepadId', pad?.id ?? '')
+        } catch {}
+        if (pad) {
+            localStorage.setItem('arcadeSelectedGamepadKey', pad.key)
+        } else {
+            localStorage.removeItem('arcadeSelectedGamepadKey')
+        }
+    }
 
     // === Initialisierung: URL > localStorage ===
     useEffect(() => {
@@ -126,6 +140,57 @@ export default function MenuPanel({
         }
     }, [setDebug])
 
+    useEffect(() => {
+        const initial = snapshotGamepads()
+        // vorhandene Auswahl wiederherstellen
+        const storedKey = loadStoredPadKey()
+        if (storedKey) {
+            const hit = initial.find(g => g.key === storedKey)
+            if (hit) setSelectedPadKey(storedKey)
+            else persistPadSelection(null) // nicht mehr vorhanden
+        }
+
+        function onConnect() {
+            const list = snapshotGamepads()
+            // falls nix gewählt war, aber nur 1 Pad da ist → auto-select
+            if (!selectedPadKey && list.length === 1) {
+                setSelectedPadKey(list[0].key)
+                persistPadSelection(list[0])
+            }
+        }
+        function onDisconnect() {
+            const list = snapshotGamepads()
+            if (selectedPadKey && !list.find(g => g.key === selectedPadKey)) {
+                // ausgewähltes Pad ist weg
+                setSelectedPadKey('')
+                persistPadSelection(null)
+            }
+        }
+
+        window.addEventListener('gamepadconnected', onConnect)
+        window.addEventListener('gamepaddisconnected', onDisconnect)
+        return () => {
+            window.removeEventListener('gamepadconnected', onConnect)
+            window.removeEventListener('gamepaddisconnected', onDisconnect)
+        }
+    }, []) // nur einmal
+
+    function handleInputSelectChange(e) {
+        const key = e.target.value
+        setSelectedPadKey(key)
+        const pad = gamepads.find(g => g.key === key)
+        persistPadSelection(pad || null)
+    }
+
+    function handleRefreshPads() {
+        const list = snapshotGamepads()
+        // Re-select falls vorhanden, sonst aufräumen
+        if (selectedPadKey && !list.find(g => g.key === selectedPadKey)) {
+            setSelectedPadKey('')
+            persistPadSelection(null)
+        }
+    }
+
     function handleThemeChange(event) {
         const value = event.target.value
         setTheme(value)
@@ -179,28 +244,6 @@ export default function MenuPanel({
         if (!pinned) {
             setVisible(false)
         }
-    }
-
-    function handleRegexChange(e) {
-        const raw = e.target.value
-
-        if (!activeSetup) {
-            return
-        }
-
-        const res = parseRegexInput(raw)
-
-        if (!res.valid) {
-            e.target.setCustomValidity(L8N.get("regex_invalid") || "Invalid regular expression")
-            e.target.reportValidity()
-            return
-        }
-
-        e.target.setCustomValidity("")
-
-        // Einheitlich speichern: wenn Flags vorhanden, benutze /src/flags, sonst nur src
-        const storeValue = res.flags ? `/${res.source}/${res.flags}` : res.source
-        ctrlConfig.set(activeSetup.toLowerCase(), "regex", storeValue)
     }
 
     // Links nur anzeigen, wenn sichtbar oder gepinnt
@@ -284,28 +327,6 @@ export default function MenuPanel({
                     </select>
                 </div>
 
-                {cfg && (
-                    <div className="menu-section">
-                        <label htmlFor="deviceRegex">{L8N.get('Regex')}:</label>
-                        <input
-                            id="deviceRegex"
-                            type={"text"}
-                            value={cfg?.getRegEx() ?? ''}
-                            readOnly={true}
-                        />
-                    </div>
-                )}
-
-                <div className="menu-section debug-toggle">
-                    <label htmlFor="debugToggle">{L8N.get("debug.title")}:</label>
-                    <input
-                        id="debugToggle"
-                        type="checkbox"
-                        checked={debug}
-                        onChange={handleDebugChange}
-                    />
-                </div>
-
                 {/* Menü anpinnen */}
                 <div className="menu-section pin-toggle">
                     <label htmlFor="pinToggle">{L8N.get("always_pin_menu") || "Menü anpinnen"}:</label>
@@ -314,6 +335,17 @@ export default function MenuPanel({
                         type="checkbox"
                         checked={pinned}
                         onChange={handlePinChange}
+                    />
+                </div>
+
+                {/* Debug */}
+                <div className="menu-section debug-toggle">
+                    <label htmlFor="debugToggle">{L8N.get("debug.title")}:</label>
+                    <input
+                        id="debugToggle"
+                        type="checkbox"
+                        checked={debug}
+                        onChange={handleDebugChange}
                     />
                 </div>
             </div>

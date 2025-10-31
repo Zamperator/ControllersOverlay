@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import "../styles/devices/SNES.css";
-import {getControllerSetup} from "@/config/config";
+import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
 
 export default function SNES() {
     const buttons = useRef({});
@@ -18,14 +18,17 @@ export default function SNES() {
         9: "Start",
     }), []);
 
-    const setup = getControllerSetup('snes')
+    const activeController = useMemo(() => makeActiveGamepadPicker({ timeoutMs: 2000, deadzone: .15 }), [])
 
     useEffect(() => {
         let raf;
-        const loop = () => {
+        const update = () => {
             const pads = navigator.getGamepads?.() || [];
-            const gp = Array.from(pads).find(p => p && setup.getRegEx().test(p.id));
-            if (!gp) { raf = requestAnimationFrame(loop); return; }
+            const gp = activeController(pads)
+            if (!gp) {
+                raf = requestAnimationFrame(update);
+                return;
+            }
 
             // D-Pad (Axes)
             if (dpad.current) {
@@ -49,9 +52,9 @@ export default function SNES() {
                 if (el) el.classList.toggle("active", !!gp.buttons[idx]?.pressed);
             });
 
-            raf = requestAnimationFrame(loop);
+            raf = requestAnimationFrame(update);
         };
-        loop();
+        update();
         return () => cancelAnimationFrame(raf);
     }, [buttonMap]);
 

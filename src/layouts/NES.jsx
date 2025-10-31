@@ -1,6 +1,6 @@
 import React, {useEffect, useLayoutEffect, useMemo, useRef} from "react"
 import "../styles/devices/NES.css"
-import {getControllerSetup} from "@/config/config";
+import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
 
 export default function NES() {
     const dpad = useRef(null)        // bleibt auf .dpad-ring
@@ -19,7 +19,7 @@ export default function NES() {
         9: "Start"
     }), [])
 
-    const setup = getControllerSetup('nes')
+    const activeController = useMemo(() => makeActiveGamepadPicker({timeoutMs: 2000, deadzone: .15}), [])
 
     // === Pixel->Wrapper-Scaling: skaliert die Lobe proportional in die vmin-Box ===
     useLayoutEffect(() => {
@@ -79,10 +79,11 @@ export default function NES() {
     useEffect(() => {
         let raf
         const update = () => {
-            const pads = navigator.getGamepads?.() || []
-            const gp = Array.from(pads).find(p => p && setup.getRegEx().test(p.id))
+            const pads = navigator.getGamepads?.() || [];
+            const gp = activeController(pads)
             if (!gp) {
-                return (raf = requestAnimationFrame(update))
+                raf = requestAnimationFrame(update);
+                return;
             }
 
             if (dpad.current) {

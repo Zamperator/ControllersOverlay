@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react"
 import "../styles/devices/GameCube.css"
-import {getControllerSetup} from "@/config/config";
+import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
 
 export default function GameCube() {
     const dpad = useRef(null)
@@ -39,7 +39,15 @@ export default function GameCube() {
 
     // helper: clamp
     const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-    const setup = getControllerSetup('gamecube')
+    const activeController = useMemo(() =>
+        makeActiveGamepadPicker({
+            deadzone: .25,
+            minScore: 1.0,
+            holdMs: 5000,
+            switchDebounceFrames: 6,
+            scoreMargin: 0.5
+        }), []
+    )
 
     useEffect(() => {
         let raf
@@ -93,11 +101,12 @@ export default function GameCube() {
         }
 
         const update = () => {
-            const pads = navigator.getGamepads?.() || []
-            const gp = Array.from(pads).find(p => p && setup.getRegEx().test(p.id))
+
+            const pads = navigator.getGamepads?.() || [];
+            const gp = activeController(pads)
             if (!gp) {
-                raf = requestAnimationFrame(update)
-                return
+                raf = requestAnimationFrame(update);
+                return;
             }
 
             // === Sticks ===
@@ -126,11 +135,8 @@ export default function GameCube() {
         }
 
         update()
-        return () => {
-            if (raf) {
-                cancelAnimationFrame(raf)
-            }
-        }
+        return () => cancelAnimationFrame(raf)
+
     }, [buttonMap])
 
     return (
