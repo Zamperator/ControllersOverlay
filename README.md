@@ -7,7 +7,7 @@
 **Author:** Zamperator
 
 ## Running example
-https://zamperia.de/controllers
+https://zamperia.de/controllers/?device=xbox
 
 ## Table of Contents
 - [Features](#features)
