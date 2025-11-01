@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useMemo, useState} from "react"
-import "../styles/devices/HotasX.css"
 import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
+import "../styles/devices/HotasX.css"
 
 export default function HotasX() {
 

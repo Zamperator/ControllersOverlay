@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react"
-import "../styles/devices/ArcadeVenom.css"
-import {getControllerSetup} from "@/config/config";
 import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
+import "../styles/devices/ArcadeVenom.css"
 
 export default function ArcadeVenom() {
     const stickBall = useRef(null)

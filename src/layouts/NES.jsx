@@ -1,6 +1,6 @@
 import React, {useEffect, useLayoutEffect, useMemo, useRef} from "react"
-import "../styles/devices/NES.css"
 import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
+import "../styles/devices/NES.css"
 
 export default function NES() {
     const dpad = useRef(null)        // bleibt auf .dpad-ring

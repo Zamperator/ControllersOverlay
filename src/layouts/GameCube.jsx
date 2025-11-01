@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react"
-import "../styles/devices/GameCube.css"
 import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
+import "../styles/devices/GameCube.css"
 
 export default function GameCube() {
     const dpad = useRef(null)

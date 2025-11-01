@@ -1,26 +1,32 @@
-import React, {useEffect, useState} from "react"
-import HotasX from "./layouts/HotasX"
-import T16000 from "./layouts/T16000"
-import ArcadeVenom from "./layouts/ArcadeVenom"
-import Xbox from "./layouts/Xbox"
-import SNES from "./layouts/SNES"
-import NES from "./layouts/NES"
-import N64 from "./layouts/N64"
-import GameCube from "./layouts/GameCube"
-import Genesis from "./layouts/Genesis"
-import DebugBox from "./components/DebugBox"
-import MenuPanel from "./components/MenuPanel"
-import {controllerSetups} from "./config/config"
-import {GamepadProvider, useGamepads} from "./hooks/GamepadContext"
-import "./styles/style.css"
-import {L8N} from "./lib/Localization"
-import HelpPanel from "@/components/HelpPanel";
+import React, {useEffect, useMemo, useState, lazy, Suspense} from 'react'
+import DebugBox from './components/DebugBox'
+import MenuPanel from './components/MenuPanel'
+import {controllerSetups} from './config/config'
+import {GamepadProvider, useGamepads} from './hooks/GamepadContext'
+import './styles/style.css'
+import {L8N} from './lib/Localization'
+import HelpPanel from '@/components/HelpPanel'
 
 const forcedDevice = null
 
+// Alle Layout-Komponenten dynamisch (lazy) aus /layouts/** laden
+// Erwartung: jede Datei exportiert default eine React-Komponente
+const layoutModules = import.meta.glob('./layouts/**/*.{jsx,tsx,js,ts}')
+
+function useLayoutsMap() {
+    return useMemo(() => {
+        return Object.fromEntries(
+            Object.entries(layoutModules).map(([path, loader]) => {
+                const name = path.split('/').pop().replace(/\.(jsx?|tsx?)$/, '')
+                return [name, lazy(loader)]
+            })
+        )
+    }, [])
+}
+
 function getDeviceFromUrl() {
     const params = new URLSearchParams(window.location.search)
-    const value = params.get("device")
+    const value = params.get('device')
     return value ? value.toLowerCase() : forcedDevice
 }
 
@@ -29,7 +35,7 @@ function AppWithProvider() {
 
     return (
         <GamepadProvider
-            enabled={debug}                               // <- hier wird gepollt oder nicht
+            enabled={debug} // Polling nur wenn Debug aktiv
             options={{intervalMs: 60, timeoutMs: 1500, deadzone: .22}}
         >
             <AppInner debug={debug} setDebug={setDebug}/>
@@ -37,12 +43,13 @@ function AppWithProvider() {
     )
 }
 
-function AppInner() {
+function AppInner({debug, setDebug}) {
     const {activeKey, hasAny} = useGamepads()
     const [activeSetup, setActiveSetup] = useState(null)
     const [showDeviceSelect, setShowDeviceSelect] = useState(false)
     const [showHelp, setShowHelp] = useState(false)
-    const [debug, setDebug] = useState(true)
+
+    const layouts = useLayoutsMap()
 
     const Menu = () => (
         <MenuPanel
@@ -52,7 +59,7 @@ function AppInner() {
             debug={debug}
             setDebug={setDebug}
             leftLinks={[
-                { label: L8N.get('help.title'), onClick: () => setShowHelp(true) }
+                {label: L8N.get('help.title'), onClick: () => setShowHelp(true)}
             ]}
         />
     )
@@ -72,51 +79,42 @@ function AppInner() {
         }
     }, [])
 
-    const layoutComponents = {
-        HotasX,
-        ArcadeVenom,
-        Xbox,
-        SNES,
-        NES,
-        N64,
-        GameCube,
-        Genesis,
-        T16000
-    }
-
     let SelectedLayout = null
     if (activeSetup) {
         const setup = controllerSetups[activeSetup.toLowerCase()]
-        if (setup && layoutComponents[setup.layout]) {
+        if (setup) {
             if (!setup.active) {
                 return (
-                    <div className="debug active">
+                    <div className='debug active'>
                         <Menu/>
-                        <strong>{L8N.get("error.device_currently_not_supported", [setup.name])}</strong>
+                        <strong>{L8N.get('error.device_currently_not_supported', [setup.name])}</strong>
                     </div>
                 )
             }
-            SelectedLayout = layoutComponents[setup.layout]
+            // Erwartet: setup.layout entspricht dem Dateinamen (z. B. 'Xbox' → ./layouts/Xbox.jsx)
+            SelectedLayout = layouts[setup.layout]
         }
     }
 
     if (!hasAny && !activeSetup) {
         return (
-            <div className="debug active">
+            <div className='debug active'>
                 <Menu/>
-                <strong>{L8N.get("error.no_devices_detected")}</strong>
+                <strong>{L8N.get('error.no_devices_detected')}</strong>
             </div>
         )
     }
 
     return (
-        <div id="overlay">
+        <div id='overlay'>
             <Menu/>
 
-            {SelectedLayout && <SelectedLayout/>}
+            <Suspense fallback={null}>
+                {SelectedLayout && <SelectedLayout/>}
+            </Suspense>
 
             {!SelectedLayout && !showDeviceSelect && (
-                <p style={{color: "#aaa"}}>{L8N.get("press_key_or_stick")}</p>
+                <p style={{color: '#aaa'}}>{L8N.get('press_key_or_stick')}</p>
             )}
 
             {debug && <DebugBox activeSetup={activeSetup} activeKey={activeKey}/>}
@@ -139,7 +137,5 @@ function AppInner() {
 }
 
 export default function App() {
-    return (
-        <AppWithProvider/>
-    )
+    return <AppWithProvider/>
 }

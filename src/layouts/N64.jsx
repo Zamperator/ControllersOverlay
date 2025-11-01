@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useRef} from "react"
-import "../styles/devices/N64.css"
 import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
+import "../styles/devices/N64.css"
 
 export default function N64() {
     const dpad = useRef(null)

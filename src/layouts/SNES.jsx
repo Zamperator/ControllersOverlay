@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import "../styles/devices/SNES.css";
 import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
+import "../styles/devices/SNES.css";
 
 export default function SNES() {
     const buttons = useRef({});

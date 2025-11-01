@@ -1,9 +1,9 @@
-// src/config/useCtrlConfig.js
-
 const STORAGE_KEY = 'ctrl'
 
 class CtrlConfig {
+
     constructor() {
+
         this.cache = this._readStore()
 
         if (typeof window !== 'undefined' && window.addEventListener) {

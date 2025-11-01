@@ -1,8 +1,8 @@
 import React, {useEffect, useRef, useMemo} from "react"
 import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
-import "../styles/devices/Genesis.css"
+import "../styles/devices/GenesisClassic.css"
 
-export default function Genesis() {
+export default function GenesisClassic() {
     const dpad = useRef(null)
     const buttons = useRef({})
 
@@ -11,10 +11,6 @@ export default function Genesis() {
         0: "B",
         1: "A",
         4: "C",
-        3: "X",
-        2: "Y",
-        5: "Z",
-        8: "Mode",
         9: "Start",
         12: "dpadUp",
         13: "dpadDown",
@@ -61,7 +57,7 @@ export default function Genesis() {
     }, [buttonMap])
 
     return (
-        <div className="overlay genesis">
+        <div className="overlay genesis-classic">
             <div className="controller-body">
 
                 {/* === D-PAD === */}
@@ -79,22 +75,11 @@ export default function Genesis() {
 
                 {/* === FACE BUTTONS === */}
                 <div className="face-buttons">
-                    <div className="row top">
-                        <div ref={el => buttons.current.X = el} className="btn x">X</div>
-                        <div ref={el => buttons.current.Y = el} className="btn y">Y</div>
-                        <div ref={el => buttons.current.Z = el} className="btn z">Z</div>
-                    </div>
-                    <div className="row bottom">
+                    <div className="row">
                         <div ref={el => buttons.current.A = el} className="btn a">A</div>
                         <div ref={el => buttons.current.B = el} className="btn b">B</div>
                         <div ref={el => buttons.current.C = el} className="btn c">C</div>
                     </div>
-                </div>
-
-                {/* === MODE BUTTON === */}
-                <div className="extra-buttons">
-                    <div ref={el => buttons.current.Mode = el} className="extra-btn"></div>
-                    <div className={"extra-label"}>MODE</div>
                 </div>
 
             </div>

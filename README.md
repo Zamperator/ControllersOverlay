@@ -3,8 +3,8 @@
 > Overlay & input visualizer for Twitch streams using the HTML5 Gamepad API.  
 > Built with React (JSX), styled with CSS3.
 
-**Version:** 0.1.8
-**Author:** Zamperator
+**Version:** 0.2.0
+**Author:** Christian "ZAM" Zamora
 
 ## Running example
 https://zamperia.de/controllers/?device=xbox
@@ -38,8 +38,10 @@ https://zamperia.de/controllers/?device=xbox
 - NES
 - N64
 - GameCube
-- Xbox One Controller
-- Mega Drive 6-Button Controller
+- Xbox One
+- PS5
+- Mega Drive Classic
+- Mega Drive 6-Button
 - Arcade sticks (various PS2/PS3/PS4 models)
 
 > More devices are planned—see the [Roadmap](#roadmap--todo).
@@ -63,6 +65,8 @@ yarn dev
 Open `http://localhost:3000`.
 
 > Connect your controller via USB/Bluetooth and trigger **at least one input** so the Gamepad API detects and activates the device.
+
+> You can easily create a new layout in ```/layouts/``` - This will be automatically integrated into App.jsx. And don't forget to make an entry in ```/config/config.js```.
 
 ## Production Build
 ```bash
@@ -108,10 +112,10 @@ public/
     - Close GPU/CPU-heavy tabs
 
 ## Roadmap / TODO
-- [ ] Add more controller layouts
-- [ ] Improve UI/UX (skins/themes, options)
-- [ ] Cleanup & refactor codebase and CSS
-- [ ] Configurable per-device mappings
+- [x] Add more controller layouts
+- [x] Improve UI/UX (skins/themes, options)
+- [x] Cleanup & refactor codebase and CSS
+- [ ] Move config data per device to each device module
 - [ ] Document OBS presets
 
 ## Contributing
@@ -119,6 +123,9 @@ Contributions welcome!
 - Open issues for bugs/feature requests
 - Submit PRs with clear descriptions
 - Follow project conventions (React/JSX, Yarn)
+
+## Thanks
+- Used https://www.image2clippath.com/ to create most of the controller shapes
 
 ## License
 MIT License

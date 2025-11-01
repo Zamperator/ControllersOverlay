@@ -1,19 +1,3 @@
-import ctrlConfig from './ctrlConfig.js'
-
-export const controllerDevices = {
-    hotasx: [],
-    arcadevenom: [],
-    xbox: [],
-    snes: [],
-    nes: [],
-    n64: [],
-    gamecube: [],
-    genesis: [],
-    t16000: [],
-    twcs: [],
-    pedals: [],
-}
-
 export const controllerSetups = {
     hotasx: {
         name: "Thrustmaster Hotas X",
@@ -27,8 +11,18 @@ export const controllerSetups = {
             ocean: "Ocean",
         }
     },
+    t16000: {
+        name: "Thrustmaster T.16000M + TWCS",
+        layout: "T16000",
+        active: true,
+    },
+    dual16000: {
+        name: "Thrustmaster T.16000M Dual",
+        layout: "DualT16000",
+        active: false,
+    },
     arcadevenom: {
-        name: "PS3/PS4 Arcade Joystick",
+        name: "Arcade Joystick (PS3/PS4)",
         layout: "ArcadeVenom",
         active: true,
         themes: {
@@ -41,9 +35,14 @@ export const controllerSetups = {
         }
     },
     xbox: {
-        name: "XBox Controller",
+        name: "XBox One",
         layout: "Xbox",
         active: true,
+    },
+    ps5: {
+        name: "PS5",
+        layout: "PS5",
+        active: false,
     },
     snes: {
         name: "SNES Controller",
@@ -69,19 +68,14 @@ export const controllerSetups = {
         active: true,
     },
     genesis: {
-        name: "Sega Mega Drive Controller",
+        name: "Mega Drive 6 Buttons",
         layout: "Genesis",
         active: true,
     },
-    t16000: {
-        name: "Thrustmaster T.16000M + TWCS",
-        layout: "T16000",
-        active: false,
-    },
-    dual16000: {
-        name: "Dual Thrustmaster T.16000M",
-        layout: "DualT16000",
-        active: false,
+    genesisclassic: {
+        name: "Mega Drive 3 Buttons",
+        layout: "GenesisClassic",
+        active: true,
     },
     pedals: {
         name: "Thrustmaster TFRP Pedals",

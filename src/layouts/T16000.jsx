@@ -1,5 +1,5 @@
-import React, {useEffect, useRef} from "react"
-import {getControllerSetup} from "../config/config";
+import React, {useEffect, useMemo, useRef} from "react"
+import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
 import "../styles/devices/T16000.css"
 
 export default function T16000() {
@@ -14,12 +14,22 @@ export default function T16000() {
     const sideParam = new URLSearchParams(window.location.search).get("side")
     const twcsSide = sideParam === "right" ? "right" : "left"
 
-    const setup = getControllerSetup('t16000')
+    const activeController = useMemo(() => makeActiveGamepadPicker({timeoutMs: 2000, deadzone: .15}), [])
 
     useEffect(() => {
+
+        let raf;
+
         function update() {
-            const pads = navigator.getGamepads()
-            const stick = [...pads].find(gp => gp && setup.getRegEx().test(gp.id))
+
+            const pads = navigator.getGamepads?.() || [];
+            const gp = activeController(pads)
+            if (!gp) {
+                raf = requestAnimationFrame(update);
+                return;
+            }
+
+            const stick = [...pads].find(gp => gp && /T16000/i.test(gp.id))
             const twcs = [...pads].find(gp => gp && /TWCS/i.test(gp.id))
 
             // === Stick ===
@@ -104,10 +114,11 @@ export default function T16000() {
                 })
             }
 
-            requestAnimationFrame(update)
+            raf = requestAnimationFrame(update)
         }
 
         update()
+        return () => cancelAnimationFrame(raf)
     }, [])
 
     return (

@@ -1,8 +1,8 @@
 import React, {useEffect, useRef, useMemo} from "react"
 import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
-import "../styles/devices/Xbox.css"
+import "../styles/devices/PS5.css"
 
-export default function Xbox() {
+export default function PS5() {
 
     const leftStickBase = useRef(null)
     const rightStickBase = useRef(null)
@@ -83,7 +83,7 @@ export default function Xbox() {
     }, [buttonMap])
 
     return (
-        <div className="overlay xbox">
+        <div className="overlay ps5">
             <div className="controller-body">
 
                 {/* Bumper + Trigger */}
@@ -135,10 +135,31 @@ export default function Xbox() {
 
                 {/* Face Buttons */}
                 <div className="face">
-                    <div ref={el => buttons.current.Y = el} className="btn y">Y</div>
-                    <div ref={el => buttons.current.B = el} className="btn b">B</div>
-                    <div ref={el => buttons.current.A = el} className="btn a">A</div>
-                    <div ref={el => buttons.current.X = el} className="btn x">X</div>
+                    <div ref={el => buttons.current.Y = el} className="btn y">
+                        <svg viewBox="-18 -16 140 140" role="img" aria-hidden="true">
+                            <polygon points="50,12 88,88 12,88" fill="none" stroke="currentColor" strokeWidth="10"
+                                     strokeLinejoin="round"/>
+                        </svg>
+                    </div>
+                    <div ref={el => buttons.current.B = el} className="btn b">
+                        <svg viewBox="-20 -20 140 140" role="img" aria-hidden="true">
+                            <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeWidth="10"/>
+                        </svg>
+                    </div>
+                    <div ref={el => buttons.current.A = el} className="btn a">
+                        <svg viewBox="-20 -20 140 140" role="img" aria-hidden="true">
+                            <line x1="20" y1="20" x2="80" y2="80" stroke="currentColor" strokeWidth="10"
+                                  strokeLinecap="round"/>
+                            <line x1="80" y1="20" x2="20" y2="80" stroke="currentColor" strokeWidth="10"
+                                  strokeLinecap="round"/>
+                        </svg>
+                    </div>
+                    <div ref={el => buttons.current.X = el} className="btn x">
+                        <svg viewBox="-20 -20 140 140" role="img" aria-hidden="true">
+                            <rect x="18" y="18" width="64" height="64" rx="8" ry="8" fill="none" stroke="currentColor"
+                                  strokeWidth="10"/>
+                        </svg>
+                    </div>
                 </div>
             </div>
         </div>
