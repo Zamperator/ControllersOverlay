@@ -8,16 +8,14 @@ export default defineConfig({
         include: '**/*.jsx',
     }), compression(), inspect()],
     build: {
-        outDir: "build", // falls du CRA-Kompatibilität brauchst
+        outDir: "build",
         rollupOptions: {
             output: {
-                entryFileNames: "assets/[name].[hash].js",
-                chunkFileNames: "assets/[name].[hash].js",
-                assetFileNames: "assets/[name].[hash][extname]",
+                manualChunks: () => 'bundle' // erzwingt einen JS-Chunk
             },
         },
     },
-    base: "/controllers/static/",
+    base: "./",
     resolve: {
         alias: {
             '@': '/src',
