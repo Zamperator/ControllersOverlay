@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useRef} from "react"
 import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
-import "../styles/devices/T16000.css"
+import "@/styles/devices/T16000.css"
 
 export default function T16000() {
     const stickInd = useRef(null)
@@ -18,12 +18,12 @@ export default function T16000() {
 
     useEffect(() => {
 
-        let raf;
+        let raf
 
         function update() {
 
-            const pads = navigator.getGamepads?.() || [];
-            const gp = activeController(pads)
+            const pads = navigator.getGamepads?.() || []
+            const gp = activeController(pads, null)
             if (!gp) {
                 raf = requestAnimationFrame(update);
                 return;
@@ -119,7 +119,7 @@ export default function T16000() {
 
         update()
         return () => cancelAnimationFrame(raf)
-    }, [])
+    }, [activeController])
 
     return (
         <div className={`overlay t16000 ${twcsSide}`}>

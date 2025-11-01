@@ -1,16 +1,16 @@
 export function makeActiveGamepadPicker(opts = {}) {
-    const deadzone   = opts.deadzone   ?? 0.25     // höher für GC-Adapter
+    const deadzone   = opts.deadzone   ?? 0.25     // higher for GC adapters
     const axisWeight = opts.axisWeight ?? 0.5
-    const minScore   = opts.minScore   ?? 1.0      // mehr als 1 Button oder deutliche Achsbewegung
-    const holdMs     = opts.holdMs     ?? 5000     // wie lange wir am letzten Pad „kleben“
-    const switchDebounceFrames = opts.switchDebounceFrames ?? 6 // so viele Frames in Folge muss newBest besser sein
-    const scoreMargin = opts.scoreMargin ?? 0.5    // um wieviel besser newBest sein muss, um Wechsel zu rechtfertigen
+    const minScore   = opts.minScore   ?? 1.0      // more than "1 button press" worth of activity
+    const holdMs     = opts.holdMs     ?? 5000     // how long to hold onto a disconnected pad
+    const switchDebounceFrames = opts.switchDebounceFrames ?? 6 // this many frames of stable better score to switch
+    const scoreMargin = opts.scoreMargin ?? 0.5    // how much better must the new pad be to count as a challenger
 
     const prevRef = new Map() // index -> { axes:[], buttons:[], timestamp }
     let currentKey = ''
     let holdUntil = 0
 
-    // Debounce-State für Wechsel
+    // Debounce state for challenger
     let challengerKey = ''
     let challengerFrames = 0
 
@@ -24,7 +24,7 @@ export function makeActiveGamepadPicker(opts = {}) {
 
         let score = 0
 
-        // Buttons: gedrückt zählen stark, reine State-Changes leicht
+        // Buttons: pushed counts stronger, pure state-changes light
         for (let i = 0; i < buttons.length; i++) {
             const isPressed  = !!buttons[i]?.pressed
             const wasPressed = !!prev?.buttons?.[i]?.pressed
@@ -32,7 +32,7 @@ export function makeActiveGamepadPicker(opts = {}) {
             else if (prev && isPressed !== wasPressed) score += 0.25
         }
 
-        // Axes: Delta über Deadzone
+        // Axes: Delta over Deadzone
         for (let i = 0; i < axes.length; i++) {
             const was = prev?.axes?.[i] ?? 0
             const is  = axes[i] ?? 0
@@ -40,7 +40,7 @@ export function makeActiveGamepadPicker(opts = {}) {
             if (delta > deadzone) score += (delta - deadzone) * axisWeight
         }
 
-        // WICHTIG: KEIN Timestamp-Bonus (GC-Adapter tickern im Idle)
+        // Important: No timestamp bonus (GC adapters tick in idle)
         return score
     }
 
@@ -61,7 +61,7 @@ export function makeActiveGamepadPicker(opts = {}) {
             const prev = prevRef.get(gp.index)
             const score = activityScore(prev, gp)
 
-            // Snapshot fürs nächste Frame
+            // Snapshot for the next frame
             prevRef.set(gp.index, {
                 axes: Array.isArray(gp.axes) ? gp.axes.slice() : [],
                 buttons: Array.isArray(gp.buttons) ? gp.buttons.map(b => ({ pressed: !!b?.pressed })) : [],
@@ -74,7 +74,7 @@ export function makeActiveGamepadPicker(opts = {}) {
             }
         }
 
-        // 1) Wenn der Nutzer ein Pad gewählt hat → das gewinnt, solange verbunden
+        // 1) If the user has a preferred pad → it wins, as long as it's connected
         if (preferredKey) {
             const pref = pads.find(p => keyOf(p) === preferredKey)
             if (pref) {
@@ -86,17 +86,17 @@ export function makeActiveGamepadPicker(opts = {}) {
             }
         }
 
-        // 2) Wenn wir bereits ein Pad haben und es ist noch da → sticky halten
+        // 2) If we have a currentKey and it's still present → hold it sticky
         if (currentKey && isPresent(pads, currentKey)) {
             const curr = pads.find(p => keyOf(p) === currentKey)
-            // Gibt es einen ernsthaften Herausforderer?
+            // Is there a serious challenger?
             if (best && keyOf(best) !== currentKey && bestScore >= minScore) {
-                // wie viel Aktivität hat das aktuelle Pad?
+                // how many activity does the current pad have?
                 const currPrev = prevRef.get(curr.index)
                 const currScore = activityScore(currPrev, curr)
 
                 if (bestScore >= currScore + scoreMargin) {
-                    // gleicher Challenger wie im letzten Frame?
+                    // same challenger as last frame?
                     if (challengerKey === keyOf(best)) {
                         challengerFrames++
                     } else {
@@ -104,7 +104,7 @@ export function makeActiveGamepadPicker(opts = {}) {
                         challengerFrames = 1
                     }
 
-                    // nur wechseln, wenn er stabil besser ist
+                    // Only switch if stable better
                     if (challengerFrames >= switchDebounceFrames) {
                         currentKey = challengerKey
                         holdUntil = t + holdMs
@@ -113,21 +113,21 @@ export function makeActiveGamepadPicker(opts = {}) {
                         return pads.find(p => keyOf(p) === currentKey) || null
                     }
                 } else {
-                    // nicht klar besser → Challenger verwerfen
+                    // reset debounce if needed
                     challengerKey = ''
                     challengerFrames = 0
                 }
             } else {
-                // kein Challenger → Ruhe bewahren
+                // no challenger → reset debounce
                 challengerKey = ''
                 challengerFrames = 0
             }
 
-            // aktuelle Auswahl behalten (ohne Timeout auf null zu fallen)
+            // keep currentKey and holdUntil as is (may extend hold time)
             return curr
         }
 
-        // 3) Noch kein currentKey? Bei echter Aktivität eins claimen.
+        // 3) No currentKey? If there's real activity, claim one.
         if (best && bestScore >= minScore) {
             currentKey = keyOf(best)
             holdUntil = t + holdMs
@@ -136,12 +136,12 @@ export function makeActiveGamepadPicker(opts = {}) {
             return best
         }
 
-        // 4) Als Fail-safe: Wenn wir kürzlich eins hatten und es noch da ist → behalten
+        // 4) Fail safe: recent pad still connected → keep it
         if (currentKey && t < holdUntil && isPresent(pads, currentKey)) {
             return pads.find(p => keyOf(p) === currentKey) || null
         }
 
-        // 5) Nichts aktiv
+        // 5) nothing is active
         return null
     }
 }

@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useRef} from "react"
 import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
-import "../styles/devices/N64.css"
+import "@/styles/devices/N64.css"
 
 export default function N64() {
     const dpad = useRef(null)
@@ -8,7 +8,7 @@ export default function N64() {
     const stickHat = useRef(null)
     const buttons = useRef({})
 
-    // Button-Index-Mapping deines Pads
+    // Button-Index-Mapping
     const buttonMap = useMemo(() => ({
         0: "cUp",
         1: "cRight",
@@ -43,7 +43,7 @@ export default function N64() {
 
         function update() {
             const pads = navigator.getGamepads?.() || [];
-            const gp = activeController(pads)
+            const gp = activeController(pads, null)
             if (!gp) {
                 raf = requestAnimationFrame(update);
                 return;
@@ -52,7 +52,7 @@ export default function N64() {
             // Stick (axes 0/1)
             setHat(gp.axes[0] ?? 0, gp.axes[1] ?? 0)
 
-            // D-Pad (Axis 9 Werte; inkl. Diagonalen)
+            // D-Pad (Axis 9 Values; incl. Diagonals)
             if (dpad.current) {
                 const v = gp.axes[9]
                 const up = near(v, -1.000)
@@ -84,7 +84,7 @@ export default function N64() {
 
         update()
         return () => cancelAnimationFrame(raf)
-    }, [buttonMap])
+    }, [activeController, buttonMap])
 
     return (
         <div className="overlay n64">

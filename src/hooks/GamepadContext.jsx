@@ -1,11 +1,20 @@
-import React, {
-    createContext, useContext, useEffect, useMemo, useRef, useState
-} from 'react'
-import { makeActiveGamepadPicker } from '@/lib/activeGamepad'
+import React, {createContext, useContext, useEffect, useMemo, useRef, useState} from 'react'
 
-const GamepadCtx = createContext({ pads: [], activeKey: '', hasAny: false })
+import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
 
-export function GamepadProvider({ children, options, enabled = true }) {
+const GamepadCtx = createContext({pads: [], activeKey: '', hasAny: false})
+
+/**
+ * GamepadProvider component.
+ *
+ * @param children
+ * @param options
+ * @param enabled
+ * @returns {JSX.Element}
+ * @constructor
+ */
+export function GamepadProvider({children, options, enabled = true}) {
+
     const picker = useMemo(() => makeActiveGamepadPicker({
         timeoutMs: options?.timeoutMs ?? 1500,
         deadzone: options?.deadzone ?? .22,
@@ -15,11 +24,11 @@ export function GamepadProvider({ children, options, enabled = true }) {
 
     const [pads, setPads] = useState([])
     const [activeKey, setActiveKey] = useState('')
-    const last = useRef({ padsJSON: '[]', activeKey: '' })
+    const last = useRef({padsJSON: '[]', activeKey: ''})
     const needRefresh = useRef(true)
     const rafRef = useRef(null)
 
-    // Wenn disabled, sofort Zustand leeren
+    // When disabled, clear state and stop any RAF
     useEffect(() => {
         if (!enabled) {
             if (rafRef.current) {
@@ -28,16 +37,22 @@ export function GamepadProvider({ children, options, enabled = true }) {
             }
             setPads([])
             setActiveKey('')
-            last.current = { padsJSON: '[]', activeKey: '' }
+            last.current = {padsJSON: '[]', activeKey: ''}
         }
     }, [enabled])
 
-    // Connect/Disconnect nur wenn enabled
+    // Connect/Disconnect only when enabled
     useEffect(() => {
-        if (!enabled) return
+        if (!enabled) {
+            return
+        }
 
-        const onConnect = () => { needRefresh.current = true }
-        const onDisconnect = () => { needRefresh.current = true }
+        const onConnect = () => {
+            needRefresh.current = true
+        }
+        const onDisconnect = () => {
+            needRefresh.current = true
+        }
         window.addEventListener('gamepadconnected', onConnect)
         window.addEventListener('gamepaddisconnected', onDisconnect)
         return () => {
@@ -46,9 +61,11 @@ export function GamepadProvider({ children, options, enabled = true }) {
         }
     }, [enabled])
 
-    // Polling-Loop nur wenn enabled
+    // Polling-Loop only when enabled
     useEffect(() => {
-        if (!enabled) return
+        if (!enabled) {
+            return
+        }
 
         const intervalMs = options?.intervalMs ?? 60
         let lastUpdate = 0
@@ -71,8 +88,8 @@ export function GamepadProvider({ children, options, enabled = true }) {
             const active = picker(list, options?.preferredKey)
             const newActiveKey = active ? `${active.index}:${active.id}` : ''
 
-            // nur bei Änderungen updaten (minimiert React work)
-            const slim = list.map(gp => ({ index: gp.index, id: gp.id, mapping: gp.mapping || '' }))
+            // only update state if something changed (to avoid re-renders)
+            const slim = list.map(gp => ({index: gp.index, id: gp.id, mapping: gp.mapping || ''}))
             const padsJSON = JSON.stringify(slim)
             if (padsJSON !== last.current.padsJSON) {
                 setPads(list)
@@ -88,7 +105,9 @@ export function GamepadProvider({ children, options, enabled = true }) {
 
         rafRef.current = requestAnimationFrame(loop)
         return () => {
-            if (rafRef.current) cancelAnimationFrame(rafRef.current)
+            if (rafRef.current) {
+                cancelAnimationFrame(rafRef.current)
+            }
             rafRef.current = null
         }
     }, [enabled, picker, options?.intervalMs, options?.preferredKey])

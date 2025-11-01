@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
-import "../styles/devices/SNES.css";
+import "@/styles/devices/SNES.css";
 
 export default function SNES() {
     const buttons = useRef({});
     const dpad = useRef(null);
 
-    // dein Mapping bleibt gleich
+    // Controller Mapping
     const buttonMap = useMemo(() => ({
         0: "B",
         1: "A",
@@ -24,7 +24,7 @@ export default function SNES() {
         let raf;
         const update = () => {
             const pads = navigator.getGamepads?.() || [];
-            const gp = activeController(pads)
+            const gp = activeController(pads, null)
             if (!gp) {
                 raf = requestAnimationFrame(update);
                 return;
@@ -56,7 +56,7 @@ export default function SNES() {
         };
         update();
         return () => cancelAnimationFrame(raf);
-    }, [buttonMap]);
+    }, [activeController, buttonMap]);
 
     return (
         <div className="overlay snes theme-pal">

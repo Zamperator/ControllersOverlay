@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react"
-import "../styles/DebugBox.css"
-import { L8N } from "../lib/Localization"
+import React, {useEffect, useState} from "react"
+import {L8N} from "@/lib/Localization"
+import "@/styles/components/DebugBox.css"
 
-export default function DebugBox({ activeSetup, activeKey }) {
+export default function DebugBox({activeSetup, activeKey}) {
     const [debugText, setDebugText] = useState("")
-    const [perf, setPerf] = useState({ fps: 0, ram: 0, cpu: 0 })
+    const [perf, setPerf] = useState({fps: 0, ram: 0, cpu: 0})
 
     // Performance-Anzeige (FPS / RAM / einfache CPU-Schätzung)
     useEffect(() => {
@@ -17,7 +17,9 @@ export default function DebugBox({ activeSetup, activeKey }) {
             lastFrame = now
 
             frameTimes.push(delta)
-            if (frameTimes.length > 60) frameTimes.shift()
+            if (frameTimes.length > 60) {
+                frameTimes.shift()
+            }
 
             const avg = frameTimes.reduce((a, b) => a + b, 0) / frameTimes.length
             const fps = Math.max(0, Math.round(1000 / avg))
@@ -32,7 +34,7 @@ export default function DebugBox({ activeSetup, activeKey }) {
                 ramMB = Math.max(0, Math.round(used))
             }
 
-            setPerf({ fps, ram: ramMB, cpu: cpuLoad })
+            setPerf({fps, ram: ramMB, cpu: cpuLoad})
             raf = requestAnimationFrame(updatePerf)
         }
 
@@ -66,7 +68,9 @@ export default function DebugBox({ activeSetup, activeKey }) {
 
                 lines.push(header)
                 lines.push(`ID: ${gp.id}`)
-                if (gp.mapping) lines.push(`Mapping: ${gp.mapping}`)
+                if (gp.mapping) {
+                    lines.push(`Mapping: ${gp.mapping}`)
+                }
 
                 const totalAxes = Array.isArray(gp.axes) ? gp.axes.length : 0
                 const axesPreview = totalAxes > 4 ? gp.axes.slice(0, 4) : gp.axes || []

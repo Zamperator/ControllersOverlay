@@ -233,7 +233,7 @@
         margin: 65px 0 0 120px;
     }
 
-    /* ===== Teller (face button island) mit Variable ===== */
+    /* ===== Teller (face button island) with variable ===== */
 
     .face-btns {
         width: 225px;
@@ -248,7 +248,7 @@
         /*box-shadow: inset -21px 8px 9px -14px #aaa;*/
     }
 
-    /* ===== Buttons: X / Y (hell), A / B (dunkel) mit per-Button-Variablen ===== */
+    /* ===== Buttons: X / Y (light), A / B (dark) with per-Button-Variables ===== */
 
     .btn-x, .btn-y, .btn-a, .btn-b {
         width: 45px;

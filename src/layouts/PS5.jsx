@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useMemo} from "react"
 import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
-import "../styles/devices/PS5.css"
+import "@/styles/devices/PS5.css"
 
 export default function PS5() {
 
@@ -37,7 +37,7 @@ export default function PS5() {
         let raf
         const update = () => {
             const pads = navigator.getGamepads?.() || [];
-            const gp = activeController(pads)
+            const gp = activeController(pads, null)
             if (!gp) {
                 raf = requestAnimationFrame(update);
                 return;
@@ -59,7 +59,7 @@ export default function PS5() {
             moveStick(leftStickBase.current, leftStickHat.current, 0, 1)
             moveStick(rightStickBase.current, rightStickHat.current, 2, 3)
 
-            // === Buttons (inkl. Trigger) ===
+            // === Buttons (incl. Trigger) ===
             Object.entries(buttonMap).forEach(([i, name]) => {
                 const el = buttons.current[name]
                 if (el) {
@@ -80,7 +80,7 @@ export default function PS5() {
 
         update()
         return () => raf && cancelAnimationFrame(raf)
-    }, [buttonMap])
+    }, [activeController, buttonMap])
 
     return (
         <div className="overlay ps5">

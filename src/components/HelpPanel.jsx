@@ -1,6 +1,15 @@
 import React, {useEffect} from 'react'
-import '../styles/HelpPanel.css'
+import '@/styles/components/HelpPanel.css'
 
+/**
+ * Help panel component.
+ * @param open
+ * @param onClose
+ * @param title
+ * @param children
+ * @returns {JSX.Element|null}
+ * @constructor
+ */
 export default function HelpPanel({open, onClose, title = 'Hilfe', children}) {
     useEffect(() => {
         if (!open) {

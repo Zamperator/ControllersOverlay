@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react"
 import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
-import "../styles/devices/GameCube.css"
+import "@/styles/devices/GameCube.css"
 
 export default function GameCube() {
     const dpad = useRef(null)
@@ -34,6 +34,7 @@ export default function GameCube() {
     }), [])
 
     // === Config ===
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const AXIS_BIAS = { 0: 0.0, 1: 0.249, 2: 0.0, 3: 0.0 };   // dein Offset: Achse 1 = +0.249
     const SMOOTH = 0.35;                                      // 0 = sofort, 1 = sehr träge
 
@@ -52,33 +53,42 @@ export default function GameCube() {
     useEffect(() => {
         let raf
 
-        // per-Stick State für Glättung
+        // per stick for smoothing
         const _stickState = new WeakMap(); // baseEl -> {x,y}
 
         // helper: Bias + Deadzone (radial) + Re-Scaling
         function normalizeAxes(gp, xAxis, yAxis, dz) {
-            // Bias abziehen
+            // Bias decreement
             let x = (gp.axes[xAxis] ?? 0) - (AXIS_BIAS[xAxis] ?? 0);
             let y = (gp.axes[yAxis] ?? 0) - (AXIS_BIAS[yAxis] ?? 0);
 
-            // hart auf -1..1 einfangen (falls Pads überziehen)
+            // hard to -1..1 clamp (because of bias)
             x = clamp(x, -1, 1);
             y = clamp(y, -1, 1);
 
-            // radialer Deadzone mit Re-Scaling (sauberer als pro-Achse)
+            // radial Deadzone with re-scaling to full range
             const r = Math.hypot(x, y);
             if (r < dz) return { x: 0, y: 0 };
             const scale = (r - dz) / (1 - dz);
             const nx = (x / (r || 1)) * scale;
             const ny = (y / (r || 1)) * scale;
 
-            // sehr kleine Reste killen
+            // small values to zero
             return {
                 x: Math.abs(nx) < 1e-3 ? 0 : nx,
                 y: Math.abs(ny) < 1e-3 ? 0 : ny
             };
         }
 
+        /**
+         * Move Stick Hat within Base according to GP axes
+         * @param base
+         * @param hat
+         * @param gp
+         * @param xAxis
+         * @param yAxis
+         * @param deadzone
+         */
         function moveStick(base, hat, gp, xAxis, yAxis, { deadzone = 0.12 } = {}) {
             if (!base || !hat) return;
 
@@ -103,7 +113,7 @@ export default function GameCube() {
         const update = () => {
 
             const pads = navigator.getGamepads?.() || [];
-            const gp = activeController(pads)
+            const gp = activeController(pads, null)
             if (!gp) {
                 raf = requestAnimationFrame(update);
                 return;
@@ -123,7 +133,7 @@ export default function GameCube() {
                 el.classList.toggle("active", pressed)
             })
 
-            // === D-Pad als Klassen am Container (wie bei Xbox) ===
+            // === D-Pad as classes ===
             if (dpad.current) {
                 dpad.current.classList.toggle("active-up", !!gp.buttons[12]?.pressed)
                 dpad.current.classList.toggle("active-down", !!gp.buttons[13]?.pressed)
@@ -137,7 +147,7 @@ export default function GameCube() {
         update()
         return () => cancelAnimationFrame(raf)
 
-    }, [buttonMap])
+    }, [AXIS_BIAS, activeController, buttonMap])
 
     return (
         <div className="overlay gamecube">

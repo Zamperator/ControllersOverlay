@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react"
+import React, {useEffect, useMemo, useState} from "react"
 import {controllerSetups, getControllerSetup} from "../config/config"
-import "../styles/MenuPanel.css"
-import { L8N } from "../lib/Localization"
+import {L8N} from "../lib/Localization"
 import ctrlConfig from "@/config/ctrlConfig";
+
+import "../styles/components/MenuPanel.css"
 
 export default function MenuPanel({
                                       showDeviceSelect,
@@ -16,7 +17,6 @@ export default function MenuPanel({
     const [theme, setTheme] = useState("")
     const [visible, setVisible] = useState(false)
     const [pinned, setPinned] = useState(false)
-    const [gamepads, setGamepads] = useState([])
     const [selectedPadKey, setSelectedPadKey] = useState('')
 
     const cfg = getControllerSetup(activeSetup)
@@ -30,7 +30,7 @@ export default function MenuPanel({
     }, [activeSetup, cfg])
 
     function snapshotGamepads() {
-        const list = Array.from(navigator.getGamepads ? navigator.getGamepads() : [])
+        return Array.from(navigator.getGamepads ? navigator.getGamepads() : [])
             .filter(Boolean)
             .map(gp => ({
                 key: `${gp.index}:${gp.id}`,
@@ -45,8 +45,6 @@ export default function MenuPanel({
             .sort((a, b) => (a.mapping === b.mapping ? 0 : a.mapping === 'standard' ? -1 : 1)
                 || a.label.localeCompare(b.label)
                 || a.index - b.index)
-        setGamepads(list)
-        return list
     }
 
     function loadStoredPadKey() {
@@ -54,8 +52,11 @@ export default function MenuPanel({
         try {
             const idx = ctrlConfig.get?.('input', 'gamepadIndex')
             const id = ctrlConfig.get?.('input', 'gamepadId')
-            if (typeof idx === 'number' && id) return `${idx}:${id}`
-        } catch {}
+            if (typeof idx === 'number' && id) {
+                return `${idx}:${id}`
+            }
+        } catch {
+        }
         const k = localStorage.getItem('arcadeSelectedGamepadKey')
         return k || ''
     }
@@ -64,10 +65,12 @@ export default function MenuPanel({
         try {
             ctrlConfig.set?.('input', 'gamepadIndex', pad?.index ?? null)
             ctrlConfig.set?.('input', 'gamepadId', pad?.id ?? '')
-        } catch {}
+        } catch {
+        }
         if (pad) {
             localStorage.setItem('arcadeSelectedGamepadKey', pad.key)
-        } else {
+        }
+        else {
             localStorage.removeItem('arcadeSelectedGamepadKey')
         }
     }
@@ -81,7 +84,8 @@ export default function MenuPanel({
 
         if (urlTheme) {
             setTheme(urlTheme)
-        } else {
+        }
+        else {
             if (storedTheme) {
                 setTheme(storedTheme)
             }
@@ -113,7 +117,8 @@ export default function MenuPanel({
         if (!theme) {
             document.documentElement.removeAttribute("data-theme")
             localStorage.removeItem("arcadeTheme")
-        } else {
+        }
+        else {
             document.documentElement.setAttribute("data-theme", theme)
             localStorage.setItem("arcadeTheme", theme)
         }
@@ -121,7 +126,8 @@ export default function MenuPanel({
         const params = new URLSearchParams(window.location.search)
         if (theme) {
             params.set("theme", theme)
-        } else {
+        }
+        else {
             params.delete("theme")
         }
         const newUrl = `${window.location.pathname}?${params.toString()}`
@@ -134,7 +140,8 @@ export default function MenuPanel({
         if (storedDebug === null) {
             setDebug(false)
             localStorage.setItem("arcadeDebug", "false")
-        } else {
+        }
+        else {
             const parsed = storedDebug === "true"
             setDebug(parsed)
         }
@@ -146,8 +153,12 @@ export default function MenuPanel({
         const storedKey = loadStoredPadKey()
         if (storedKey) {
             const hit = initial.find(g => g.key === storedKey)
-            if (hit) setSelectedPadKey(storedKey)
-            else persistPadSelection(null) // nicht mehr vorhanden
+            if (hit) {
+                setSelectedPadKey(storedKey)
+            }
+            else {
+                persistPadSelection(null)
+            } // nicht mehr vorhanden
         }
 
         function onConnect() {
@@ -158,6 +169,7 @@ export default function MenuPanel({
                 persistPadSelection(list[0])
             }
         }
+
         function onDisconnect() {
             const list = snapshotGamepads()
             if (selectedPadKey && !list.find(g => g.key === selectedPadKey)) {
@@ -173,23 +185,7 @@ export default function MenuPanel({
             window.removeEventListener('gamepadconnected', onConnect)
             window.removeEventListener('gamepaddisconnected', onDisconnect)
         }
-    }, []) // nur einmal
-
-    function handleInputSelectChange(e) {
-        const key = e.target.value
-        setSelectedPadKey(key)
-        const pad = gamepads.find(g => g.key === key)
-        persistPadSelection(pad || null)
-    }
-
-    function handleRefreshPads() {
-        const list = snapshotGamepads()
-        // Re-select falls vorhanden, sonst aufräumen
-        if (selectedPadKey && !list.find(g => g.key === selectedPadKey)) {
-            setSelectedPadKey('')
-            persistPadSelection(null)
-        }
-    }
+    }, [selectedPadKey]) // nur einmal
 
     function handleThemeChange(event) {
         const value = event.target.value
@@ -208,7 +204,8 @@ export default function MenuPanel({
             const nextAllowsTheme = !!controllerSetups[selected]?.themes
             if (nextAllowsTheme && theme) {
                 params.set("theme", theme)
-            } else {
+            }
+            else {
                 params.delete("theme")
             }
 
@@ -267,11 +264,12 @@ export default function MenuPanel({
                                 data-id={lnk?.id || ""}
                                 data-action={lnk?.action || ""}
                                 title={lnk?.title || lnk?.label || "Link"}
-                                onClick={lnk?.onClick || (() => {})}
+                                onClick={lnk?.onClick || (() => {
+                                })}
                             >
                                 {lnk?.icon ? (
                                     typeof lnk.icon === "string" && lnk.icon.startsWith("<svg")
-                                        ? <span className="pill-icon" dangerouslySetInnerHTML={{ __html: lnk.icon }} />
+                                        ? <span className="pill-icon" dangerouslySetInnerHTML={{__html: lnk.icon}}/>
                                         : <span className="pill-icon" aria-hidden="true">★</span>
                                 ) : (
                                     <span className="pill-icon" aria-hidden="true">★</span>

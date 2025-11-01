@@ -1,7 +1,7 @@
 .overlay.t16000 {
-    /* === Theme (T16000: Schwarz/Orange) === */
+    /* === Theme (T16000: Black/Orange) === */
     --bg: rgba(0, 0, 0, 0.88);
-    --line: #222;                /* dunkle Linien */
+    --line: #222;                /* darker lines */
     --active: #ff7a00;           /* T16000-Orange */
     --text: #eee;
     --btn-bg: #181818;
@@ -22,7 +22,7 @@
     .left  { flex-direction: row-reverse }
     .right { flex-direction: row }
 
-    /* =============== Gemeinsame Controls (scoped!) =============== */
+    /* =============== Controls (scoped!) =============== */
     .button {
         width: 4vmin;
         height: 4vmin;

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react"
 import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
-import "../styles/devices/ArcadeVenom.css"
+import "@/styles/devices/ArcadeVenom.css"
 
 export default function ArcadeVenom() {
     const stickBall = useRef(null)
@@ -27,7 +27,7 @@ export default function ArcadeVenom() {
 
         function update() {
             const pads = navigator.getGamepads?.() || [];
-            const gp = activeController(pads)
+            const gp = activeController(pads, null)
             if (!gp) {
                 raf = requestAnimationFrame(update);
                 return;

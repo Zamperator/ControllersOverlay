@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useMemo, useState} from "react"
 import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
-import "../styles/devices/HotasX.css"
+import "@/styles/devices/HotasX.css"
 
 export default function HotasX() {
 
@@ -35,7 +35,7 @@ export default function HotasX() {
 
         function update() {
             const pads = navigator.getGamepads?.() || [];
-            const gp = activeController(pads)
+            const gp = activeController(pads, null)
             if (!gp) {
                 raf = requestAnimationFrame(update);
                 return;
@@ -66,15 +66,15 @@ export default function HotasX() {
                 const pct = Math.round(z * 100)   // –100 … +100
                 setThrottlePct(pct)
 
-                // Höhe (invertiert, damit Hoch = Hoch)
+                // Height (inverted to match physical movement)
                 const heightPct = (pct + 100) / 200 * 100
                 throttleFill.current.style.height = `${heightPct}%`
 
-                // Farbe (Hue 0 = Rot → 120 = Grün)
+                // Color (Hue 0 = Rot → 120 = Grün)
                 const hue = (pct + 100) * 0.6     // -100 = 0, 0 = 60, +100 = 120
                 throttleFill.current.style.backgroundColor = `hsl(${hue}, 100%, 45%, 0.7)`
 
-                // Textfarbe anpassen (Gelb = hell, sonst dunkel)
+                // Text color adjustment
                 /*const throttlePercentEl = throttleFill.current.parentElement.querySelector(".throttle-percent")
                 if (throttlePercentEl) {
                     if (pct > -20 && pct < 20) {
@@ -132,7 +132,7 @@ export default function HotasX() {
                     if (lastHatAngle.current !== null) {
                         const diff = angle - lastHatAngle.current
 
-                        // Sprung über 360° → korrigieren
+                        // Jump over 360° → correct
                         if (diff > 180) {
                             angle -= 360
                         }
@@ -168,7 +168,7 @@ export default function HotasX() {
 
         return () => cancelAnimationFrame(raf);
 
-    }, [buttonMap])
+    }, [activeController, buttonMap])
 
     return (
         <div className="overlay hotasx">

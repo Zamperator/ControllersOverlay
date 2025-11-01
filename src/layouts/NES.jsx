@@ -1,6 +1,6 @@
 import React, {useEffect, useLayoutEffect, useMemo, useRef} from "react"
 import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
-import "../styles/devices/NES.css"
+import "@/styles/devices/NES.css"
 
 export default function NES() {
     const dpad = useRef(null)        // bleibt auf .dpad-ring
@@ -21,7 +21,7 @@ export default function NES() {
 
     const activeController = useMemo(() => makeActiveGamepadPicker({timeoutMs: 2000, deadzone: .15}), [])
 
-    // === Pixel->Wrapper-Scaling: skaliert die Lobe proportional in die vmin-Box ===
+    // Pixel -> Wrapper scaling: scales the lobe proportionally into the vmin box
     useLayoutEffect(() => {
 
         if (!dpadWrap.current || !dpadLobe.current) {
@@ -80,7 +80,7 @@ export default function NES() {
         let raf
         const update = () => {
             const pads = navigator.getGamepads?.() || [];
-            const gp = activeController(pads)
+            const gp = activeController(pads, null)
             if (!gp) {
                 raf = requestAnimationFrame(update);
                 return;
@@ -106,7 +106,7 @@ export default function NES() {
         }
         update()
         return () => cancelAnimationFrame(raf)
-    }, [buttonMap])
+    }, [activeController, buttonMap])
 
     return (
         <div className="overlay nes">

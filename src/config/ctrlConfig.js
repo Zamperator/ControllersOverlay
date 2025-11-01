@@ -1,5 +1,9 @@
 const STORAGE_KEY = 'ctrl'
 
+/**
+ * CtrlConfig
+ * A simple configuration manager that uses localStorage to persist data.
+ */
 class CtrlConfig {
 
     constructor() {

@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useMemo} from "react"
 import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
-import "../styles/devices/Xbox.css"
+import "@/styles/devices/Xbox.css"
 
 export default function Xbox() {
 
@@ -37,7 +37,7 @@ export default function Xbox() {
         let raf
         const update = () => {
             const pads = navigator.getGamepads?.() || [];
-            const gp = activeController(pads)
+            const gp = activeController(pads, null)
             if (!gp) {
                 raf = requestAnimationFrame(update);
                 return;
@@ -80,7 +80,7 @@ export default function Xbox() {
 
         update()
         return () => raf && cancelAnimationFrame(raf)
-    }, [buttonMap])
+    }, [activeController, buttonMap])
 
     return (
         <div className="overlay xbox">

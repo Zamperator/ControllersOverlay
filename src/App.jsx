@@ -1,16 +1,16 @@
 import React, {useEffect, useMemo, useState, lazy, Suspense} from 'react'
-import DebugBox from './components/DebugBox'
-import MenuPanel from './components/MenuPanel'
-import {controllerSetups} from './config/config'
-import {GamepadProvider, useGamepads} from './hooks/GamepadContext'
-import './styles/style.css'
-import {L8N} from './lib/Localization'
+import DebugBox from '@/components/DebugBox'
+import MenuPanel from '@/components/MenuPanel'
+import {controllerSetups} from '@/config/config'
+import {GamepadProvider, useGamepads} from '@/hooks/GamepadContext'
+import {L8N} from '@/lib/Localization'
 import HelpPanel from '@/components/HelpPanel'
+import '@/styles/style.css'
 
 const forcedDevice = null
 
-// Alle Layout-Komponenten dynamisch (lazy) aus /layouts/** laden
-// Erwartung: jede Datei exportiert default eine React-Komponente
+// Load all layout components dynamically (lazy) from /layouts/**
+// Expectation: each file exports a React component by default
 const layoutModules = import.meta.glob('./layouts/**/*.{jsx,tsx,js,ts}')
 
 function useLayoutsMap() {
@@ -24,12 +24,22 @@ function useLayoutsMap() {
     }, [])
 }
 
+/**
+ * Retrieves the 'device' parameter from the URL query string.
+ * @returns {string|null}
+ */
 function getDeviceFromUrl() {
     const params = new URLSearchParams(window.location.search)
     const value = params.get('device')
     return value ? value.toLowerCase() : forcedDevice
 }
 
+/**
+ * Main app component with GamepadProvider.
+ *
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function AppWithProvider() {
     const [debug, setDebug] = useState(true)
 
@@ -43,6 +53,14 @@ function AppWithProvider() {
     )
 }
 
+/**
+ * Inner app component.
+ *
+ * @param debug
+ * @param setDebug
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function AppInner({debug, setDebug}) {
     const {activeKey, hasAny} = useGamepads()
     const [activeSetup, setActiveSetup] = useState(null)
@@ -51,6 +69,12 @@ function AppInner({debug, setDebug}) {
 
     const layouts = useLayoutsMap()
 
+    /**
+     * Menu component.
+     *
+     * @returns {JSX.Element}
+     * @constructor
+     */
     const Menu = () => (
         <MenuPanel
             setShowDeviceSelect={setShowDeviceSelect}
@@ -64,7 +88,6 @@ function AppInner({debug, setDebug}) {
         />
     )
 
-    // Initial: URL erzwingt Gerät oder Selector anzeigen
     useEffect(() => {
         const urlDevice = getDeviceFromUrl()
         const validUrlDevice = urlDevice && controllerSetups[urlDevice]
@@ -80,6 +103,7 @@ function AppInner({debug, setDebug}) {
     }, [])
 
     let SelectedLayout = null
+    // Layout based on active setup
     if (activeSetup) {
         const setup = controllerSetups[activeSetup.toLowerCase()]
         if (setup) {
@@ -96,6 +120,7 @@ function AppInner({debug, setDebug}) {
         }
     }
 
+    // No devices detected and no forced setup
     if (!hasAny && !activeSetup) {
         return (
             <div className='debug active'>
@@ -136,6 +161,12 @@ function AppInner({debug, setDebug}) {
     )
 }
 
+/**
+ * Main app component.
+ *
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export default function App() {
     return <AppWithProvider/>
 }

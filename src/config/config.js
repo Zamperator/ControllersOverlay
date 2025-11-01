@@ -1,3 +1,9 @@
+/**
+ * Available controller setups
+ * @type {Object.<string, {name: string, layout: string, regex?: RegExp, active: boolean, themes?: Object.<string, string>}>}
+ *
+ * TODO: Move each entry to it's own module/file for better maintainability
+ */
 export const controllerSetups = {
     hotasx: {
         name: "Thrustmaster Hotas X",
