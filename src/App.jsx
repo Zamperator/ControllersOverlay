@@ -144,18 +144,7 @@ function AppInner({debug, setDebug}) {
 
             {debug && <DebugBox activeSetup={activeSetup} activeKey={activeKey}/>}
 
-            <HelpPanel open={showHelp} onClose={() => setShowHelp(false)} title={L8N.get('help.title')}>
-                <h3>{L8N.get('help.controls')}</h3>
-                <ul>
-                    <li>{L8N.get('press_key_or_stick')}</li>
-                    <li>{L8N.get('help.change_device')}</li>
-                    <li>{L8N.get('help.debug_toggle')}</li>
-                </ul>
-                <h3>{L8N.get('help.troubleshoot')}</h3>
-                <ul>
-                    <li>{L8N.get('help.browser_input')}</li>
-                    <li>{L8N.get('help.usb')}</li>
-                </ul>
+            <HelpPanel open={showHelp} onClose={() => setShowHelp(false)}>
             </HelpPanel>
         </div>
     )

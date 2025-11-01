@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react'
+import {L8N} from "@/lib/Localization";
 import '@/styles/components/HelpPanel.css'
 
 /**
@@ -6,11 +7,10 @@ import '@/styles/components/HelpPanel.css'
  * @param open
  * @param onClose
  * @param title
- * @param children
  * @returns {JSX.Element|null}
  * @constructor
  */
-export default function HelpPanel({open, onClose, title = 'Hilfe', children}) {
+export default function HelpPanel({open, onClose}) {
     useEffect(() => {
         if (!open) {
             return
@@ -32,11 +32,25 @@ export default function HelpPanel({open, onClose, title = 'Hilfe', children}) {
         <div className="help-backdrop" onClick={onClose}>
             <aside className="help-panel" onClick={e => e.stopPropagation()}>
                 <header className="help-header">
-                    <h2>{title}</h2>
+                    <h2>{L8N.get('help.title')}</h2>
                     <button type="button" className="help-close" onClick={onClose} aria-label="Close">×</button>
                 </header>
                 <div className="help-body">
-                    {children}
+                    <h3>{L8N.get('help.controls')}</h3>
+                    <ul>
+                        <li>{L8N.get('press_key_or_stick')}</li>
+                        <li>{L8N.get('help.change_device')}</li>
+                        <li>{L8N.get('help.debug_toggle')}</li>
+                    </ul>
+                    <h3>{L8N.get('help.troubleshoot')}</h3>
+                    <ul>
+                        <li>{L8N.get('help.browser_input')}</li>
+                        <li>{L8N.get('help.usb')}</li>
+                    </ul>
+                    <hr />
+                    <div>
+                        Version: 0.2.0 | Author: <a href={"https://zamperia.de"}>Zam</a>
+                    </div>
                 </div>
             </aside>
         </div>

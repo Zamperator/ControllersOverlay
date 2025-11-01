@@ -91,3 +91,10 @@ body {
     padding: 0.25em 0.5em;
     border-radius: 0.25em;
 }
+
+hr {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 2vmin 0;
+    transform: scaleY(0.3);
+}

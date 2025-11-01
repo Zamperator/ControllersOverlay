@@ -1,12 +1,11 @@
 import React, {useEffect, useMemo, useState} from "react"
-import {controllerSetups, getControllerSetup} from "../config/config"
-import {L8N} from "../lib/Localization"
+import {controllerSetups, getControllerSetup} from "@/config/config"
+import {L8N} from "@/lib/Localization"
 import ctrlConfig from "@/config/ctrlConfig";
 
-import "../styles/components/MenuPanel.css"
+import "@/styles/components/MenuPanel.css"
 
 export default function MenuPanel({
-                                      showDeviceSelect,
                                       setShowDeviceSelect,
                                       activeSetup,
                                       setActiveSetup,
@@ -21,7 +20,7 @@ export default function MenuPanel({
 
     const cfg = getControllerSetup(activeSetup)
 
-    // Darf das aktive Device Themes nutzen?
+    // Are themes allowed for the current setup?
     const allowTheme = useMemo(() => {
         if (!activeSetup) {
             return false
@@ -41,14 +40,14 @@ export default function MenuPanel({
                 axes: gp.axes?.length || 0,
                 label: gp.id?.trim() || `Gamepad ${gp.index}`
             }))
-            // stabile Sortierung: zuerst „standard“, dann Name, dann Index
+            // stable sorting: first "standard", then name, then index
             .sort((a, b) => (a.mapping === b.mapping ? 0 : a.mapping === 'standard' ? -1 : 1)
                 || a.label.localeCompare(b.label)
                 || a.index - b.index)
     }
 
     function loadStoredPadKey() {
-        // bevorzugt ctrlConfig, sonst localStorage
+        // prefer ctrlConfig if available
         try {
             const idx = ctrlConfig.get?.('input', 'gamepadIndex')
             const id = ctrlConfig.get?.('input', 'gamepadId')
@@ -75,7 +74,7 @@ export default function MenuPanel({
         }
     }
 
-    // === Initialisierung: URL > localStorage ===
+    // === Initialising: URL > localStorage ===
     useEffect(() => {
         const params = new URLSearchParams(window.location.search)
         const urlTheme = params.get("theme")
@@ -97,7 +96,7 @@ export default function MenuPanel({
         }
     }, [])
 
-    // === Theme anwenden/speichern/URL sync (nur wenn erlaubt) ===
+    // Use/Save theme when changed (if allowed)
     useEffect(() => {
         if (!allowTheme) {
             if (theme) {
@@ -134,7 +133,7 @@ export default function MenuPanel({
         window.history.replaceState({}, "", newUrl)
     }, [theme, allowTheme])
 
-    // === Debug-Zustand laden (Default: false) ===
+    // === Load Debug-Mode (Default: false) ===
     useEffect(() => {
         const storedDebug = localStorage.getItem("arcadeDebug")
         if (storedDebug === null) {
@@ -149,7 +148,7 @@ export default function MenuPanel({
 
     useEffect(() => {
         const initial = snapshotGamepads()
-        // vorhandene Auswahl wiederherstellen
+        // restore existing selection
         const storedKey = loadStoredPadKey()
         if (storedKey) {
             const hit = initial.find(g => g.key === storedKey)
@@ -158,12 +157,12 @@ export default function MenuPanel({
             }
             else {
                 persistPadSelection(null)
-            } // nicht mehr vorhanden
+            } // not available
         }
 
         function onConnect() {
             const list = snapshotGamepads()
-            // falls nix gewählt war, aber nur 1 Pad da ist → auto-select
+            // if no pad selected, but only one available → auto-select
             if (!selectedPadKey && list.length === 1) {
                 setSelectedPadKey(list[0].key)
                 persistPadSelection(list[0])
@@ -173,7 +172,7 @@ export default function MenuPanel({
         function onDisconnect() {
             const list = snapshotGamepads()
             if (selectedPadKey && !list.find(g => g.key === selectedPadKey)) {
-                // ausgewähltes Pad ist weg
+                // selected pad is gone
                 setSelectedPadKey('')
                 persistPadSelection(null)
             }
@@ -185,7 +184,7 @@ export default function MenuPanel({
             window.removeEventListener('gamepadconnected', onConnect)
             window.removeEventListener('gamepaddisconnected', onDisconnect)
         }
-    }, [selectedPadKey]) // nur einmal
+    }, [selectedPadKey]) // only once
 
     function handleThemeChange(event) {
         const value = event.target.value
@@ -243,7 +242,7 @@ export default function MenuPanel({
         }
     }
 
-    // Links nur anzeigen, wenn sichtbar oder gepinnt
+    // Show links only when visible or pinned
     const showLeftLinks = (visible || pinned) && Array.isArray(leftLinks) && leftLinks.length > 0
 
     return (
@@ -325,7 +324,7 @@ export default function MenuPanel({
                     </select>
                 </div>
 
-                {/* Menü anpinnen */}
+                {/* Pin menu */}
                 <div className="menu-section pin-toggle">
                     <label htmlFor="pinToggle">{L8N.get("always_pin_menu") || "Menü anpinnen"}:</label>
                     <input
