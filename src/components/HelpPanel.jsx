@@ -49,7 +49,7 @@ export default function HelpPanel({open, onClose}) {
                     </ul>
                     <hr />
                     <div>
-                        Version: 0.2.0 | Author: <a href={"https://zamperia.de"}>Zam</a>
+                        Version: 0.2.0 | Author: <a href={"https://zamperia.de"}>Zam</a> | <a href={"https://github.com/Zamperator/ControllersOverlay"}>Source</a>
                     </div>
                 </div>
             </aside>
