@@ -1,0 +1,253 @@
+.overlay.t16000 {
+    /* === Theme (T16000: Black/Orange) === */
+    --bg: rgba(0, 0, 0, 0.88);
+    --line: #222;                /* darker lines */
+    --active: #ff7a00;           /* T16000-Orange */
+    --text: #eee;
+    --btn-bg: #181818;
+    --btn-active-bg: rgba(255, 122, 0, 0.18);
+    --btn-active-color: #ff7a00;
+    --btn-active-border: #ff7a00;
+
+    display: flex;
+    gap: 6vmin;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2vmin;
+    width: 90vw;
+
+    > * { flex: 1 1 auto }
+
+    /* TWCS */
+    .left  { flex-direction: row-reverse }
+    .right { flex-direction: row }
+
+    /* =============== Controls (scoped!) =============== */
+    .button {
+        width: 4vmin;
+        height: 4vmin;
+        border: 0.35vmin solid var(--line);
+        background: var(--btn-bg);
+        color: var(--text);
+        border-radius: 0.6vmin;
+        display: grid;
+        place-items: center;
+        font-size: 1.4vmin;
+        line-height: 1;
+        user-select: none;
+        transition: transform .06s linear, background-color .06s linear, border-color .06s linear, color .06s linear;
+
+        &.active,
+        &.pressed,
+        &[data-active="true"] {
+            background: var(--btn-active-bg);
+            border-color: var(--btn-active-border);
+            color: var(--btn-active-color);
+            transform: translateY(0.1vmin);
+        }
+
+        &:focus-visible {
+            outline: 0.35vmin solid var(--btn-active-border);
+            outline-offset: 0.15vmin;
+        }
+    }
+
+    .button.orange {
+        background: #ff9a2e;
+        color: #000;
+        font-weight: 700;
+
+        &.active,
+        &.pressed {
+            background: #ff7a00;
+            border-color: #ff7a00;
+            color: #000;
+        }
+    }
+
+    /* =============== Stick =============== */
+    .stick-block {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1vmin;
+    }
+
+    .stick {
+        width: 20vmin;
+        height: 20vmin;
+        border: 0.4vmin solid var(--line);
+        position: relative;
+        background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+    }
+
+    .stick-indicator {
+        width: 2vmin;
+        height: 2vmin;
+        border-radius: 50%;
+        background: var(--active);
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 1vmin rgba(255,122,0,.35);
+    }
+
+    .rudder {
+        width: 20vmin; height: 3vmin;
+        border: 0.4vmin solid var(--line);
+        position: relative;
+        background: #0f0f0f;
+    }
+
+    .rudder-indicator {
+        width: 2vmin; height: 2vmin;
+        background: var(--active);
+        position: absolute;
+        top: -0.2vmin; left: 0;
+    }
+
+    .hat-group {
+        display: flex;
+        gap: 1vmin;
+        align-items: center;
+    }
+
+    .under-hat { margin-top: -0.5vmin }
+
+    .hat {
+        width: 6vmin; height: 6vmin;
+        border: 0.4vmin solid var(--line);
+        border-radius: 50%;
+        position: relative;
+        background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.06), transparent 60%);
+    }
+
+    .hat-arrow {
+        width: 0; height: 0;
+        border-left: 1vmin solid transparent;
+        border-right: 1vmin solid transparent;
+        border-bottom: 2vmin solid var(--active);
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity .06s linear;
+
+        &.active { opacity: 1 }
+    }
+
+    .trigger { margin-top: 1vmin }
+
+    .button-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 4vmin);
+        gap: 0.6vmin;
+        margin-top: 1vmin;
+
+        &.left  { position: absolute; left: -10%; top: 5vmin }
+        &.right { position: absolute; right: -10%; top: 5vmin }
+    }
+
+    /* =============== TWCS (Throttle) =============== */
+    .twcs-block {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5vmin;
+    }
+
+    .throttle {
+        width: 7vmin; height: 24vmin;
+        border: 0.4vmin solid var(--line);
+        position: relative;
+        background: #0f0f0f;
+    }
+
+    .throttle-handle {
+        width: 100%; height: 2vmin;
+        background: var(--active);
+        position: absolute; top: 0;
+        box-shadow: inset 0 -0.2vmin 0.4vmin rgba(0,0,0,.35);
+    }
+
+    .mini-stick {
+        width: 10vmin; height: 10vmin;
+        border: 0.4vmin solid var(--line);
+        position: relative;
+        background: #0f0f0f;
+    }
+
+    .mini-stick-indicator {
+        width: 2vmin; height: 2vmin;
+        border-radius: 50%;
+        background: var(--active);
+        position: absolute; top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .cooliehats {
+        display: flex;
+        gap: 3vmin;
+    }
+
+    .cooliehat {
+        display: grid;
+        grid-template-areas:
+          ". up ."
+          "left . right"
+          ". down .";
+        grid-template-columns: 4vmin 4vmin 4vmin;
+        grid-template-rows: 4vmin 4vmin 4vmin;
+        gap: 0.5vmin;
+
+        .button:nth-child(1) { grid-area: up }
+        .button:nth-child(2) { grid-area: right }
+        .button:nth-child(3) { grid-area: down }
+        .button:nth-child(4) { grid-area: left }
+    }
+
+    .orange-buttons {
+        display: flex;
+        gap: 1.2vmin;
+    }
+
+    .toggle-switch {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6vmin;
+        align-items: center;
+    }
+
+    .flip-switch {
+        width: 10vmin; height: 5vmin;
+        border: 0.4vmin solid var(--line);
+        position: relative;
+        border-radius: 1vmin;
+        background: #0f0f0f;
+
+        .flip-handle {
+            width: 50%; height: 90%;
+            background: var(--active);
+            border-radius: 0.6vmin;
+            position: absolute; top: 0.2vmin; left: 0;
+            transition: left 0.1s linear;
+        }
+
+        &.on  .flip-handle { left: 49% }
+        &.off .flip-handle { left: 0 }
+    }
+
+    .dial {
+        width: 15vmin; height: 3vmin;
+        border: 0.4vmin solid var(--line);
+        position: relative;
+        background: #0f0f0f;
+
+        .dial-handle {
+            width: 2vmin; height: 2vmin;
+            background: var(--active);
+            position: absolute; top: -0.2vmin; left: 0;
+        }
+    }
+}

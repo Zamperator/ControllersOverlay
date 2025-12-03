@@ -1,0 +1,123 @@
+.menu-panel-zone {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100vw;
+    height: 4vh;
+    z-index: 100;
+}
+
+/* Left top section – only rendered when visible or pinned */
+.menu-left {
+    position: absolute;
+    top: 1vmin;
+    left: 1vmin;
+    display: flex;
+    align-items: center;
+    gap: 0.8vmin;
+    z-index: 111;
+}
+
+.left-pill {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6vmin;
+    padding: 0.5vmin 0.9vmin;
+    border: 0.2vmin solid #3a3a3a;
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(20, 20, 20, .9), rgba(10, 10, 10, .9));
+    color: #fff;
+    font-size: 1.4vmin;
+    letter-spacing: .02em;
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+
+    &:hover {
+        transform: translateY(-0.2vmin);
+        border-color: #f00;
+        box-shadow: 0 0.6vmin 1.2vmin rgba(255, 0, 0, .25), inset 0 0 0.6vmin rgba(255, 0, 0, .08);
+    }
+
+    &:focus-visible {
+        outline: none;
+        border-color: #f00;
+        box-shadow: 0 0 0 .3vmin rgba(255, 0, 0, .55);
+    }
+
+}
+
+.pill-icon {
+    width: 1.6vmin;
+    height: 1.6vmin;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    opacity: .9;
+}
+
+.pill-text {
+    line-height: 1;
+    white-space: nowrap;
+}
+
+/* Hover panel on the right side */
+.menu-panel {
+    position: absolute;
+    top: 1vmin;
+    right: -25vmin;
+    width: 40vmin;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8vmin;
+    background: rgba(0, 0, 0, 0.7);
+    border: 0.2vmin solid #333;
+    border-radius: 1vmin;
+    padding: 1vmin 1.2vmin;
+    font-family: 'Orbitron', sans-serif;
+    color: #fff;
+    z-index: 110;
+    transition: right 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    backdrop-filter: blur(6px);
+
+    &.visible {
+        right: 1vmin;
+        opacity: 1;
+    }
+}
+
+.menu-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1vmin;
+
+    select, input[type="text"] {
+        width: 20vmin;
+        background: #111;
+        color: #fff;
+        border: 0.2vmin solid #444;
+        border-radius: 0.5vmin;
+        font-size: 1.6vmin;
+        padding: 0.3vmin 0.6vmin;
+        outline: none;
+
+        &:focus {
+            border-color: #f00;
+        }
+    }
+
+    label {
+        font-size: 1.6vmin;
+        opacity: 0.8;
+        white-space: nowrap;
+
+
+    }
+}
+
+input[type="checkbox"] {
+    width: 2vmin;
+    height: 2vmin;
+    cursor: pointer;
+}

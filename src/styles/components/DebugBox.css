@@ -1,0 +1,46 @@
+/** DEBUG ***/
+.debug-wrapper {
+    position: fixed;
+    bottom: 0.5vh;
+    left: 0.5vw;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 999;
+    max-height: 90vh;
+}
+
+.debug {
+    font-family: monospace;
+    font-size: 1.5vmin;
+    border: 0.2vmin solid #333;
+    padding: 1vmin;
+    background: rgba(0,0,0,0.6);
+    color: #0f0;
+    white-space: pre;
+    margin: 0;
+    box-sizing: border-box;
+    flex: 1;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.perf-panel {
+    position: sticky;
+    bottom: 1vh;
+    right: 1vw;
+    align-self: flex-end;
+    background: rgba(0, 0, 0, 0.6);
+    border: 0.1vmin solid #444;
+    border-radius: 0.5vmin;
+    padding: 0.3vmin 0.8vmin;
+    font-family: monospace;
+    font-size: 1.4vmin;
+    line-height: 1.8vmin;
+    color: #0f0;
+    text-shadow: 0 0 0.4vmin #000;
+    pointer-events: none;
+}
+
+
+.debug.active { display: block; }

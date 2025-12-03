@@ -1,0 +1,509 @@
+/* ========================= THEMES ========================= */
+
+/* === PAL (EU): X blue, Y green, A red, B yellow; dpad darkened === */
+:root {
+    .overlay.snes {
+        --island-bg: #727089;
+
+        --btnX-bg: #2f6de1;
+        --btnX-border: #1e50a8;
+        --btnX-shadow: rgba(47, 109, 225, .6);
+        --btnX-hover: #295ec2;
+        --btnX-active: #204b9a;
+
+        --btnY-bg: #1e8e3e;
+        --btnY-border: #176c2f;
+        --btnY-shadow: rgba(30, 142, 62, .6);
+        --btnY-hover: #197a35;
+        --btnY-active: #145f2a;
+
+        --btnA-bg: #d32f2f;
+        --btnA-border: #9f2323;
+        --btnA-shadow: rgba(211, 47, 47, .55);
+        --btnA-hover: #b82929;
+        --btnA-active: #951f1f;
+
+        --btnB-bg: #f4c20d;
+        --btnB-border: #c49c0a;
+        --btnB-shadow: rgba(244, 194, 13, .55);
+        --btnB-hover: #d8ab0c;
+        --btnB-active: #b18b0a;
+    }
+}
+
+/* === JP (Super Famicom): same colors, but dpad more lightened/gray === */
+[data-theme="ntsc"] {
+    .overlay.snes {
+        /* ====== COLOR TOKENS (NTSC = US/SNES: X/Y lavender, A/B purple) ====== */
+        --island-bg: #727089;
+
+        /* X */
+        --btnX-bg: #BEB5E0;
+        --btnX-border: #8983A2;
+        --btnX-shadow: #8983A2;
+        --btnX-hover: #8983A2;
+        --btnX-active: #7e78a1;
+
+        /* Y */
+        --btnY-bg: #BEB5E0;
+        --btnY-border: #8983A2;
+        --btnY-shadow: #8983A2;
+        --btnY-hover: #8983A2;
+        --btnY-active: #7e78a1;
+
+        /* A */
+        --btnA-bg: #5E4197;
+        --btnA-border: #39256D;
+        --btnA-shadow: #39256D;
+        --btnA-hover: #39256D;
+        --btnA-active: #3b2872;
+
+        /* B */
+        --btnB-bg: #5E4197;
+        --btnB-border: #39256D;
+        --btnB-shadow: #39256D;
+        --btnB-hover: #39256D;
+        --btnB-active: #3b2872;
+    }
+}
+
+/* === Canvas / Scaling + Default (US/SNES) Token === */
+.overlay.snes {
+
+    /* ====== LAYOUT ====== */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+
+    font-family: "Anton", serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    .controller-body {
+        width: 650px;
+        height: 300px;
+        position: relative;
+        /* responsive scale: adjusts height/width to viewport ... maybe */
+        transform: scale(calc(min(100vw / 650, 100vh / 300)));
+        transform-origin: center;
+    }
+
+    .dpad-lobe {
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        background: #CACCD2;
+        float: left;
+        margin: 5px 0 0 0;
+        box-shadow: inset 9px 3px 11px -6px #aaa;
+        position: relative;
+        z-index: 6;
+    }
+
+    .dpad-ring {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: #bdbdbd;
+        position: relative;
+        z-index: 9999;
+        margin: 47px 0 0 46px;
+        box-shadow: inset 0 0 7px #AEACAC;
+        border: 1px solid #bdbdbd;
+    }
+
+    .hub {
+        width: 114px;
+        height: 40px;
+        background: #5B5B5B;
+        position: absolute;
+        z-index: 999991;
+        margin: -97px 0 0 17px;
+    }
+
+    .dir-l-r {
+        width: 120px;
+        height: 40px;
+        background: #5B5B5B;
+        position: relative;
+        z-index: 99999;
+        margin: 55px auto;
+        box-shadow: -1px 1px 3px #333;
+        border: 2px solid #333;
+        border-radius: 3px;
+    }
+
+    .dpad-hub {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #5A5A5A;
+        margin: -90px 0 0 59px;
+        position: absolute;
+        z-index: 999999;
+        box-shadow: inset 0 0 10px #1F1F1F;
+    }
+
+    .dir-u-d {
+        width: 40px;
+        height: 120px;
+        background: #5B5B5B;
+        position: relative;
+        z-index: 99999;
+        margin: -137px auto;
+        box-shadow: -1px 1px 3px #333;
+        border: 2px solid #333;
+        border-radius: 3px;
+    }
+
+    .dpad-ring .hit {
+        position: absolute;
+        background: transparent;
+    }
+
+    .dpad-ring .hit.up {
+        left: 36px;
+        right: 36px;
+        top: 8px;
+        height: 46px;
+    }
+
+    .dpad-ring .hit.down {
+        left: 36px;
+        right: 36px;
+        bottom: 8px;
+        height: 46px;
+    }
+
+    .dpad-ring .hit.left {
+        top: 36px;
+        bottom: 36px;
+        left: 8px;
+        width: 46px;
+    }
+
+    .dpad-ring .hit.right {
+        top: 36px;
+        bottom: 36px;
+        right: 8px;
+        width: 46px;
+    }
+
+    /* visual feedback via the arrowheads */
+
+    .dpad-ring.active-up .arrow-u::before,
+    .dpad-ring.active-down .arrow-d::before,
+    .dpad-ring.active-left .arrow-l::before,
+    .dpad-ring.active-right .arrow-r::before {
+        border-left-color: #00aaff;
+    }
+
+    /*** Button lobe ****/
+
+    .button-lobe {
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        background: #CACCD2;
+        float: right;
+        margin: 5px 0 0 113px;
+        box-shadow: inset -21px 8px 9px -14px #aaa;
+        position: relative;
+        z-index: 6;
+    }
+
+    .bg-xy, .bg-ab {
+        width: 50px;
+        height: 135px;
+        border-radius: 25px;
+        background: #CACCD2;
+        -webkit-transform: rotate(50deg);
+        transform: rotate(50deg);
+        margin: 15px 0 0 59px;
+        position: absolute;
+        border: 1px solid #5A5A5A;
+    }
+
+    .bg-ab {
+        margin: 65px 0 0 120px;
+    }
+
+    /* face button island */
+
+    .face-btns {
+        width: 225px;
+        height: 225px;
+        background: var(--island-bg);
+        border-radius: 50%;
+        z-index: 9999;
+        position: relative;
+        margin: 14px 0 0 15px;
+        border: 1px solid #4B4A51;
+        color: #fff;
+        /*box-shadow: inset -21px 8px 9px -14px #aaa;*/
+    }
+
+    /* Buttons: X / Y (light), A / B (dark) with per-Button-Variables */
+
+    .btn-x, .btn-y, .btn-a, .btn-b {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        margin: 3px 0 0 2px;
+        position: relative;
+        transition: transform .06s, filter .06s, box-shadow .1s, background-color .1s, border-color .1s;
+    }
+
+    .btn-x {
+        background: var(--btnX-bg);
+        border-bottom: 1px solid var(--btnX-border);
+        box-shadow: 0 0 5px var(--btnX-shadow);
+    }
+
+    .btn-x:hover {
+        background: var(--btnX-hover);
+        border-bottom-color: var(--btnX-hover);
+    }
+
+    .btn-y {
+        background: var(--btnY-bg);
+        border-bottom: 1px solid var(--btnY-border);
+        box-shadow: 0 0 5px var(--btnY-shadow);
+    }
+
+    .btn-y:hover {
+        background: var(--btnY-hover);
+        border-bottom-color: var(--btnY-hover);
+    }
+
+    .btn-a {
+        background: var(--btnA-bg);
+        border-bottom: 1px solid var(--btnA-border);
+        box-shadow: 0 0 5px var(--btnA-shadow);
+    }
+
+    .btn-a:hover {
+        background: var(--btnA-hover);
+        border-bottom-color: var(--btnA-hover);
+    }
+
+    .btn-b {
+        background: var(--btnB-bg);
+        border-bottom: 1px solid var(--btnB-border);
+        box-shadow: 0 0 5px var(--btnB-shadow);
+    }
+
+    .btn-b:hover {
+        background: var(--btnB-hover);
+        border-bottom-color: var(--btnB-hover);
+    }
+
+    /* Reihenversatz wie Vorlage */
+
+    .btn-y, .btn-b {
+        margin: 38px 0 0 2px;
+    }
+
+    .label-btn {
+        position: absolute;
+        font-family: Arial, sans-serif;
+        color: #fff;
+        font-weight: 700;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-50deg);
+        pointer-events: none;
+        user-select: none;
+    }
+
+    .btn-x .label-btn {
+        margin: -45px 0 0 4px;
+    }
+
+    .btn-y .label-btn {
+        margin: 44px 0 0 5px;
+    }
+
+    .btn-a .label-btn {
+        margin: -40px 0 0 4px;
+    }
+
+    .btn-b .label-btn {
+        margin: 50px 0 0 5px;
+    }
+
+    .arrow-r, .arrow-l, .arrow-u, .arrow-d {
+        position: absolute;
+        margin: -89px 0 0 110px;
+        z-index: 999999;
+    }
+
+    .arrow-l {
+        margin: -89px 0 0 -1px;
+        -webkit-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+
+    .arrow-u {
+        margin: -142px 0 0 56px;
+        -webkit-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+    }
+
+    .arrow-d {
+        margin: -33px 0 0 55px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .arrow-r:before, .arrow-l:before, .arrow-u:before, .arrow-d:before {
+        content: "";
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 10px;
+        width: 10px;
+        height: 0;
+        border-top: 12px solid transparent;
+        border-bottom: 12px solid transparent;
+        border-left: 20px solid #6E6C6C;
+    }
+
+    .center-plate {
+        width: 420px;
+        height: 220px;
+        background: #CACCD2;
+        position: absolute;
+        z-index: 5;
+        margin: 5px 0 0 113px;
+        box-shadow: inset 0 0 9px #aaa;
+    }
+
+    .select, .start {
+        width: 15px;
+        height: 40px;
+        background: #333;
+        border-radius: 10px;
+        margin: 60px 0 0 150px;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+        border: 1px solid #333;
+        box-shadow: inset 1px 0 5px #000;
+        position: relative;
+        z-index: 99999;
+        transition: transform .06s, filter .06s;
+    }
+
+    .start {
+        margin: -38px 0 0 235px;
+    }
+
+    .btn-l {
+        background: #CACCD2;
+        width: 160px;
+        height: 25px;
+        position: absolute;
+        margin: -4px 0 0 90px;
+        border-radius: 47% 4px 0 0;
+        z-index: -1;
+        box-shadow: inset 3px 0 3px #aaa;
+        display: grid;
+        place-items: center;
+        color: #6b6f75;
+        transition: transform .06s, filter .06s;
+    }
+
+    .btn-r {
+        background: #CACCD2;
+        width: 160px;
+        height: 25px;
+        position: absolute;
+        margin: -3px 0 0 404px;
+        border-radius: 4px 47% 0 0;
+        z-index: -2;
+        box-shadow: inset -3px 0 3px #aaa;
+        display: grid;
+        place-items: center;
+        color: #6b6f75;
+        transition: transform .06s, filter .06s;
+    }
+
+    .snes {
+        width: 100%;
+        text-align: center;
+        text-transform: uppercase;
+        font-style: italic;
+        font-size: 28px;
+        color: #333;
+    }
+
+    .snes-name {
+        width: 41%;
+        text-align: center;
+        color: #CACCD2;
+        font-size: 10px;
+        letter-spacing: 3px;
+        background: #333;
+        margin: -7px auto;
+        font-style: italic;
+    }
+
+    .select-label, .start-label {
+        color: #333;
+        text-align: center;
+        width: 91px;
+        margin: 0 0 0 102px;
+        font-size: 1em;
+        text-transform: uppercase;
+        font-style: italic;
+        float: left;
+    }
+
+    .start-label {
+        margin: 0 136px 0 0;
+        float: right;
+    }
+
+    /* Active + D-Pad Hit section */
+
+    .btn-x.active {
+        background: var(--btnX-active);
+        border-bottom-color: var(--btnX-active);
+        transform: translateY(1px) scale(.97);
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, .45);
+    }
+
+    .btn-y.active {
+        background: var(--btnY-active);
+        border-bottom-color: var(--btnY-active);
+        transform: translateY(1px) scale(.97);
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, .45);
+    }
+
+    .btn-a.active {
+        background: var(--btnA-active);
+        border-bottom-color: var(--btnA-active);
+        transform: translateY(1px) scale(.97);
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, .45);
+    }
+
+    .btn-b.active {
+        background: var(--btnB-active);
+        border-bottom-color: var(--btnB-active);
+        transform: translateY(1px) scale(.97);
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, .45);
+    }
+
+    .btn-l.active, .btn-r.active {
+        transform: translateY(4px);
+        filter: brightness(.92);
+        background: var(--btnX-active);
+    }
+
+    .select.active, .start.active {
+        filter: brightness(.7);
+        background: #00aaff;
+    }
+}

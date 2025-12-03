@@ -1,0 +1,412 @@
+:root, [data-theme] {
+    transition:
+            --stick-bg-inner 0.25s ease,
+            --stick-bg-outer 0.25s ease,
+            --stick-border 0.25s ease,
+            --stick-shadow-inset 0.25s ease,
+            --stick-shadow-glow 0.25s ease,
+            --ball-light 0.25s ease,
+            --ball-dark 0.25s ease,
+            --ball-shadow-inset 0.25s ease,
+            --ball-shadow-glow 0.25s ease,
+            --btn-bg-inner 0.25s ease,
+            --btn-bg-outer 0.25s ease,
+            --btn-border 0.25s ease,
+            --btn-shadow 0.25s ease,
+            --btn-active-inner 0.25s ease,
+            --btn-active-outer 0.25s ease,
+            --btn-active-shadow 0.25s ease,
+            --btn-square 0.25s ease,
+            --btn-triangle 0.25s ease,
+            --btn-circle 0.25s ease,
+            --btn-cross 0.25s ease,
+            --btn-shoulder 0.25s ease;
+}
+
+:root {
+    /* === BASE === */
+    --font-family: 'Orbitron', sans-serif;
+    --bg-main: transparent;
+
+    /* === STICK === */
+    --stick-bg-inner: #222;
+    --stick-bg-outer: #000;
+    --stick-border: #500;
+    --stick-shadow-inset: #300;
+    --stick-shadow-glow: #500;
+
+    /* === STICK BALL === */
+    --ball-light: #ff3030;
+    --ball-dark: #800000;
+    --ball-shadow-inset: #500;
+    --ball-shadow-glow: #f00;
+
+    /* === BUTTON DEFAULT === */
+    --btn-bg-inner: #222;
+    --btn-bg-outer: #000;
+    --btn-border: #700;
+    --btn-shadow: #500;
+    --btn-active-inner: #c00;
+    --btn-active-outer: #700;
+    --btn-active-shadow: #f00;
+
+    /* === BUTTON COLORS === */
+    --btn-square: #39f;
+    --btn-triangle: #0f0;
+    --btn-circle: #f00;
+    --btn-cross: #fff;
+    --btn-shoulder: #ccc;
+}
+
+/* === ICY THEME === */
+[data-theme="icy"] {
+    --stick-bg-inner: #0a0a1a;
+    --stick-bg-outer: #000818;
+    --stick-border: #0af;
+    --stick-shadow-inset: #003;
+    --stick-shadow-glow: #0cf;
+
+    --ball-light: #7ff;
+    --ball-dark: #08c;
+    --ball-shadow-inset: #055;
+    --ball-shadow-glow: #0ff;
+
+    --btn-bg-inner: #022;
+    --btn-bg-outer: #000;
+    --btn-border: #06c;
+    --btn-shadow: #05a;
+    --btn-active-inner: #08f;
+    --btn-active-outer: #005;
+    --btn-active-shadow: #0cf;
+
+    /*--btn-square: #9ef;
+    --btn-triangle: #9ff;
+    --btn-circle: #0ff;
+    --btn-cross: #fff;*/
+    --btn-shoulder: #ace;
+}
+
+/* === MATRIX THEME === */
+[data-theme="matrix"] {
+    --stick-bg-inner: #030;
+    --stick-bg-outer: #000;
+    --stick-border: #090;
+    --stick-shadow-inset: #010;
+    --stick-shadow-glow: #0f0;
+
+    --ball-light: #0f0;
+    --ball-dark: #030;
+    --ball-shadow-inset: #050;
+    --ball-shadow-glow: #0f0;
+
+    --btn-bg-inner: #010;
+    --btn-bg-outer: #000;
+    --btn-border: #070;
+    --btn-shadow: #060;
+    --btn-active-inner: #0f0;
+    --btn-active-outer: #060;
+    --btn-active-shadow: #0f0;
+
+    /*--btn-square: #4f4;
+    --btn-triangle: #6f6;
+    --btn-circle: #9f9;
+    --btn-cross: #cfc;*/
+    --btn-shoulder: #9f9;
+}
+
+/* === INFERNO THEME === */
+[data-theme="inferno"] {
+    --stick-bg-inner: #200;
+    --stick-bg-outer: #000;
+    --stick-border: #a20;
+    --stick-shadow-inset: #400;
+    --stick-shadow-glow: #f40;
+
+    --ball-light: #ff6600;
+    --ball-dark: #400000;
+    --ball-shadow-inset: #500;
+    --ball-shadow-glow: #f40;
+
+    --btn-bg-inner: #220;
+    --btn-bg-outer: #000;
+    --btn-border: #a30;
+    --btn-shadow: #800;
+    --btn-active-inner: #f30;
+    --btn-active-outer: #600;
+    --btn-active-shadow: #f80;
+
+    /*--btn-square: #f90;
+    --btn-triangle: #ff0;
+    --btn-circle: #f00;
+    --btn-cross: #fff;*/
+    --btn-shoulder: #f80;
+}
+
+/* === RETRO THEME === */
+[data-theme="retro"] {
+    --stick-bg-inner: #211;
+    --stick-bg-outer: #000;
+    --stick-border: #c0f;
+    --stick-shadow-inset: #406;
+    --stick-shadow-glow: #f0f;
+
+    --ball-light: #f3f;
+    --ball-dark: #309;
+    --ball-shadow-inset: #606;
+    --ball-shadow-glow: #f3f;
+
+    --btn-bg-inner: #222;
+    --btn-bg-outer: #000;
+    --btn-border: #909;
+    --btn-shadow: #606;
+    --btn-active-inner: #f3f;
+    --btn-active-outer: #606;
+    --btn-active-shadow: #f9f;
+
+    /*--btn-square: #f9f;
+    --btn-triangle: #ff7;
+    --btn-circle: #0ff;
+    --btn-cross: #fff;*/
+    --btn-shoulder: #c8f;
+}
+
+/* === AQUA THEME === */
+[data-theme="aqua"] {
+    --stick-bg-inner: #013;
+    --stick-bg-outer: #000;
+    --stick-border: #0bb;
+    --stick-shadow-inset: #024;
+    --stick-shadow-glow: #0ff;
+
+    --ball-light: #0ff;
+    --ball-dark: #066;
+    --ball-shadow-inset: #044;
+    --ball-shadow-glow: #0ff;
+
+    --btn-bg-inner: #012;
+    --btn-bg-outer: #000;
+    --btn-border: #099;
+    --btn-shadow: #066;
+    --btn-active-inner: #0ff;
+    --btn-active-outer: #066;
+    --btn-active-shadow: #0ff;
+
+    /*--btn-square: #0ff;
+    --btn-triangle: #9ff;
+    --btn-circle: #6ff;
+    --btn-cross: #fff;
+    --btn-shoulder: #cff;
+    */
+}
+
+.layout.arcadevenom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8vmin;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-main);
+    font-family: var(--font-family);
+
+    /* === STICK === */
+
+    .stick {
+        position: relative;
+        width: 18vmin;
+        height: 18vmin;
+        background: radial-gradient(circle at 50% 50%, var(--stick-bg-inner) 20%, var(--stick-bg-outer) 80%);
+        border: 0.4vmin solid var(--stick-border);
+        border-radius: 50%;
+        box-shadow: inset 0 0 2vmin var(--stick-shadow-inset), 0 0 1vmin var(--stick-shadow-glow);
+        overflow: hidden;
+    }
+
+    .stick-ball {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5vmin;
+        height: 5vmin;
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 30%, var(--ball-light), var(--ball-dark));
+        box-shadow: inset 0 0 1vmin var(--ball-shadow-inset), 0 0 1vmin var(--ball-shadow-glow);
+        transform: translate(-50%, -50%);
+        transition: transform 0.05s linear, background 0.1s linear, box-shadow 0.1s linear;
+    }
+
+    /* === BUTTONS === */
+
+    .right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .buttons-grid {
+        position: relative;
+        width: 40vmin;
+        height: 24vmin;
+    }
+
+    .row {
+        position: absolute;
+        display: flex;
+        /*gap: 1vmin;*/
+        justify-content: center;
+    }
+
+    .row-top {
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .row-bottom {
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .row-top, .row-bottom {
+        .button:nth-child(1) {
+            transform: translate(-4vmin, 2vmin);
+        }
+    }
+
+    .row-top, .row-bottom {
+        .button:nth-child(2) {
+            transform: translate(-1vmin, -1vmin);
+        }
+    }
+
+    .row-top, .row-bottom {
+        .button:nth-child(3) {
+            transform: translate(2vmin, -1vmin);
+        }
+    }
+
+    .row-top, .row-bottom {
+        .button:nth-child(4) {
+            transform: translate(5vmin, -1vmin);
+        }
+    }
+
+    .button {
+        aspect-ratio: 1 / 1;
+        width: 10vmin;
+        height: 10vmin;
+        border-radius: 50%;
+        border: 0.3vmin solid var(--btn-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4vmin;
+        font-weight: 700;
+        color: #fff;
+        background: radial-gradient(circle at 30% 30%, var(--btn-bg-inner), var(--btn-bg-outer));
+        box-shadow: 0 0 1vmin var(--btn-shadow);
+        transition: transform 0.05s, background 0.15s, box-shadow 0.15s;
+    }
+
+    .button.active {
+        background: radial-gradient(circle at 30% 30%, var(--btn-active-inner), var(--btn-active-outer));
+        box-shadow: 0 0 1vmin var(--btn-active-shadow);
+        transform: scale(0.94);
+    }
+
+    /* === Farben === */
+
+    .button.square {
+        color: var(--btn-square);
+        font-weight: 900;
+        font-size: 5vmin;
+    }
+
+    .button.triangle {
+        color: var(--btn-triangle);
+        font-weight: 100;
+        font-size: 5vmin;
+    }
+
+    .button.cross {
+        color: var(--btn-cross);
+    }
+
+    .button.circle {
+        color: var(--btn-circle);
+    }
+
+    .button.l1, .button.l2, .button.r1, .button.r2 {
+        color: var(--btn-shoulder);
+        font-size: 2.5vmin;
+    }
+
+    /* === System Buttons (Start/Select) === */
+    .row-system {
+        position: absolute;
+        top: -9vmin;
+        left: 7vmin;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 4vmin;
+
+        .button.small {
+            width: 12vmin;
+            height: 3vmin;
+            border-radius: 1vmin;
+            font-size: 1.8vmin;
+            color: var(--btn-shoulder);
+            border: 0.25vmin solid var(--btn-border);
+            background: radial-gradient(circle at 30% 30%, var(--btn-bg-inner), var(--btn-bg-outer));
+            box-shadow: 0 0 0.6vmin var(--btn-shadow);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .button.small.active {
+            background: radial-gradient(circle at 30% 30%, var(--btn-active-inner), var(--btn-active-outer));
+            box-shadow: 0 0 1vmin var(--btn-active-shadow);
+        }
+    }
+
+    /* === Centered PS-Button === */
+    /* === PS BUTTON (top right, shiny black with white text) === */
+    .ps-button {
+        position: absolute;
+        top: -12vmin;
+        right: -5vmin;
+        width: 8vmin;
+        height: 8vmin;
+        border-radius: 50%;
+        border: 0.3vmin solid #222;
+        background:
+                radial-gradient(circle at 30% 30%, #444, #000 80%);
+        box-shadow:
+                inset 0 0.6vmin 0.8vmin rgba(255,255,255,0.1),
+                0 0 1vmin rgba(0,0,0,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 2.8vmin;
+        font-family: "Orbitron", sans-serif;
+        letter-spacing: -0.1vmin;
+        transition: transform 0.1s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .ps-button::before {
+        content: "PS";
+        font-weight: 800;
+        color: #fff;
+        text-shadow: 0 0 0.8vmin rgba(255,255,255,0.6);
+    }
+
+    .ps-button.active {
+        transform: scale(0.95);
+        background: radial-gradient(circle at 30% 30%, #222, #000);
+        box-shadow:
+                inset 0 0.6vmin 0.8vmin rgba(255,255,255,0.15),
+                0 0 1.5vmin rgba(255,255,255,0.4);
+    }
+}

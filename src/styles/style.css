@@ -1,0 +1,99 @@
+@font-face {
+    font-family: "Orbitron";
+    src: local("Orbitron"),
+    url("/fonts/orbitron-v35-latin-regular.woff2") format("woff2");
+    font-weight: 400 900; /* variable range */
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Anton";
+    src: local("Anton"),
+    url("/fonts/anton-v27-latin-regular.woff2") format("woff2");
+    font-weight: 400 900; /* variable range */
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --bg: rgba(0, 0, 0, 0.4);
+    --line: #666;
+    --active: #00bcd4;
+    --btn-bg: #222;
+    --btn-active-bg: rgba(0, 188, 212, 0.2);
+    --btn-active-color: #00bcd4;
+    --btn-active-border: #00bcd4;
+    color-scheme: dark light;
+}
+
+body {
+    background: transparent;
+    font-family: "Segoe UI", sans-serif;
+    color: #ddd;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.layout {
+    display: none;
+}
+
+.layout.active {
+    display: flex;
+}
+
+.overlay {
+    display: flex;
+    gap: 5vmin;
+    padding: 2vmin;
+    border-radius: 1.5vmin;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1vmin;
+    justify-content: center;
+    align-items: center;
+}
+
+.device-select {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 1em;
+    border-radius: 0.5em;
+    color: #fff;
+}
+
+.device-select select {
+    margin-left: 0.5em;
+    background: #222;
+    color: #fff;
+    border: 1px solid #555;
+    padding: 0.25em 0.5em;
+    border-radius: 0.25em;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 2vmin 0;
+    transform: scaleY(0.3);
+}

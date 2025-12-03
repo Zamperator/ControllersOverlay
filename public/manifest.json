@@ -1,0 +1,8 @@
+{
+  "short_name": "Controllers App",
+  "name": "Show Controllers Overlays for streams",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

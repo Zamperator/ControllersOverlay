@@ -1,0 +1,36 @@
+{
+  "title": "Twitch Controllers Overlay",
+  "description": "Overlay-Anwendung zur Anzeige von Controller-Eingaben in Twitch-Streams.",
+  "press_key_or_stick": "Drücke eine Taste oder bewege einen Stick",
+  "device": "Gerät",
+  "layout": "Layout",
+  "type": "Typ",
+  "choose_device": "Gerät auswählen",
+  "default": "Standard",
+  "always_pin_menu": "Menü immer anzeigen",
+  "debug": {
+    "title": "Debug-Modus",
+    "description": "Zeigt zusätzliche Debug-Informationen an",
+    "active_setup": "Aktives Setup: {1}",
+    "axis": "Achse {1}: {2}",
+    "axes": "Achsen ({1})",
+    "button": "Taste {1}: {2}",
+    "buttons": "Tasten ({1})",
+    "calibration": "Kalibrierung",
+    "pressed": "gedrückt",
+    "released": "losgelassen"
+  },
+  "help": {
+    "title": "Hilfe",
+    "controls": "Steuerung & Hinweise",
+    "change_device": "Gerät im Menü auswählen",
+    "debug_toggle": "Debug im Menü an/aus",
+    "troubleshoot": "Troubleshooting",
+    "browser_input": "Bewege einen Stick / drücke eine Taste, damit das Pad erkannt wird.",
+    "usb": "Adapter/USB-Port wechseln, Browser neu laden"
+  },
+  "error": {
+    "no_devices_detected": "Keine Eingabegeräte erkannt",
+    "device_currently_not_supported": "Das ausgewählte Gerät wird derzeit nicht unterstützt"
+  }
+}

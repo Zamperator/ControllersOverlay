@@ -1,0 +1,312 @@
+:root, [data-theme] {
+    .overlay.hotasx {
+        transition: --btn-bg 0.3s ease,
+        --btn-active-bg 0.3s ease,
+        --btn-active-color 0.3s ease,
+        --btn-active-border 0.3s ease,
+        --bg 0.3s ease,
+        --line 0.3s ease;
+    }
+}
+
+:root {
+    .overlay.hotasx {
+        --bg: rgba(0, 0, 0, 0.8);
+        --line: #660000;
+        --active: #b30000;
+        --text: #eee;
+        --btn-bg: #222;
+        --btn-active-bg: rgba(179, 0, 0, 0.2);
+        --btn-active-color: #b30000;
+        --btn-active-border: #b30000;
+    }
+}
+
+[data-theme="space"] {
+    .overlay.hotasx {
+        --bg: rgba(0, 50, 0, 0.8);
+        --line: #009900;
+        --active: #00ff00;
+        --text: #00ff00;
+        --btn-bg: #003300;
+        --btn-active-bg: rgba(0, 255, 0, 0.2);
+        --btn-active-color: #00ff00;
+        --btn-active-border: #00ff00;
+    }
+}
+
+[data-theme="desert"] {
+    .overlay.hotasx {
+        --bg: rgba(50, 25, 0, 0.8);
+        --line: #cc9900;
+        --active: #ffcc00;
+        --text: #ffcc00;
+        --btn-bg: #332200;
+        --btn-active-bg: rgba(255, 204, 0, 0.2);
+        --btn-active-color: #ffcc00;
+        --btn-active-border: #ffcc00;
+    }
+}
+
+[data-theme="ocean"] {
+    .overlay.hotasx {
+        --bg: rgba(0, 50, 50, 0.8);
+        --line: #006666;
+        --active: #00ffff;
+        --text: #00ffff;
+        --btn-bg: #003333;
+        --btn-active-bg: rgba(0, 255, 255, 0.2);
+        --btn-active-color: #00ffff;
+        --btn-active-border: #00ffff;
+    }
+}
+
+.overlay.hotasx {
+
+    --bg: rgba(0, 0, 0, 0.8);
+    --line: #660000;
+    --active: #b30000;
+    --text: #eee;
+    --btn-bg: #222;
+    --btn-active-bg: rgba(179, 0, 0, 0.2);
+    --btn-active-color: #b30000;
+    --btn-active-border: #b30000;
+
+    display: flex;
+    gap: 8vmin;
+    padding: 4vmin;
+    border-radius: 2vmin;
+    background: transparent;
+    color: var(--text);
+
+    width: 100vw;
+    height: 100vh;
+
+    font-family: 'Orbitron', sans-serif;
+
+    /* === THROTTLE BLOCK === */
+    .throttle-block {
+        display: grid;
+        align-self: center;
+        gap: 2vmin;
+
+        grid-template-columns: auto auto;
+        grid-template-rows: auto 1fr auto;
+        grid-template-areas:
+        "throttle-rear throttle-rear"
+        "throttle throttle-front"
+        "throttle throttle-console";
+    }
+
+    .throttle {
+        grid-area: throttle;
+        width: 16vmin;
+        height: 40vmin;
+        border: 0.3vmin solid var(--line);
+        border-radius: 1vmin;
+        position: relative;
+        background: var(--bg);
+        overflow: hidden;
+    }
+
+    .throttle-fill {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 0;
+        background: red; /* via JS überschrieben */
+        transition: height 0.1s linear, background-color 0.2s linear;
+        z-index: 0;
+    }
+
+    .throttle-percent {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 2.4rem;
+        font-weight: 900;
+        text-shadow: 0 1px 3px #000;
+        z-index: 2;
+    }
+
+    /* Rear section (top) */
+    .throttle-rear {
+        grid-area: throttle-rear;
+        display: grid;
+        grid-template-columns: 1fr auto; /* left Slider, right side Buttons */
+        align-items: center;
+        gap: 3vmin;
+    }
+
+    .slider {
+        height: 3vmin;
+        border: 0.3vmin solid var(--line);
+        border-radius: 1vmin;
+        background: var(--bg);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .slider-handle {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 3vmin;
+        background: var(--active);
+        border-radius: 0.6vmin;
+        box-shadow: 0 0 1vmin var(--active);
+        transform: translateX(-50%); /* Mitte bleibt Referenz */
+        transition: left 0.05s linear;
+    }
+
+    .throttle-upper-buttons {
+        display: flex;
+        gap: 1vmin;
+    }
+
+    /* Front buttons (to the right of the lever) */
+    .throttle-front {
+
+        grid-area: throttle-front;
+        display: grid;
+        grid-template-columns: 1fr;
+        /*gap: 1vmin;*/
+        justify-items: start;
+
+        .button {
+            border-radius: 30px;
+            width: 100%;
+        }
+
+    }
+
+    /* Console buttons (bottom) */
+    .throttle-console {
+        grid-area: throttle-console;
+        display: flex;
+        gap: 2vmin;
+        justify-content: flex-start;
+    }
+
+    /* === STICK BLOCK === */
+    .stick-block {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2vmin;
+        align-self: center;
+
+        .name-block {
+            position: absolute;
+            top: -6vmin;
+            color: var(--line);
+            font-size: 3vmin;
+            font-weight: 900;
+            text-shadow: 0 1px 3px #000;
+        }
+    }
+
+    .stick {
+        width: 20vmin;
+        height: 20vmin;
+        border: 0.3vmin solid var(--line);
+        position: relative;
+        background: var(--bg);
+        overflow: hidden;
+    }
+
+    .stick-indicator {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 3vmin;
+        height: 3vmin;
+        border-radius: 50%;
+        margin: -1.5vmin 0 0 -1.5vmin;
+        background: var(--active);
+        box-shadow: 0 0 1vmin var(--active);
+        transition: transform 0.05s linear;
+    }
+
+    .rudder {
+        width: 20vmin;
+        height: 3vmin;
+        border: 0.3vmin solid var(--line);
+        border-radius: 0.8vmin;
+        background: var(--bg);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .rudder-indicator {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 3vmin;
+        background: var(--active);
+        border-radius: 0.6vmin;
+        box-shadow: 0 0 1vmin var(--active);
+        transform: translateX(-50%); /* Mitte ist Referenz */
+        transition: left 0.05s linear;
+    }
+
+    /* === HAT === */
+    .hat {
+        width: 6vmin;
+        height: 6vmin;
+        border: 0.3vmin solid var(--line);
+        border-radius: 50%;
+        position: relative;
+        background: var(--bg);
+        overflow: hidden;
+    }
+
+    /* Arrow hat pointer */
+    .hat-arrow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        background: var(--active);
+
+        clip-path: polygon(
+                50% 50%, /* Top center */ 30% 0%, /* Base left at edge */ 70% 0% /* Base right at edge */
+        );
+
+        transform-origin: 50% 50%;
+        transform: rotate(0deg);
+        opacity: 0;
+        transition: transform 0.1s linear, opacity 0.1s;
+    }
+
+    .hat-arrow.active {
+        opacity: 1;
+    }
+
+    /* === BUTTONS === */
+    .button {
+        font-family: 'Orbitron', sans-serif;
+        border: 0.2vmin solid var(--line) !important;
+        border-radius: 50%;
+        width: 6vmin;
+        height: 6vmin;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.0vmin;
+        font-weight: 900;
+        background: var(--bg);
+        color: var(--text);
+        transition: background 0.1s, box-shadow 0.1s;
+    }
+
+    .button.active {
+        background: var(--btn-active-bg);
+        border-color: var(--btn-active-border);
+        color: var(--btn-active-color);
+        box-shadow: 0 0 1.2vmin var(--btn-active-border);
+    }
+}
