@@ -390,6 +390,27 @@
             place-items: center;
             pointer-events: none;
 
+            &::after {
+                position: absolute;
+                top: 6.5vmin;
+                font-size: 2vmin;
+                font-weight: 900;
+                color: var(--label);
+                letter-spacing: .22vmin;
+                pointer-events: none;
+                content: "";
+            }
+
+            &.b::after {
+                content: "B";
+                left: 2.0pc;
+            }
+
+            &.a::after {
+                content: "A";
+                right: 2.0pc;
+            }
+
             .btn {
                 pointer-events: auto;
                 position: absolute;
@@ -409,26 +430,6 @@
                     transform: translate(-50%, -50%) translateY(.25vmin) scale(.97);
                     filter: brightness(.9);
                     box-shadow: inset 0 .2vmin .6vmin rgba(0, 0, 0, .55);
-                }
-
-                &.b::after, &.a::after {
-                    position: absolute;
-                    top: 6.0vmin;
-                    font-size: 2vmin;
-                    font-weight: 900;
-                    color: var(--label);
-                    letter-spacing: .22vmin;
-                    content: "";
-                }
-
-                &.b::after {
-                    content: "B";
-                    left: 1.2pc;
-                }
-
-                &.a::after {
-                    content: "A";
-                    right: 1.0pc;
                 }
             }
         }

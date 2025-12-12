@@ -149,11 +149,11 @@ export default function NES() {
 
                 {/* A/B */}
                 <div className="face-buttons">
-                    <div className="button-box">
-                        <div ref={el => buttons.current.Y = el} className="btn b" aria-label="B"/>
+                    <div className="button-box b">
+                        <div ref={el => buttons.current.B = el} className="btn b" aria-label="B"/>
                     </div>
-                    <div className="button-box">
-                        <div ref={el => buttons.current.B = el} className="btn a" aria-label="A"/>
+                    <div className="button-box a">
+                        <div ref={el => buttons.current.A = el} className="btn a" aria-label="A"/>
                     </div>
                 </div>
             </div>
