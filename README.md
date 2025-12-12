@@ -17,8 +17,8 @@ https://zamperia.de/controllers/?device=xbox
 - [Start Development](#start-development)
 - [Production Build](#production-build)
 - [Usage](#usage)
-- [Tips & Troubleshooting](#tips--troubleshooting)
 - [Roadmap / TODO](#roadmap--todo)
+- [Tips & Troubleshooting](#tips--troubleshooting)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -98,6 +98,15 @@ public/
 - Set the Browser Source size to match your scene layout
 - Enable hardware acceleration in OBS for better performance
 
+## Roadmap / TODO
+- [x] Add more controller layouts
+- [x] Improve UI/UX (skins/themes, options)
+- [x] Cleanup & refactor codebase and CSS
+- [ ] Provide button mapping (saved in localStorage)
+- [ ] Move config data per device to each device module
+- [ ] Document OBS presets
+- [ ] Create a standalone Electron app
+
 ## Tips & Troubleshooting
 - **Gamepad not detected?**
     - Press a button/move a stick (initializes the API)
@@ -111,13 +120,6 @@ public/
     - Set appropriate FPS for the Browser Source (e.g., 60)
     - Close GPU/CPU-heavy tabs
 
-## Roadmap / TODO
-- [x] Add more controller layouts
-- [x] Improve UI/UX (skins/themes, options)
-- [x] Cleanup & refactor codebase and CSS
-- [ ] Move config data per device to each device module
-- [ ] Document OBS presets
-
 ## Contributing
 Contributions welcome!
 - Open issues for bugs/feature requests
@@ -126,6 +128,7 @@ Contributions welcome!
 
 ## Thanks
 - Used https://www.image2clippath.com/ to create most of the controller shapes
+- With a little help from ChatGPT :) (Provided css code snippets)
 
 ## License
 MIT License
