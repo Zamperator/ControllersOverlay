@@ -22,7 +22,7 @@
     }
 }
 
-[data-theme="space"] {
+body[data-theme="space"] {
     .overlay.hotasx {
         --bg: rgba(0, 50, 0, 0.8);
         --line: #009900;
@@ -35,7 +35,7 @@
     }
 }
 
-[data-theme="desert"] {
+body[data-theme="desert"] {
     .overlay.hotasx {
         --bg: rgba(50, 25, 0, 0.8);
         --line: #cc9900;
@@ -48,7 +48,7 @@
     }
 }
 
-[data-theme="ocean"] {
+body[data-theme="ocean"] {
     .overlay.hotasx {
         --bg: rgba(0, 50, 50, 0.8);
         --line: #006666;

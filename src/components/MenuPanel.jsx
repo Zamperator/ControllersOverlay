@@ -1,7 +1,7 @@
-import React, {useEffect, useMemo, useState} from "react"
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react"
 import {controllerSetups, getControllerSetup} from "@/config/config"
 import {L8N} from "@/lib/Localization"
-import ctrlConfig from "@/config/ctrlConfig";
+import ctrlConfig from "@/config/ctrlConfig"
 
 import "@/styles/components/MenuPanel.css"
 
@@ -13,101 +13,174 @@ export default function MenuPanel({
                                       setDebug,
                                       leftLinks = []
                                   }) {
-    const [theme, setTheme] = useState("")
-    const [visible, setVisible] = useState(false)
-    const [pinned, setPinned] = useState(false)
-    const [selectedPadKey, setSelectedPadKey] = useState('')
 
-    const cfg = getControllerSetup(activeSetup)
+    const [selectedPadKey, setSelectedPadKey] = useState("")
+    const selectedPadKeyRef = useRef("")
 
-    // Are themes allowed for the current setup?
-    const allowTheme = useMemo(() => {
-        if (!activeSetup) {
-            return false
-        }
-        return !!cfg?.themes
-    }, [activeSetup, cfg])
+    const getInitialTheme = () => {
+        const params = new URLSearchParams(window.location.search)
+        const urlTheme = (params.get("theme") || "").trim()
+        const storedTheme = (localStorage.getItem("arcadeTheme") || "").trim()
 
-    function snapshotGamepads() {
-        return Array.from(navigator.getGamepads ? navigator.getGamepads() : [])
-            .filter(Boolean)
-            .map(gp => ({
-                key: `${gp.index}:${gp.id}`,
-                index: gp.index,
-                id: gp.id,
-                mapping: gp.mapping || 'standard',
-                buttons: gp.buttons?.length || 0,
-                axes: gp.axes?.length || 0,
-                label: gp.id?.trim() || `Gamepad ${gp.index}`
-            }))
-            // stable sorting: first "standard", then name, then index
-            .sort((a, b) => (a.mapping === b.mapping ? 0 : a.mapping === 'standard' ? -1 : 1)
-                || a.label.localeCompare(b.label)
-                || a.index - b.index)
+        return urlTheme || storedTheme || ""
     }
 
-    function loadStoredPadKey() {
-        // prefer ctrlConfig if available
+    const getInitialPinned = () => {
+        return localStorage.getItem("arcadeMenuPinned") === "true"
+    }
+
+    const [theme, setTheme] = useState(() => getInitialTheme())
+    const [pinned, setPinned] = useState(() => getInitialPinned())
+    const [visible, setVisible] = useState(() => getInitialPinned())
+
+    const cfg = useMemo(() => {
+        if (!activeSetup) {
+            return null
+        }
+
+        return getControllerSetup(activeSetup)
+    }, [activeSetup])
+
+    const allowTheme = !!activeSetup && !!cfg?.themes
+    const showLeftLinks = (visible || pinned) && Array.isArray(leftLinks) && leftLinks.length > 0
+
+    const replaceUrlParams = useCallback((mutate) => {
+        const params = new URLSearchParams(window.location.search)
+
+        mutate(params)
+
+        const query = params.toString()
+        const newUrl = query
+            ? `${window.location.pathname}?${query}`
+            : window.location.pathname
+
+        window.history.replaceState({}, "", newUrl)
+    }, [])
+
+    const pushUrlParams = useCallback((mutate) => {
+        const params = new URLSearchParams(window.location.search)
+
+        mutate(params)
+
+        const query = params.toString()
+        const newUrl = query
+            ? `${window.location.pathname}?${query}`
+            : window.location.pathname
+
+        window.history.pushState({}, "", newUrl)
+    }, [])
+
+    const snapshotGamepads = useCallback(() => {
+        return Array.from(navigator.getGamepads ? navigator.getGamepads() : [])
+            .filter(Boolean)
+            .map((gp) => {
+                return {
+                    key: `${gp.index}:${gp.id}`,
+                    index: gp.index,
+                    id: gp.id,
+                    mapping: gp.mapping || "standard",
+                    buttons: gp.buttons?.length || 0,
+                    axes: gp.axes?.length || 0,
+                    label: gp.id?.trim() || `Gamepad ${gp.index}`
+                }
+            })
+            .sort((a, b) => {
+                if (a.mapping !== b.mapping) {
+                    return a.mapping === "standard" ? -1 : 1
+                }
+
+                const labelCompare = a.label.localeCompare(b.label)
+                if (labelCompare !== 0) {
+                    return labelCompare
+                }
+
+                return a.index - b.index
+            })
+    }, [])
+
+    const loadStoredPadKey = useCallback(() => {
         try {
-            const idx = ctrlConfig.get?.('input', 'gamepadIndex')
-            const id = ctrlConfig.get?.('input', 'gamepadId')
-            if (typeof idx === 'number' && id) {
+            const idx = ctrlConfig.get?.("input", "gamepadIndex")
+            const id = ctrlConfig.get?.("input", "gamepadId")
+
+            if (typeof idx === "number" && id) {
                 return `${idx}:${id}`
             }
         } catch {
         }
-        const k = localStorage.getItem('arcadeSelectedGamepadKey')
-        return k || ''
-    }
 
-    function persistPadSelection(pad) {
+        const storedKey = localStorage.getItem("arcadeSelectedGamepadKey")
+        return storedKey || ""
+    }, [])
+
+    const persistPadSelection = useCallback((pad) => {
         try {
-            ctrlConfig.set?.('input', 'gamepadIndex', pad?.index ?? null)
-            ctrlConfig.set?.('input', 'gamepadId', pad?.id ?? '')
+            ctrlConfig.set?.("input", "gamepadIndex", pad?.index ?? null)
+            ctrlConfig.set?.("input", "gamepadId", pad?.id ?? "")
         } catch {
         }
+
         if (pad) {
-            localStorage.setItem('arcadeSelectedGamepadKey', pad.key)
-        }
-        else {
-            localStorage.removeItem('arcadeSelectedGamepadKey')
-        }
-    }
-
-    // === Initialising: URL > localStorage ===
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search)
-        const urlTheme = params.get("theme")
-        const storedTheme = localStorage.getItem("arcadeTheme")
-        const storedPin = localStorage.getItem("arcadeMenuPinned")
-
-        if (urlTheme) {
-            setTheme(urlTheme)
-        }
-        else {
-            if (storedTheme) {
-                setTheme(storedTheme)
-            }
-        }
-
-        if (storedPin === "true") {
-            setPinned(true)
-            setVisible(true)
+            localStorage.setItem("arcadeSelectedGamepadKey", pad.key)
+        } else {
+            localStorage.removeItem("arcadeSelectedGamepadKey")
         }
     }, [])
 
-    // Use/Save theme when changed (if allowed)
     useEffect(() => {
+        selectedPadKeyRef.current = selectedPadKey
+    }, [selectedPadKey])
+
+    // --- FIX: On reload, set activeSetup from URL early so allowTheme is correct
+    useEffect(() => {
+        if (activeSetup) {
+            return
+        }
+
+        const params = new URLSearchParams(window.location.search)
+        const device = (params.get("device") || "").trim()
+
+        if (!device) {
+            return
+        }
+
+        if (!controllerSetups[device]) {
+            return
+        }
+
+        setActiveSetup(device)
+    }, [activeSetup, setActiveSetup])
+
+    useEffect(() => {
+        const storedDebug = localStorage.getItem("arcadeDebug")
+
+        if (storedDebug === null) {
+            setDebug(false)
+            localStorage.setItem("arcadeDebug", "false")
+            return
+        }
+
+        setDebug(storedDebug === "true")
+    }, [setDebug])
+
+    // --- FIX: Do not delete theme from URL/localStorage while activeSetup isn't known yet
+    useEffect(() => {
+
+        // During initial load activeSetup can be empty for a moment -> don't wipe ?theme=...
+        if (!activeSetup) {
+            return
+        }
+
         if (!allowTheme) {
             if (theme) {
                 setTheme("")
             }
+
             document.documentElement.removeAttribute("data-theme")
 
-            const params = new URLSearchParams(window.location.search)
-            params.delete("theme")
-            const newUrl = `${window.location.pathname}?${params.toString()}`
-            window.history.replaceState({}, "", newUrl)
+            replaceUrlParams((params) => {
+                params.delete("theme")
+            })
 
             localStorage.removeItem("arcadeTheme")
             return
@@ -116,117 +189,127 @@ export default function MenuPanel({
         if (!theme) {
             document.documentElement.removeAttribute("data-theme")
             localStorage.removeItem("arcadeTheme")
-        }
-        else {
-            document.documentElement.setAttribute("data-theme", theme)
+        } else {
+            document.documentElement.dataset.theme = theme
+
+            if (document.body) {
+                document.body.dataset.theme = theme
+            }
             localStorage.setItem("arcadeTheme", theme)
         }
 
-        const params = new URLSearchParams(window.location.search)
-        if (theme) {
-            params.set("theme", theme)
-        }
-        else {
-            params.delete("theme")
-        }
-        const newUrl = `${window.location.pathname}?${params.toString()}`
-        window.history.replaceState({}, "", newUrl)
-    }, [theme, allowTheme])
-
-    // === Load Debug-Mode (Default: false) ===
-    useEffect(() => {
-        const storedDebug = localStorage.getItem("arcadeDebug")
-        if (storedDebug === null) {
-            setDebug(false)
-            localStorage.setItem("arcadeDebug", "false")
-        }
-        else {
-            const parsed = storedDebug === "true"
-            setDebug(parsed)
-        }
-    }, [setDebug])
-
-    useEffect(() => {
-        const initial = snapshotGamepads()
-        // restore existing selection
-        const storedKey = loadStoredPadKey()
-        if (storedKey) {
-            const hit = initial.find(g => g.key === storedKey)
-            if (hit) {
-                setSelectedPadKey(storedKey)
+        replaceUrlParams((params) => {
+            if (theme) {
+                params.set("theme", theme)
+            } else {
+                params.delete("theme")
             }
-            else {
+        })
+    }, [activeSetup, allowTheme, theme, replaceUrlParams])
+
+    useEffect(() => {
+        const pads = snapshotGamepads()
+        const storedKey = loadStoredPadKey()
+
+        if (storedKey) {
+            const existingPad = pads.find((pad) => {
+                return pad.key === storedKey
+            })
+
+            if (existingPad) {
+                setSelectedPadKey(storedKey)
+                selectedPadKeyRef.current = storedKey
+            } else {
                 persistPadSelection(null)
-            } // not available
+            }
+        } else if (pads.length === 1) {
+            setSelectedPadKey(pads[0].key)
+            selectedPadKeyRef.current = pads[0].key
+            persistPadSelection(pads[0])
         }
 
         function onConnect() {
             const list = snapshotGamepads()
-            // if no pad selected, but only one available → auto-select
-            if (!selectedPadKey && list.length === 1) {
+
+            if (!selectedPadKeyRef.current && list.length === 1) {
                 setSelectedPadKey(list[0].key)
+                selectedPadKeyRef.current = list[0].key
                 persistPadSelection(list[0])
             }
         }
 
         function onDisconnect() {
             const list = snapshotGamepads()
-            if (selectedPadKey && !list.find(g => g.key === selectedPadKey)) {
-                // selected pad is gone
-                setSelectedPadKey('')
+            const currentKey = selectedPadKeyRef.current
+
+            if (!currentKey) {
+                return
+            }
+
+            const stillExists = list.find((pad) => {
+                return pad.key === currentKey
+            })
+
+            if (!stillExists) {
+                setSelectedPadKey("")
+                selectedPadKeyRef.current = ""
                 persistPadSelection(null)
             }
         }
 
-        window.addEventListener('gamepadconnected', onConnect)
-        window.addEventListener('gamepaddisconnected', onDisconnect)
+        window.addEventListener("gamepadconnected", onConnect)
+        window.addEventListener("gamepaddisconnected", onDisconnect)
+
         return () => {
-            window.removeEventListener('gamepadconnected', onConnect)
-            window.removeEventListener('gamepaddisconnected', onDisconnect)
+            window.removeEventListener("gamepadconnected", onConnect)
+            window.removeEventListener("gamepaddisconnected", onDisconnect)
         }
-    }, [selectedPadKey]) // only once
+    }, [snapshotGamepads, loadStoredPadKey, persistPadSelection])
 
     function handleThemeChange(event) {
-        const value = event.target.value
-        setTheme(value)
+        setTheme(event.target.value)
     }
 
     function handleDeviceSelect(event) {
         const selected = event.target.value
-        if (selected && controllerSetups[selected]) {
-            setActiveSetup(selected)
-            setShowDeviceSelect(false)
 
-            const params = new URLSearchParams(window.location.search)
+        if (!selected || !controllerSetups[selected]) {
+            return
+        }
+
+        setActiveSetup(selected)
+        setShowDeviceSelect(false)
+
+        const nextAllowsTheme = !!controllerSetups[selected]?.themes
+
+        pushUrlParams((params) => {
             params.set("device", selected)
 
-            const nextAllowsTheme = !!controllerSetups[selected]?.themes
             if (nextAllowsTheme && theme) {
                 params.set("theme", theme)
-            }
-            else {
+            } else {
                 params.delete("theme")
             }
+        })
 
-            const newUrl = `${window.location.pathname}?${params.toString()}`
-            window.history.pushState({}, "", newUrl)
-
-            if (!nextAllowsTheme && theme) {
-                setTheme("")
-            }
+        if (!nextAllowsTheme && theme) {
+            setTheme("")
         }
     }
 
     function handleDebugChange(event) {
         const checked = event.target.checked
+
         setDebug(checked)
-        localStorage.setItem("arcadeDebug", checked)
+        localStorage.setItem("arcadeDebug", checked ? "true" : "false")
     }
 
     function handlePinChange(event) {
         const checked = event.target.checked
+
         setPinned(checked)
         localStorage.setItem("arcadeMenuPinned", checked ? "true" : "false")
+
         if (checked) {
             setVisible(true)
         }
@@ -242,9 +325,6 @@ export default function MenuPanel({
         }
     }
 
-    // Show links only when visible or pinned
-    const showLeftLinks = (visible || pinned) && Array.isArray(leftLinks) && leftLinks.length > 0
-
     return (
         <div
             className="menu-panel-zone"
@@ -255,6 +335,7 @@ export default function MenuPanel({
                 <div className="menu-left">
                     {leftLinks.map((lnk, idx) => {
                         const key = `${lnk?.label || "link"}-${idx}`
+
                         return (
                             <button
                                 key={key}
@@ -263,12 +344,11 @@ export default function MenuPanel({
                                 data-id={lnk?.id || ""}
                                 data-action={lnk?.action || ""}
                                 title={lnk?.title || lnk?.label || "Link"}
-                                onClick={lnk?.onClick || (() => {
-                                })}
+                                onClick={lnk?.onClick || (() => {})}
                             >
                                 {lnk?.icon ? (
                                     typeof lnk.icon === "string" && lnk.icon.startsWith("<svg")
-                                        ? <span className="pill-icon" dangerouslySetInnerHTML={{__html: lnk.icon}}/>
+                                        ? <span className="pill-icon" dangerouslySetInnerHTML={{__html: lnk.icon}} />
                                         : <span className="pill-icon" aria-hidden="true">★</span>
                                 ) : (
                                     <span className="pill-icon" aria-hidden="true">★</span>
@@ -284,16 +364,16 @@ export default function MenuPanel({
                 {allowTheme && (
                     <div className="menu-section">
                         <label htmlFor="themeSelect">Theme:</label>
-                        <select id="themeSelect" onChange={handleThemeChange} value={theme || ""}>
+                        <select id="themeSelect" onChange={handleThemeChange} value={theme}>
                             <option value="">{L8N.get("default")}</option>
                             {Object.entries(cfg.themes)
-                                .filter(([k]) => {
-                                    return k !== "default"
+                                .filter(([key]) => {
+                                    return key !== "default"
                                 })
-                                .map(([k, label]) => {
+                                .map(([key, label]) => {
                                     return (
-                                        <option key={k} value={k}>
-                                            {label || (k.charAt(0).toUpperCase() + k.slice(1))}
+                                        <option key={key} value={key}>
+                                            {label || (key.charAt(0).toUpperCase() + key.slice(1))}
                                         </option>
                                     )
                                 })}
@@ -306,7 +386,7 @@ export default function MenuPanel({
                     <select
                         id="deviceSelect"
                         onChange={handleDeviceSelect}
-                        defaultValue={activeSetup || ""}
+                        value={activeSetup || ""}
                     >
                         <option value="" disabled>
                             {L8N.get("choose_device")}...
@@ -315,6 +395,7 @@ export default function MenuPanel({
                             if (!setup.active) {
                                 return null
                             }
+
                             return (
                                 <option key={key} value={key}>
                                     {setup.name}
@@ -324,7 +405,6 @@ export default function MenuPanel({
                     </select>
                 </div>
 
-                {/* Pin menu */}
                 <div className="menu-section pin-toggle">
                     <label htmlFor="pinToggle">{L8N.get("always_pin_menu") || "Menü anpinnen"}:</label>
                     <input
@@ -335,7 +415,6 @@ export default function MenuPanel({
                     />
                 </div>
 
-                {/* Debug */}
                 <div className="menu-section debug-toggle">
                     <label htmlFor="debugToggle">{L8N.get("debug.title")}:</label>
                     <input
