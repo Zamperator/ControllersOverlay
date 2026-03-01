@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useMemo, useState} from "react"
-import {makeActiveGamepadPicker} from "@/lib/activeGamepad";
+import {makeActiveGamepadPicker} from "@/lib/activeGamepad"
 import "@/styles/devices/HotasX.css"
 
 export default function HotasX() {
@@ -8,11 +8,13 @@ export default function HotasX() {
     const rudderInd = useRef(null)
     const throttleFill = useRef(null)
     const sliderHandle = useRef(null)
-    const hatArrow = useRef(null)
+
+    const hatBase = useRef(null)
+    const hatKnob = useRef(null)
+
     const buttons = useRef({})
 
     const [throttlePct, setThrottlePct] = useState(0)
-    const lastHatAngle = useRef(null)
 
     const buttonMap = useMemo(() => ({
         0: "F",   // Fire
@@ -31,141 +33,144 @@ export default function HotasX() {
     const activeController = useMemo(() => makeActiveGamepadPicker({timeoutMs: 2000, deadzone: .15}), [])
 
     useEffect(() => {
-        let raf;
+        let raf
+
+        const povToVector = (pov) => {
+
+            if (pov === null || pov === undefined) {
+                return {active: false, x: 0, y: 0}
+            }
+
+            // Many devices report neutral as 0.0
+            if (Math.abs(pov) < 0.05) {
+                return {active: false, x: 0, y: 0}
+            }
+
+            const steps = [
+                {v: -1.0, a: 0},
+                {v: -0.714, a: 45},
+                {v: -0.428, a: 90},
+                {v: -0.143, a: 135},
+                {v: 0.143, a: 180},
+                {v: 0.428, a: 225},
+                {v: 0.714, a: 270},
+                {v: 1.0, a: 315},
+            ]
+
+            let best = null
+            let bestDiff = Infinity
+
+            for (const s of steps) {
+                const diff = Math.abs(pov - s.v)
+                if (diff < bestDiff) {
+                    bestDiff = diff
+                    best = s
+                }
+            }
+
+            if (!best || bestDiff > 0.08) {
+                return {active: false, x: 0, y: 0}
+            }
+
+            // angle: 0 = up, 90 = right, 180 = down, 270 = left
+            const rad = (best.a * Math.PI) / 180
+            const x = Math.sin(rad)
+            const y = -Math.cos(rad)
+
+            return {active: true, x, y}
+        }
+
+        const moveIndicatorInBox = (indicatorEl, x, y) => {
+            if (!indicatorEl || !indicatorEl.parentElement) {
+                return
+            }
+
+            const box = indicatorEl.parentElement.getBoundingClientRect()
+            const ind = indicatorEl.getBoundingClientRect()
+
+            const rangeX = (box.width - ind.width) / 2
+            const rangeY = (box.height - ind.height) / 2
+
+            indicatorEl.style.transform = `translate(${x * rangeX}px, ${y * rangeY}px)`
+        }
+
+        const moveHat = (baseEl, knobEl, x, y) => {
+            if (!baseEl || !knobEl) {
+                return
+            }
+
+            const box = baseEl.getBoundingClientRect()
+            const ind = knobEl.getBoundingClientRect()
+
+            const rangeX = (box.width - ind.width) / 2
+            const rangeY = (box.height - ind.height) / 2
+
+            knobEl.style.transform = `translate(calc(-50% + ${x * rangeX}px), calc(-50% + ${y * rangeY}px))`
+        }
 
         function update() {
-            const pads = navigator.getGamepads?.() || [];
+            const pads = navigator.getGamepads?.() || []
             const gp = activeController(pads, null)
+
             if (!gp) {
-                raf = requestAnimationFrame(update);
-                return;
+                raf = requestAnimationFrame(update)
+                return
             }
 
             // === Stick (X/Y) ===
-            if (stickInd.current && stickInd.current.parentElement) {
-                const box = stickInd.current.parentElement.getBoundingClientRect()
-                const ind = stickInd.current.getBoundingClientRect()
-                const rangeX = (box.width - ind.width) / 2
-                const rangeY = (box.height - ind.height) / 2
-                const x = gp.axes[0]
-                const y = gp.axes[1]
-                stickInd.current.style.transform = `translate(${x * rangeX}px, ${y * rangeY}px)`
-            }
+            moveIndicatorInBox(stickInd.current, gp.axes[0] ?? 0, gp.axes[1] ?? 0)
 
             // === Rudder (axis 5) ===
             if (rudderInd.current && rudderInd.current.parentElement) {
                 const box = rudderInd.current.parentElement.getBoundingClientRect()
-                const r = gp.axes[5] // –1 … +1
+                const r = gp.axes[5] ?? 0 // –1 … +1
                 const pos = ((r + 1) / 2) * box.width
                 rudderInd.current.style.left = `${pos}px`
             }
 
             // === Throttle (axis 2) ===
             if (throttleFill.current) {
-                const z = -gp.axes[2]              // –1 … +1
-                const pct = Math.round(z * 100)   // –100 … +100
+                const z = -(gp.axes[2] ?? 0)           // –1 … +1
+                const pct = Math.round(z * 100)        // –100 … +100
                 setThrottlePct(pct)
 
                 // Height (inverted to match physical movement)
-                const heightPct = (pct + 100) / 200 * 100
+                const heightPct = ((pct + 100) / 200) * 100
                 throttleFill.current.style.height = `${heightPct}%`
 
                 // Color (Hue 0 = Rot → 120 = Grün)
-                const hue = (pct + 100) * 0.6     // -100 = 0, 0 = 60, +100 = 120
+                const hue = (pct + 100) * 0.6          // -100 = 0, 0 = 60, +100 = 120
                 throttleFill.current.style.backgroundColor = `hsl(${hue}, 100%, 45%, 0.7)`
-
-                // Text color adjustment
-                /*const throttlePercentEl = throttleFill.current.parentElement.querySelector(".throttle-percent")
-                if (throttlePercentEl) {
-                    if (pct > -20 && pct < 20) {
-                        throttlePercentEl.style.color = "#111"
-                        throttlePercentEl.style.textShadow = "0 1px 2px #fff"
-                    } else {
-                        throttlePercentEl.style.color = "#fff"
-                        throttlePercentEl.style.textShadow = "0 1px 2px #000"
-                    }
-                }*/
             }
 
             // === Slider (axis 6) ===
             if (sliderHandle.current && sliderHandle.current.parentElement) {
                 const box = sliderHandle.current.parentElement.getBoundingClientRect()
-                const s = gp.axes[6]
+                const s = gp.axes[6] ?? 0
                 const pos = ((s + 1) / 2) * box.width
                 sliderHandle.current.style.left = `${pos}px`
             }
 
-            // === Hat (Coolie, Axis 9) ===
-            if (hatArrow.current) {
-                const pov = gp.axes[9]
-                let angle = null
-
-                // Mapping Axis9 → Angle
-                if (Math.abs(pov - (-1.0)) < 0.05) {
-                    angle = 0
-                }
-                else if (Math.abs(pov - (-0.714)) < 0.05) {
-                    angle = 45
-                }
-                else if (Math.abs(pov - (-0.428)) < 0.05) {
-                    angle = 90
-                }
-                else if (Math.abs(pov - (-0.143)) < 0.05) {
-                    angle = 135
-                }
-                else if (Math.abs(pov - (0.143)) < 0.05) {
-                    angle = 180
-                }
-                else if (Math.abs(pov - (0.428)) < 0.05) {
-                    angle = 225
-                }
-                else if (Math.abs(pov - (0.714)) < 0.05) {
-                    angle = 270
-                }
-                else if (Math.abs(pov - (1.0)) < 0.05) {
-                    angle = 315
-                }
-
-                if (angle !== null) {
-                    if (lastHatAngle.current !== null) {
-                        const diff = angle - lastHatAngle.current
-
-                        // Jump over 360° → correct
-                        if (diff > 180) {
-                            angle -= 360
-                        }
-                        else if (diff < -180) {
-                            angle += 360
-                        }
-                    }
-
-                    lastHatAngle.current = angle % 360
-
-                    hatArrow.current.classList.add("active")
-                    hatArrow.current.style.transform =
-                        `translate(-50%, -50%) rotate(${lastHatAngle.current}deg)`
-                }
-                else {
-                    hatArrow.current.classList.remove("active")
-                    lastHatAngle.current = null
-                }
+            // === Hat (Coolie, axis 9) ===
+            if (hatBase.current && hatKnob.current) {
+                const vec = povToVector(gp.axes[9])
+                hatBase.current.classList.toggle("active", vec.active)
+                moveHat(hatBase.current, hatKnob.current, vec.x, vec.y)
             }
 
             // === Buttons ===
             Object.entries(buttonMap).forEach(([i]) => {
                 const el = buttons.current[i]
                 if (el) {
-                    el.classList.toggle("active", gp.buttons[i]?.pressed)
+                    el.classList.toggle("active", !!gp.buttons[i]?.pressed)
                 }
             })
 
-            raf = requestAnimationFrame(update);
+            raf = requestAnimationFrame(update)
         }
 
         update()
-
-        return () => cancelAnimationFrame(raf);
-
+        return () => raf && cancelAnimationFrame(raf)
     }, [activeController, buttonMap])
 
     return (
@@ -205,16 +210,22 @@ export default function HotasX() {
 
             <div className="stick-block">
                 <div className="name-block">T.Flight Hotas X</div>
+
                 <div className="stick">
                     <div ref={stickInd} className="stick-indicator"></div>
                 </div>
+
                 <div className="rudder">
                     <div ref={rudderInd} className="rudder-indicator"></div>
                 </div>
+
                 <div className="buttons">
                     <div className="hat">
-                        <div ref={hatArrow} className="hat-arrow"></div>
+                        <div ref={hatBase} className="hat-base">
+                            <div ref={hatKnob} className="hat-knob"></div>
+                        </div>
                     </div>
+
                     {[0, 1, 3].map(i => (
                         <div key={i} ref={el => buttons.current[i] = el} className="button">
                             {buttonMap[i]}

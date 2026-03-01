@@ -11,7 +11,7 @@
 
 :root {
     .overlay.hotasx {
-        --bg: rgba(0, 0, 0, 0.8);
+        --bg: rgba(0, 0, 0, 0.1);
         --line: #660000;
         --active: #b30000;
         --text: #eee;
@@ -24,7 +24,7 @@
 
 body[data-theme="space"] {
     .overlay.hotasx {
-        --bg: rgba(0, 50, 0, 0.8);
+        --bg: rgba(0, 50, 0, 0.1);
         --line: #009900;
         --active: #00ff00;
         --text: #00ff00;
@@ -37,7 +37,7 @@ body[data-theme="space"] {
 
 body[data-theme="desert"] {
     .overlay.hotasx {
-        --bg: rgba(50, 25, 0, 0.8);
+        --bg: rgba(50, 25, 0, 0.1);
         --line: #cc9900;
         --active: #ffcc00;
         --text: #ffcc00;
@@ -50,7 +50,7 @@ body[data-theme="desert"] {
 
 body[data-theme="ocean"] {
     .overlay.hotasx {
-        --bg: rgba(0, 50, 50, 0.8);
+        --bg: rgba(0, 50, 50, 0.1);
         --line: #006666;
         --active: #00ffff;
         --text: #00ffff;
@@ -63,7 +63,7 @@ body[data-theme="ocean"] {
 
 .overlay.hotasx {
 
-    --bg: rgba(0, 0, 0, 0.8);
+    --bg: rgba(0, 0, 0, 0.1);
     --line: #660000;
     --active: #b30000;
     --text: #eee;
@@ -253,37 +253,48 @@ body[data-theme="ocean"] {
     }
 
     /* === HAT === */
+    /* === HAT (Coolie) === */
     .hat {
         width: 6vmin;
         height: 6vmin;
+        position: relative;
+    }
+
+    .hat-base {
+        width: 100%;
+        height: 100%;
         border: 0.3vmin solid var(--line);
         border-radius: 50%;
         position: relative;
         background: var(--bg);
         overflow: hidden;
+        box-sizing: border-box;
     }
 
-    /* Arrow hat pointer */
-    .hat-arrow {
+    .hat-base.active {
+        border-color: var(--active);
+        box-shadow: 0 0 0.8vmin rgba(255, 255, 255, 0.12);
+    }
+
+    .hat-knob {
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 100%;
-        height: 100%;
-        background: var(--active);
-
-        clip-path: polygon(
-                50% 50%, /* Top center */ 30% 0%, /* Base left at edge */ 70% 0% /* Base right at edge */
-        );
-
-        transform-origin: 50% 50%;
-        transform: rotate(0deg);
-        opacity: 0;
-        transition: transform 0.1s linear, opacity 0.1s;
+        width: 1.6vmin;
+        height: 1.6vmin;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.18);
+        border: 0.25vmin solid rgba(255, 255, 255, 0.22);
+        box-shadow: 0 0 1vmin rgba(0, 0, 0, 0.45);
+        transform: translate(-50%, -50%);
+        transition: transform 0.06s linear;
+        box-sizing: border-box;
     }
 
-    .hat-arrow.active {
-        opacity: 1;
+    .hat-base.active .hat-knob {
+        background: color-mix(in srgb, var(--active) 70%, rgba(255, 255, 255, 0.22));
+        border-color: color-mix(in srgb, var(--active) 75%, rgba(255, 255, 255, 0.22));
+        box-shadow: 0 0 1.2vmin rgba(0, 0, 0, 0.55);
     }
 
     /* === BUTTONS === */
