@@ -38,11 +38,14 @@ https://zamperia.de/controllers/?device=xbox
 - NES
 - N64
 - GameCube
-- Xbox One
-- PS5
+- Xbox One*
+- PS5*
 - Mega Drive Classic
 - Mega Drive 6-Button
 - Arcade sticks (various PS2/PS3/PS4 models)
+  
+#### *Note
+- I am extremely dissatisfied with the XBOX and PS5 controller layouts. I use css clip-path, but I probably need some other method. With clip-path, you can't get the shapes and color shades right
 
 > More devices are planned—see the [Roadmap](#roadmap--todo).
 
@@ -127,8 +130,7 @@ Contributions welcome!
 - Follow project conventions (React/JSX, Yarn)
 
 ## Thanks
-- Used https://www.image2clippath.com/ to create most of the controller shapes
-- With a little help from ChatGPT :) (Provided css code snippets)
+- With a little help from ChatGPT and Claude.ai :) (Provided css code snippets)
 
 ## License
 MIT License

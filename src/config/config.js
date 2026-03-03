@@ -50,9 +50,9 @@ export const controllerSetups = {
         active: true,
     },
     ps5: {
-        name: "PS5",
+        name: "PS5 DualSense",
         layout: "PS5",
-        active: false,
+        active: true,
     },
     snes: {
         name: "SNES Controller",

@@ -3,6 +3,11 @@
     --b: #f33;
     --x: #09f;
     --y: #ff0;
+    --cross:    #4075cc;   /* Cross (×)    – blue       */
+    --circle:   #cc3040;   /* Circle (○)   – red        */
+    --square:   #cc3d8a;   /* Square (□)   – pink       */
+    --triangle: #1e8f64;   /* Triangle (△) – teal-green */
+    --acc:      #00b4f7;   /* PS accent blue            */
     --bg: #111;
     --panel: #191919;
     --light: #333;
@@ -338,25 +343,16 @@
         transition: transform 0.08s, box-shadow 0.12s;
     }
 
-    .y {
-        grid-area: 1 / 2;
-        color: var(--y);
+    .center-row {
+        position: absolute;
+        transform: translate(-50%, 100%);
     }
 
-    .x {
-        grid-area: 2 / 1;
-        color: var(--x);
-    }
-
-    .b {
-        grid-area: 2 / 3;
-        color: var(--b);
-    }
-
-    .a {
-        grid-area: 3 / 2;
-        color: var(--a);
-    }
+    /* Grid positions – △ top, □ left, ○ right, × bottom */
+    .triangle { grid-area: 1 / 2; color: var(--triangle); }
+    .circle   { grid-area: 2 / 3; color: var(--circle);   }
+    .cross    { grid-area: 3 / 2; color: var(--cross);     }
+    .square   { grid-area: 2 / 1; color: var(--square);    }
 
     .btn.active {
         transform: scale(0.9);
