@@ -24,6 +24,18 @@ import "@/styles/devices/DualT16000.css"
 const RE_T16000 = /T\.?16000/i
 const RE_TWCS = /TWCS/i
 
+// ──── Button layout ───────────────────────────────────────────────────────────
+const STICK_LAYOUT = {
+    left: {
+        leftCol: [4, 5, 6, 9, 8, 7],
+        rightCol: [12, 11, 10, 13, 14, 15],
+    },
+    right: {
+        leftCol: [10, 11, 12, 15, 14, 13],
+        rightCol: [6, 5, 4, 7, 8, 9],
+    },
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 /** Convert HAT POV axis value (-1…+1) to {x, y} unit vector, or null if centered. */
@@ -126,20 +138,20 @@ export default function DualT16000() {
     const hasTwcs = modulesOrder.includes("twcs")
 
     // T.16000M (left) refs
-    const lStickInd    = useRef(null)
-    const lRudderInd   = useRef(null)
-    const lHatBase     = useRef(null)
-    const lHatKnob     = useRef(null)
-    const lSlider      = useRef(null)   // base throttle slider (axis 6)
-    const lSignal      = useRef(null)   // connection indicator dot
+    const lStickInd = useRef(null)
+    const lRudderInd = useRef(null)
+    const lHatBase = useRef(null)
+    const lHatKnob = useRef(null)
+    const lSlider = useRef(null)   // base throttle slider (axis 6)
+    const lSignal = useRef(null)   // connection indicator dot
 
     // T.16000M (right) refs
-    const rStickInd    = useRef(null)
-    const rRudderInd   = useRef(null)
-    const rHatBase     = useRef(null)
-    const rHatKnob     = useRef(null)
-    const rSlider      = useRef(null)
-    const rSignal      = useRef(null)
+    const rStickInd = useRef(null)
+    const rRudderInd = useRef(null)
+    const rHatBase = useRef(null)
+    const rHatKnob = useRef(null)
+    const rSlider = useRef(null)
+    const rSignal = useRef(null)
 
     // TWCS refs
     const throttleFill = useRef(null)
@@ -200,7 +212,7 @@ export default function DualT16000() {
             wSignal.current?.classList.toggle("connected", !!twcsDevice)
 
             // ── Update stick panels ───────────────────────────────────────
-            updateStick(lStickInd, lRudderInd, lHatBase, lHatKnob, lSlider, leftStick,  "lt")
+            updateStick(lStickInd, lRudderInd, lHatBase, lHatKnob, lSlider, leftStick, "lt")
             updateStick(rStickInd, rRudderInd, rHatBase, rHatKnob, rSlider, rightStick, "rt")
 
             // ── Update TWCS panel ─────────────────────────────────────────
@@ -244,7 +256,8 @@ export default function DualT16000() {
                         wHatKnob.current.style.transform =
                             `translate(calc(-50% + ${dir.x * (box.width - ind.width) / 2}px),` +
                             ` calc(-50% + ${dir.y * (box.height - ind.height) / 2}px))`
-                    } else {
+                    }
+                    else {
                         wHatKnob.current.style.transform = "translate(-50%, -50%)"
                     }
                 }
@@ -264,51 +277,61 @@ export default function DualT16000() {
 
     // ── JSX factories ─────────────────────────────────────────────────────────
 
-    const stickPanel = (label, stickInd, rudderInd, hatBase, hatKnob, sliderRef, prefix, mirrored, signalRef) => (
-        <div className={`panel stick-panel${mirrored ? " mirrored" : ""}`}>
-            <div className="panel-label">
-                {label}
-                <span className="signal-dot" ref={signalRef}/>
-            </div>
-            <div className="stick-area">
-                <div className="btn-col">
-                    {(mirrored ? [6, 5, 4, 7, 8, 9] : [4, 5, 6, 9, 8, 7]).map(n =>
-                        <div key={n} id={`${prefix}-btn-${n}`} className="btn">{n}</div>
-                    )}
+    const stickPanel = (label, hand, stickInd, rudderInd, hatBase, hatKnob, sliderRef, prefix, signalRef) => {
+        const layout = STICK_LAYOUT[hand] ?? STICK_LAYOUT.right
+
+        return (
+            <div className="panel stick-panel">
+                <div className="panel-label">
+                    {label}
+                    <span className="signal-dot" ref={signalRef}/>
                 </div>
-                <div className="stick-center">
-                    <div className="stick">
-                        <div ref={stickInd} className="stick-ind"/>
-                    </div>
-                    <div className="rudder">
-                        <div ref={rudderInd} className="rudder-ind"/>
-                    </div>
-                    <div className="hat-row">
-                        <div id={`${prefix}-btn-2`} className="btn">2</div>
-                        <div ref={hatBase} className="hat-base">
-                            <div ref={hatKnob} className="hat-knob"/>
-                        </div>
-                        <div id={`${prefix}-btn-3`} className="btn">3</div>
-                    </div>
-                    <div className="grip-btns">
-                        <div id={`${prefix}-btn-0`} className="btn trg">TRG</div>
-                        <div id={`${prefix}-btn-1`} className="btn">1</div>
-                    </div>
-                </div>
-                {/* Right column: buttons + base throttle slider below */}
-                <div className="btn-col-wrap">
+
+                <div className="stick-area">
                     <div className="btn-col">
-                        {(mirrored ? [10, 11, 12, 15, 14, 13] : [12, 11, 10, 13, 14, 15]).map(n =>
+                        {layout.leftCol.map(n => (
                             <div key={n} id={`${prefix}-btn-${n}`} className="btn">{n}</div>
-                        )}
+                        ))}
                     </div>
-                    <div className="stick-slider">
-                        <div ref={sliderRef} className="stick-slider-handle"/>
+
+                    <div className="stick-center">
+                        <div className="stick">
+                            <div ref={stickInd} className="stick-ind"/>
+                        </div>
+
+                        <div className="rudder">
+                            <div ref={rudderInd} className="rudder-ind"/>
+                        </div>
+
+                        <div className="hat-row">
+                            <div id={`${prefix}-btn-2`} className="btn">2</div>
+                            <div ref={hatBase} className="hat-base">
+                                <div ref={hatKnob} className="hat-knob"/>
+                            </div>
+                            <div id={`${prefix}-btn-3`} className="btn">3</div>
+                        </div>
+
+                        <div className="grip-btns">
+                            <div id={`${prefix}-btn-0`} className="btn trg">TRG</div>
+                            <div id={`${prefix}-btn-1`} className="btn">1</div>
+                        </div>
+                    </div>
+
+                    <div className="btn-col-wrap">
+                        <div className="btn-col">
+                            {layout.rightCol.map(n => (
+                                <div key={n} id={`${prefix}-btn-${n}`} className="btn">{n}</div>
+                            ))}
+                        </div>
+
+                        <div className="stick-slider">
+                            <div ref={sliderRef} className="stick-slider-handle"/>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    )
+        )
+    }
 
     const twcsPanel = () => (
         <div className="panel twcs-panel">
@@ -371,9 +394,9 @@ export default function DualT16000() {
         <div className={`overlay t16000-twcs panels-${[hasLeft, hasRight, hasTwcs].filter(Boolean).length}`}>
             {modulesOrder.map((mod, idx) => (
                 <React.Fragment key={mod}>
-                    {idx > 0 && <div className="panel-sep"/>}
-                    {mod === "left"  && stickPanel("T.16000M (L)", lStickInd, lRudderInd, lHatBase, lHatKnob, lSlider, "lt", false,  lSignal)}
-                    {mod === "right" && stickPanel("T.16000M (R)", rStickInd, rRudderInd, rHatBase, rHatKnob, rSlider, "rt", true, rSignal)}
+                    {/*idx > 0 && <div className="panel-sep"/>*/}
+                    {mod === "left" && stickPanel(`T.16000M (${idx})`, "left", lStickInd, lRudderInd, lHatBase, lHatKnob, lSlider, "lt", lSignal)}
+                    {mod === "right" && stickPanel(`T.16000M (${idx})`, "right", rStickInd, rRudderInd, rHatBase, rHatKnob, rSlider, "rt", rSignal)}
                     {mod === "twcs" && twcsPanel()}
                 </React.Fragment>
             ))}

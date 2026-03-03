@@ -22,13 +22,15 @@ export const controllerSetups = {
         layout: "DualT16000",
         active: true,
         modules: {
-            "left,twcs":        "T16000 (L) + TWCS",
-            "right,twcs":       "T16000 (R) + TWCS",
-            "left,right":       "Dual T16000",
-            "left,right,twcs":  "Dual T16000 + TWCS",
-            "left":             "T16000 (L)",
-            "right":            "T16000 (R)",
-            "twcs":             "TWCS only",
+            "left,twcs": "T16000 (L) + TWCS",
+            "right,twcs": "T16000 (R) + TWCS",
+            "right,left": "Dual T16000 (R/L)",
+            "left,right": "Dual T16000 (L/R)",
+            "right,left,twcs": "Dual T16000 + TWCS (R/L)",
+            "left,right,twcs": "Dual T16000 + TWCS (L/R)",
+            "left": "T16000 (L)",
+            "right": "T16000 (R)",
+            "twcs": "TWCS only",
         }
     },
     arcadevenom: {

@@ -45,7 +45,7 @@ function AppWithProvider() {
 
     return (
         <GamepadProvider
-            enabled={debug} // Polling nur wenn Debug aktiv
+            enabled={debug} // Polling only when debug is enabled to reduce overhead
             options={{intervalMs: 60, timeoutMs: 1500, deadzone: .22}}
         >
             <AppInner debug={debug} setDebug={setDebug}/>
@@ -126,6 +126,9 @@ function AppInner({debug, setDebug}) {
             <div className='debug active'>
                 <Menu/>
                 <strong>{L8N.get('error.no_devices_detected')}</strong>
+
+                <HelpPanel open={showHelp} onClose={() => setShowHelp(false)}>
+                </HelpPanel>
             </div>
         )
     }

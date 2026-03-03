@@ -2,15 +2,18 @@ import {useEffect} from 'react'
 import {L8N} from "@/lib/Localization";
 import '@/styles/components/HelpPanel.css'
 
+const APP_VERSION = typeof __APP_VERSION__ !== "undefined" ? __APP_VERSION__ : "dev"
+
 /**
  * Help panel component.
  * @param open
  * @param onClose
  * @param title
- * @returns {JSX.Element|null}
+ * @returns {React.JSX.Element}
  * @constructor
  */
 export default function HelpPanel({open, onClose}) {
+
     useEffect(() => {
         if (!open) {
             return
@@ -49,7 +52,7 @@ export default function HelpPanel({open, onClose}) {
                     </ul>
                     <hr />
                     <div className={"copyright"}>
-                        <span>Version: <a href={"https://github.com/Zamperator/ControllersOverlay"} target={"_blank"} rel="noreferrer">0.3.0</a></span>
+                        <span>Version: <a href={"https://github.com/Zamperator/ControllersOverlay"} target={"_blank"} rel="noreferrer">{APP_VERSION}</a></span>
                         <span>Author: <a href={"https://zamperia.de"}>Zam</a></span>
                         <span>Uses: <strong>React</strong></span>
                     </div>

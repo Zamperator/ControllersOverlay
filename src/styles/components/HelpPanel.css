@@ -45,8 +45,30 @@
 
 .help-body {
     padding: 16px;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     max-height: 100vh;
+}
+
+.help-body ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0.6rem 0 1rem;
+}
+
+.help-body li {
+    position: relative;
+    padding-left: 1.2rem;
+    margin: 0.25rem 0;
+    text-wrap: auto;
+}
+
+.help-body li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0.7;
 }
 
 .help-body h3 {

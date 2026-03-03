@@ -25,8 +25,8 @@
     align-items:    stretch;
     gap:            0;
     padding:        0;
-    background:     var(--bg);
-    border:         0.3vmin solid #1e1e1e;
+    /*background:     var(--bg);
+    border:         0.3vmin solid #1e1e1e;*/
     border-radius:  1.2vmin;
     overflow:       hidden;
 

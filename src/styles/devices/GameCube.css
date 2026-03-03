@@ -38,7 +38,11 @@
         width: 80vmin;
         height: 62vmin;
         aspect-ratio: 80 / 62;
-        background: linear-gradient(#1b1b1b, var(--shell));
+        /*background: linear-gradient(#1b1b1b, var(--shell));*/
+        background:
+                radial-gradient(140% 120% at 50% 20%, rgba(255,255,255,.07) 0%, rgba(0,0,0,0) 60%),
+                radial-gradient(140% 120% at 50% 90%, rgba(0,0,0,.60) 0%, rgba(0,0,0,0) 55%),
+                linear-gradient(180deg, #2b2b2b 0%, #1c1c1c 55%, #070303 100%);
         border-radius: 2vmin;
         box-shadow: 0 0 1.2vmin rgba(0, 0, 0, .35),
         inset 0 0 .8vmin var(--shell-hi);
