@@ -372,8 +372,8 @@ export default function DualT16000() {
             {modulesOrder.map((mod, idx) => (
                 <React.Fragment key={mod}>
                     {idx > 0 && <div className="panel-sep"/>}
-                    {mod === "left"  && stickPanel("T.16000M (L)", lStickInd, lRudderInd, lHatBase, lHatKnob, lSlider, "lt", true,  lSignal)}
-                    {mod === "right" && stickPanel("T.16000M (R)", rStickInd, rRudderInd, rHatBase, rHatKnob, rSlider, "rt", false, rSignal)}
+                    {mod === "left"  && stickPanel("T.16000M (L)", lStickInd, lRudderInd, lHatBase, lHatKnob, lSlider, "lt", false,  lSignal)}
+                    {mod === "right" && stickPanel("T.16000M (R)", rStickInd, rRudderInd, rHatBase, rHatKnob, rSlider, "rt", true, rSignal)}
                     {mod === "twcs" && twcsPanel()}
                 </React.Fragment>
             ))}
