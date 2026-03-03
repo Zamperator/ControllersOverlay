@@ -29,7 +29,12 @@ export default function MenuPanel({
         return localStorage.getItem("arcadeMenuPinned") === "true"
     }
 
+    const getInitialModules = () => {
+        return new URLSearchParams(window.location.search).get("modules") ?? ""
+    }
+
     const [theme, setTheme] = useState(() => getInitialTheme())
+    const [currentModules, setCurrentModules] = useState(() => getInitialModules())
     const [pinned, setPinned] = useState(() => getInitialPinned())
     const [visible, setVisible] = useState(() => getInitialPinned())
 
@@ -41,7 +46,8 @@ export default function MenuPanel({
         return getControllerSetup(activeSetup)
     }, [activeSetup])
 
-    const allowTheme = !!activeSetup && !!cfg?.themes
+    const allowTheme   = !!activeSetup && !!cfg?.themes
+    const allowModules = !!activeSetup && !!cfg?.modules
     const showLeftLinks = (visible || pinned) && Array.isArray(leftLinks) && leftLinks.length > 0
 
     const replaceUrlParams = useCallback((mutate) => {
@@ -270,6 +276,19 @@ export default function MenuPanel({
         setTheme(event.target.value)
     }
 
+    function handleModulesChange(event) {
+        const val = event.target.value
+        setCurrentModules(val)
+        replaceUrlParams((params) => {
+            if (val) {
+                params.set("modules", val)
+            } else {
+                params.delete("modules")
+            }
+        })
+        window.location.reload()
+    }
+
     function handleDeviceSelect(event) {
         const selected = event.target.value
 
@@ -361,25 +380,6 @@ export default function MenuPanel({
             )}
 
             <div className={`menu-panel ${visible ? "visible" : ""}`}>
-                {allowTheme && (
-                    <div className="menu-section">
-                        <label htmlFor="themeSelect">Theme:</label>
-                        <select id="themeSelect" onChange={handleThemeChange} value={theme}>
-                            <option value="">{L8N.get("default")}</option>
-                            {Object.entries(cfg.themes)
-                                .filter(([key]) => {
-                                    return key !== "default"
-                                })
-                                .map(([key, label]) => {
-                                    return (
-                                        <option key={key} value={key}>
-                                            {label || (key.charAt(0).toUpperCase() + key.slice(1))}
-                                        </option>
-                                    )
-                                })}
-                        </select>
-                    </div>
-                )}
 
                 <div className="menu-section">
                     <label htmlFor="deviceSelect">{L8N.get("device")}:</label>
@@ -404,6 +404,42 @@ export default function MenuPanel({
                         })}
                     </select>
                 </div>
+
+                {allowTheme && (
+                    <div className="menu-section">
+                        <label htmlFor="themeSelect">Theme:</label>
+                        <select id="themeSelect" onChange={handleThemeChange} value={theme}>
+                            <option value="">{L8N.get("default")}</option>
+                            {Object.entries(cfg.themes)
+                                .filter(([key]) => {
+                                    return key !== "default"
+                                })
+                                .map(([key, label]) => {
+                                    return (
+                                        <option key={key} value={key}>
+                                            {label || (key.charAt(0).toUpperCase() + key.slice(1))}
+                                        </option>
+                                    )
+                                })}
+                        </select>
+                    </div>
+                )}
+
+                {allowModules && (
+                    <div className="menu-section">
+                        <label htmlFor="modulesSelect">Setup:</label>
+                        <select
+                            id="modulesSelect"
+                            onChange={handleModulesChange}
+                            value={currentModules}
+                        >
+                            <option value="" disabled>Auswählen…</option>
+                            {Object.entries(cfg.modules).map(([key, label]) => (
+                                <option key={key} value={key}>{label}</option>
+                            ))}
+                        </select>
+                    </div>
+                )}
 
                 <div className="menu-section pin-toggle">
                     <label htmlFor="pinToggle">{L8N.get("always_pin_menu") || "Menü anpinnen"}:</label>

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import {useEffect} from 'react'
 import {L8N} from "@/lib/Localization";
 import '@/styles/components/HelpPanel.css'
 
@@ -48,8 +48,10 @@ export default function HelpPanel({open, onClose}) {
                         <li>{L8N.get('help.usb')}</li>
                     </ul>
                     <hr />
-                    <div>
-                        Version: 0.2.0 | Author: <a href={"https://zamperia.de"}>Zam</a> | <a href={"https://github.com/Zamperator/ControllersOverlay"}>Source</a>
+                    <div className={"copyright"}>
+                        <span>Version: <a href={"https://github.com/Zamperator/ControllersOverlay"} target={"_blank"} rel="noreferrer">0.3.0</a></span>
+                        <span>Author: <a href={"https://zamperia.de"}>Zam</a></span>
+                        <span>Uses: <strong>React</strong></span>
                     </div>
                 </div>
             </aside>

@@ -11,9 +11,9 @@
 
 .help-panel {
     width: min(520px, 92vw);
-    background: #151515;
+    background: rgba(0, 0, 0, .5);
     color: #eee;
-    box-shadow: 0 0 40px rgba(0, 0, 0, .6);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .6);
     border-left: 1px solid rgba(255, 255, 255, .08);
     display: flex;
     flex-direction: column;
@@ -50,21 +50,45 @@
 }
 
 .help-body h3 {
-    margin: 16px 0 8px
+    margin: 0 0 8px 0;
 }
 
 .help-body p, .help-body li {
-    line-height: 1.4
+    line-height: 1.4;
+}
+
+.copyright {
+    display: flex;
+    justify-content: center;
+    font-size: 0.9rem;
+    color: rgba(238, 238, 238, 0.6);
+
+    a {
+        color: inherit;
+        font-weight: bold;
+    }
+
+    > * {
+        margin: 0 4px;
+        flex: 0 0 auto;
+        background:  rgba(255, 255, 255, 0.08);
+        padding: 8px 10px;
+        border-radius: 1rem;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+        &:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+    }
 }
 
 @keyframes help-backdrop-fade {
-    from { opacity: 0 }
-    to   { opacity: 1 }
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
 @keyframes help-panel-in {
-    0%   { transform: translateX(-12px); opacity: 0 }
-    100% { transform: translateX(0);     opacity: 1 }
+    0%   { transform: translateX(-12px); opacity: 0; }
+    100% { transform: translateX(0);     opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {

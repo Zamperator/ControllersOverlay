@@ -1,0 +1,462 @@
+/* ══════════════════════════════════════════════════════════════════
+   T.16000M FCS + TWCS  –  Compact Split-Panel Overlay
+   Designed for a small OBS browser source (~560 × 300 px)
+   placed in the corner of a livestream.
+   ══════════════════════════════════════════════════════════════════ */
+
+.overlay.t16000-twcs {
+
+    /* ── T16000 color theme: black / orange ── */
+    --bg:               rgba(10, 10, 10, 0.92);
+    --line:             #2b2b2b;
+    --acc:              #ff7a00;
+    --text:             #ccc;
+    --btn-bg:           #141414;
+    --btn-active-bg:    rgba(255, 122, 0, 0.22);
+    --btn-active-brd:   #ff7a00;
+    --btn-active-clr:   #ff9a40;
+
+    font-family: 'Orbitron', 'Segoe UI', sans-serif;
+    font-size: 0;           /* reset – all sizes set explicitly */
+
+    /* Override base .overlay */
+    display:        flex;
+    flex-direction: row;
+    align-items:    stretch;
+    gap:            0;
+    padding:        0;
+    background:     var(--bg);
+    border:         0.3vmin solid #1e1e1e;
+    border-radius:  1.2vmin;
+    overflow:       hidden;
+
+    /* ── Shared button style ── */
+    .btn {
+        width:          4vmin;
+        height:         4vmin;
+        border:         0.25vmin solid var(--line);
+        border-radius:  0.5vmin;
+        background:     var(--btn-bg);
+        color:          var(--text);
+        font-family:    inherit;
+        font-size:      1.3vmin;
+        font-weight:    700;
+        display:        grid;
+        place-items:    center;
+        user-select:    none;
+        transition:     background 0.06s, border-color 0.06s, color 0.06s, box-shadow 0.06s;
+
+        &.active {
+            background:     var(--btn-active-bg);
+            border-color:   var(--btn-active-brd);
+            color:          var(--btn-active-clr);
+            box-shadow:     0 0 0.8vmin rgba(255, 122, 0, 0.30);
+        }
+
+        /* Trigger – always highlighted border */
+        &.trg {
+            border-color:   rgba(255, 122, 0, 0.45);
+            color:          var(--acc);
+            font-weight:    900;
+            font-size:      1.1vmin;
+
+            &.active {
+                background:  rgba(255, 122, 0, 0.35);
+                border-color: var(--acc);
+                box-shadow:  0 0 1.5vmin rgba(255, 122, 0, 0.55);
+                color:       #fff;
+            }
+        }
+
+        /* TWCS orange buttons */
+        &.orange {
+            background:     rgba(255, 122, 0, 0.12);
+            border-color:   rgba(255, 122, 0, 0.40);
+            color:          #ff9530;
+
+            &.active {
+                background:  rgba(255, 122, 0, 0.42);
+                border-color: var(--acc);
+                box-shadow:  0 0 1vmin rgba(255, 122, 0, 0.45);
+                color:       #fff;
+            }
+        }
+    }
+
+    /* ── Panel label ── */
+    .panel-label {
+        font-size:      1.4vmin;
+        font-weight:    900;
+        letter-spacing: 0.12em;
+        color:          var(--acc);
+        opacity:        0.65;
+        padding:        1vmin 1.5vmin 0.6vmin;
+        text-transform: uppercase;
+        display:        flex;
+        align-items:    center;
+        gap:            0.7vmin;
+    }
+
+    /* Small dot: grey = no device found, orange = connected */
+    .signal-dot {
+        display:        inline-block;
+        width:          1vmin;
+        height:         1vmin;
+        border-radius:  50%;
+        background:     #2a2a2a;
+        border:         0.15vmin solid #333;
+        flex-shrink:    0;
+        transition:     background 0.3s, box-shadow 0.3s;
+
+        &.connected {
+            background:  var(--acc);
+            box-shadow:  0 0 0.6vmin rgba(255, 122, 0, 0.5);
+            border-color: var(--acc);
+        }
+    }
+
+    /* ── Vertical separator between panels ── */
+    .panel-sep {
+        width:      0.25vmin;
+        background: #1e1e1e;
+        flex-shrink: 0;
+    }
+
+
+    /* ══════════════════════════════════════════
+       T.16000M FCS  –  LEFT PANEL
+       ══════════════════════════════════════════ */
+
+    .stick-panel {
+        display:        flex;
+        flex-direction: column;
+        align-items:    center;
+        padding:        0 1.2vmin 1.5vmin;
+    }
+
+    /* Horizontal row: [left-btns] | [center] | [right-btns] */
+    .stick-area {
+        display:     flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap:         1vmin;
+    }
+
+    /* 3×2 button grids on each side of the stick */
+    .btn-col {
+        display:               grid;
+        grid-template-columns: repeat(3, 4vmin);
+        grid-template-rows:    repeat(2, 4vmin);
+        gap:                   0.5vmin;
+    }
+
+    /* Left btn-col (no slider wrapper) */
+    .stick-area > .btn-col {
+        align-self:  flex-start;
+        margin-top:  2vmin;
+    }
+
+    /* Wraps the right btn-col + the base throttle slider below it */
+    .btn-col-wrap {
+        display:        flex;
+        flex-direction: column;
+        align-items:    center;
+        gap:            6.6vmin;
+        align-self:     flex-start;
+        margin-top:     2vmin;   /* align with stick top */
+    }
+
+    /* Base throttle slider (T16000 axis 6) */
+    .stick-slider {
+        width:          100%;   /* same width as the 3-button column above */
+        height:         7vmin;
+        border:         0.3vmin solid var(--line);
+        border-radius:  0.5vmin;
+        background:     #0b0b0b;
+        position:       relative;
+    }
+
+    .stick-slider-handle {
+        position:       absolute;
+        left:           0.25vmin;
+        right:          0.25vmin;
+        top:            0;
+        height:         1.8vmin;
+        background:     var(--acc);
+        border-radius:  0.3vmin;
+        opacity:        0.65;
+        transition:     top 0.05s linear;
+    }
+
+    /**
+     * Right-hand stick: mirror button columns so the physical grip layout
+     * matches the display (left-grip buttons appear on the left side, etc.).
+     */
+    .stick-panel.mirrored .stick-area {
+        flex-direction: row-reverse;
+    }
+
+    /* Stick, rudder, hat, grip buttons – stacked vertically */
+    .stick-center {
+        display:        flex;
+        flex-direction: column;
+        align-items:    center;
+        gap:            0.7vmin;
+    }
+
+    /* Main stick area */
+    .stick {
+        width:      16vmin;
+        height:     16vmin;
+        border:     0.3vmin solid var(--line);
+        border-radius: 0.5vmin;
+        background: #0b0b0b;
+        position:   relative;
+        overflow:   hidden;
+    }
+
+    .stick-ind {
+        position:       absolute;
+        top:            50%;
+        left:           50%;
+        width:          2.5vmin;
+        height:         2.5vmin;
+        border-radius:  50%;
+        background:     var(--acc);
+        box-shadow:     0 0 1vmin rgba(255, 122, 0, 0.50);
+        transform:      translate(-50%, -50%);
+        transition:     transform 0.05s linear;
+    }
+
+    /* Rudder / Z-rotation bar */
+    .rudder {
+        width:      16vmin;
+        height:     2.5vmin;
+        border:     0.3vmin solid var(--line);
+        border-radius: 0.5vmin;
+        background: #0b0b0b;
+        position:   relative;
+    }
+
+    .rudder-ind {
+        position:       absolute;
+        top:            0.2vmin;
+        bottom:         0.2vmin;
+        width:          2.5vmin;
+        background:     var(--acc);
+        border-radius:  0.3vmin;
+        box-shadow:     0 0 0.8vmin rgba(255, 122, 0, 0.40);
+        transition:     left 0.05s linear;
+    }
+
+    /* HAT + buttons 2 and 3 */
+    .hat-row {
+        display:     flex;
+        align-items: center;
+        gap:         0.8vmin;
+    }
+
+    .hat-base {
+        width:          6vmin;
+        height:         6vmin;
+        border:         0.3vmin solid var(--line);
+        border-radius:  50%;
+        background:     #0b0b0b;
+        position:       relative;
+        overflow:       hidden;
+        box-sizing:     border-box;
+        transition:     border-color 0.06s, box-shadow 0.06s;
+
+        &.active {
+            border-color: var(--acc);
+            box-shadow:   0 0 1vmin rgba(255, 122, 0, 0.22);
+        }
+    }
+
+    .hat-knob {
+        position:       absolute;
+        top:            50%;
+        left:           50%;
+        width:          2vmin;
+        height:         2vmin;
+        border-radius:  50%;
+        background:     rgba(255, 255, 255, 0.14);
+        border:         0.2vmin solid rgba(255, 255, 255, 0.18);
+        box-shadow:     0 0 0.5vmin rgba(0, 0, 0, 0.5);
+        transform:      translate(-50%, -50%);
+        transition:     transform 0.06s linear;
+        box-sizing:     border-box;
+    }
+
+    .hat-base.active .hat-knob {
+        background:   color-mix(in srgb, var(--acc) 65%, rgba(255,255,255,0.2));
+        border-color: color-mix(in srgb, var(--acc) 75%, rgba(255,255,255,0.2));
+        box-shadow:   0 0 1vmin rgba(255, 122, 0, 0.40);
+    }
+
+    /* Thumb button (1) + trigger (0) */
+    .grip-btns {
+        display: flex;
+        gap:     0.8vmin;
+    }
+
+
+    /* ══════════════════════════════════════════
+       TWCS  –  RIGHT PANEL
+       ══════════════════════════════════════════ */
+
+    .twcs-panel {
+        display:        flex;
+        flex-direction: column;
+        padding:        0 1.2vmin 1.5vmin;
+    }
+
+    /* Throttle bar + controls side by side */
+    .twcs-body {
+        display:     flex;
+        flex-direction: row;
+        gap:         1.2vmin;
+        align-items: flex-start;
+    }
+
+    /* Vertical throttle bar */
+    .throttle {
+        width:          5vmin;
+        height:         22vmin;
+        border:         0.3vmin solid var(--line);
+        border-radius:  0.5vmin;
+        background:     #0a0a0a;
+        position:       relative;
+        overflow:       hidden;
+        flex-shrink:    0;
+    }
+
+    .thr-fill {
+        position:   absolute;
+        bottom:     0;
+        left:       0;
+        right:      0;
+        height:     0;
+        transition: height 0.08s linear, background-color 0.15s linear;
+    }
+
+    /* Column of TWCS controls */
+    .twcs-controls {
+        display:        flex;
+        flex-direction: column;
+        gap:            0.9vmin;
+    }
+
+    /* Two coolie hats */
+    .coolies {
+        display: flex;
+        gap:     0.8vmin;
+    }
+
+    .coolie {
+        display:               grid;
+        grid-template-areas:   ". u ." "l . r" ". d .";
+        grid-template-columns: repeat(3, 3.5vmin);
+        grid-template-rows:    repeat(3, 3.5vmin);
+        gap:                   0.3vmin;
+
+        .btn {
+            width:        3.5vmin;
+            height:       3.5vmin;
+            font-size:    1.1vmin;
+            border-radius: 0.4vmin;
+        }
+
+        .btn:nth-child(1) { grid-area: u }
+        .btn:nth-child(2) { grid-area: r }
+        .btn:nth-child(3) { grid-area: d }
+        .btn:nth-child(4) { grid-area: l }
+    }
+
+    /* Orange buttons + toggle in one row */
+    .orange-toggle-row {
+        display:     flex;
+        align-items: center;
+        gap:         1vmin;
+    }
+
+    .orange-row {
+        display: flex;
+        gap:     0.5vmin;
+    }
+
+    .toggles {
+        display: flex;
+        gap:     0.5vmin;
+    }
+
+    /* Mini-stick + sliders */
+    .mini-row {
+        display:     flex;
+        align-items: center;
+        gap:         1vmin;
+    }
+
+    .mini-stick {
+        width:          8vmin;
+        height:         8vmin;
+        border:         0.3vmin solid var(--line);
+        border-radius:  0.5vmin;
+        background:     #0b0b0b;
+        position:       relative;
+        overflow:       hidden;
+        flex-shrink:    0;
+    }
+
+    .mini-ind {
+        position:       absolute;
+        top:            50%;
+        left:           50%;
+        width:          2vmin;
+        height:         2vmin;
+        border-radius:  50%;
+        background:     var(--acc);
+        box-shadow:     0 0 0.8vmin rgba(255, 122, 0, 0.40);
+        transform:      translate(-50%, -50%);
+        transition:     transform 0.05s linear;
+    }
+
+    /* Flip switch + dial stacked */
+    .sliders {
+        display:        flex;
+        flex-direction: column;
+        gap:            0.8vmin;
+    }
+
+    .flip,
+    .dial {
+        width:          10vmin;
+        height:         2.5vmin;
+        border:         0.3vmin solid var(--line);
+        border-radius:  0.5vmin;
+        background:     #0b0b0b;
+        position:       relative;
+    }
+
+    .flip-hand {
+        position:       absolute;
+        top:            0.25vmin;
+        bottom:         0.25vmin;
+        width:          38%;
+        background:     var(--acc);
+        border-radius:  0.3vmin;
+        opacity:        0.65;
+        transition:     left 0.08s linear;
+    }
+
+    .dial-hand {
+        position:       absolute;
+        top:            0.25vmin;
+        bottom:         0.25vmin;
+        width:          2.2vmin;
+        background:     var(--acc);
+        border-radius:  0.3vmin;
+        opacity:        0.65;
+        transition:     left 0.08s linear;
+    }
+}

@@ -17,15 +17,19 @@ export const controllerSetups = {
             ocean: "Ocean",
         }
     },
-    t16000: {
-        name: "Thrustmaster T.16000M + TWCS",
-        layout: "T16000",
-        active: true,
-    },
     dual16000: {
-        name: "Thrustmaster T.16000M Dual",
+        name: "T.16000M FCS + TWCS (Split)",
         layout: "DualT16000",
-        active: false,
+        active: true,
+        modules: {
+            "left,twcs":        "T16000 (L) + TWCS",
+            "right,twcs":       "T16000 (R) + TWCS",
+            "left,right":       "Dual T16000",
+            "left,right,twcs":  "Dual T16000 + TWCS",
+            "left":             "T16000 (L)",
+            "right":            "T16000 (R)",
+            "twcs":             "TWCS only",
+        }
     },
     arcadevenom: {
         name: "Arcade Joystick (PS3/PS4)",

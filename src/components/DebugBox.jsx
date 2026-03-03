@@ -1,10 +1,23 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useRef, useState} from "react"
 import {L8N} from "@/lib/Localization"
 import "@/styles/components/DebugBox.css"
 
 export default function DebugBox({activeSetup, activeKey}) {
     const [debugText, setDebugText] = useState("")
     const [perf, setPerf] = useState({fps: 0, ram: 0, cpu: 0})
+
+    // Keep last values to detect movement / "used" inputs
+    const lastAxesRef = useRef(new Map())
+    const lastButtonsRef = useRef(new Map())
+
+    // Tuning knobs
+    const AXIS_EPS_MOVE = 0.003
+    const AXIS_EPS_NONZERO = 0.02
+    const AXIS_CONTEXT = 1
+
+    const BTN_EPS_VALUE = 0.05
+    const BTN_BASE_COUNT = 12
+    const BTN_CONTEXT = 1
 
     // Performance viewer (FPS / RAM / simple CPU prediction)
     useEffect(() => {
@@ -46,6 +59,64 @@ export default function DebugBox({activeSetup, activeKey}) {
     useEffect(() => {
         let frame
 
+        function fmtNum(n, digits = 3) {
+            if (typeof n !== "number" || Number.isNaN(n)) {
+                return "0.000"
+            }
+            return n.toFixed(digits)
+        }
+
+        function isAxisUsed(v, prev) {
+            const vv = typeof v === "number" ? v : 0
+            const pp = typeof prev === "number" ? prev : 0
+            const delta = Math.abs(vv - pp)
+
+            if (delta > AXIS_EPS_MOVE) {
+                return true
+            }
+            if (Math.abs(vv) > AXIS_EPS_NONZERO) {
+                return true
+            }
+            return false
+        }
+
+        function isButtonUsed(btn, prevBtn) {
+            const pressed = !!btn?.pressed
+            const value = typeof btn?.value === "number" ? btn.value : 0
+
+            const prevPressed = !!prevBtn?.pressed
+            const prevValue = typeof prevBtn?.value === "number" ? prevBtn.value : 0
+
+            if (pressed) {
+                return true
+            }
+            if (value > BTN_EPS_VALUE) {
+                return true
+            }
+
+            // show transitions as "used" for a moment (press/release spikes)
+            if (pressed !== prevPressed) {
+                return true
+            }
+            if (Math.abs(value - prevValue) > BTN_EPS_VALUE) {
+                return true
+            }
+
+            return false
+        }
+
+        function pushHiddenRange(lines, labelSingular, labelPlural, from, to) {
+            if (from < 0 || to < 0 || to < from) {
+                return
+            }
+
+            if (from === to) {
+                lines.push(`  … ${labelSingular} ${from} unused …`)
+            } else {
+                lines.push(`  … ${labelPlural} ${from}–${to} unused …`)
+            }
+        }
+
         function update() {
             const padsRaw = navigator.getGamepads?.() || []
             const pads = Array.from(padsRaw).filter(Boolean)
@@ -72,23 +143,113 @@ export default function DebugBox({activeSetup, activeKey}) {
                     lines.push(`Mapping: ${gp.mapping}`)
                 }
 
-                const totalAxes = Array.isArray(gp.axes) ? gp.axes.length : 0
-                const axesPreview = totalAxes > 4 ? gp.axes.slice(0, 4) : gp.axes || []
-                lines.push(L8N.get("debug.axes", [totalAxes]))
-                axesPreview.forEach((val, i) => {
-                    const value = typeof val === "number" ? val.toFixed(3) : "0.000"
-                    lines.push(`  ${L8N.get("debug.axis", [i, value])}`)
+                // -------- Axes (compressed, but shows active/moving + context) --------
+                const axes = Array.isArray(gp.axes) ? gp.axes : []
+                lines.push(L8N.get("debug.axes", [axes.length]))
+
+                const lastAxes = lastAxesRef.current.get(key) || []
+                const nextAxes = axes.slice()
+
+                const usedAxes = axes.map((val, i) => {
+                    return isAxisUsed(val, lastAxes[i])
                 })
 
-                const totalBtns = Array.isArray(gp.buttons) ? gp.buttons.length : 0
-                lines.push(L8N.get("debug.buttons", [totalBtns]))
-                if (totalBtns > 0) {
-                    gp.buttons.forEach((btn, i) => {
-                        const pressed = !!btn?.pressed
-                        const state = pressed ? "pressed" : "released"
-                        lines.push(`  ${L8N.get("debug.button", [i, L8N.get(`debug.${state}`)])}`)
-                    })
+                function axisInContext(i) {
+                    for (let j = Math.max(0, i - AXIS_CONTEXT); j <= Math.min(axes.length - 1, i + AXIS_CONTEXT); j++) {
+                        if (usedAxes[j]) {
+                            return true
+                        }
+                    }
+                    return usedAxes[i]
                 }
+
+                let hiddenStart = -1
+                for (let i = 0; i < axes.length; i++) {
+                    const show = axisInContext(i)
+
+                    if (!show) {
+                        if (hiddenStart === -1) {
+                            hiddenStart = i
+                        }
+                        continue
+                    }
+
+                    if (hiddenStart !== -1) {
+                        pushHiddenRange(lines, "axis", "axes", hiddenStart, i - 1)
+                        hiddenStart = -1
+                    }
+
+                    const marker = usedAxes[i] ? "*" : " "
+                    lines.push(` ${marker} ${L8N.get("debug.axis", [i, fmtNum(axes[i])])}`)
+                }
+
+                if (hiddenStart !== -1) {
+                    pushHiddenRange(lines, "axis", "axes", hiddenStart, axes.length - 1)
+                }
+
+                lastAxesRef.current.set(key, nextAxes)
+
+                // -------- Buttons (base first N + active/moving + context, rest hidden) --------
+                const buttons = Array.isArray(gp.buttons) ? gp.buttons : []
+                lines.push(L8N.get("debug.buttons", [buttons.length]))
+
+                const lastButtons = lastButtonsRef.current.get(key) || []
+                const nextButtons = buttons.map(b => {
+                    return {
+                        pressed: !!b?.pressed,
+                        value: typeof b?.value === "number" ? b.value : 0
+                    }
+                })
+
+                const usedButtons = buttons.map((btn, i) => {
+                    return isButtonUsed(btn, lastButtons[i])
+                })
+
+                const showButton = new Array(buttons.length).fill(false)
+
+                // base buttons always visible (0..BTN_BASE_COUNT-1)
+                for (let i = 0; i < Math.min(BTN_BASE_COUNT, buttons.length); i++) {
+                    showButton[i] = true
+                }
+
+                // active buttons + context around them
+                for (let i = 0; i < buttons.length; i++) {
+                    if (usedButtons[i]) {
+                        for (let j = Math.max(0, i - BTN_CONTEXT); j <= Math.min(buttons.length - 1, i + BTN_CONTEXT); j++) {
+                            showButton[j] = true
+                        }
+                    }
+                }
+
+                // Now render, compress hidden ranges
+                let hiddenBtnStart = -1
+                for (let i = 0; i < buttons.length; i++) {
+                    if (!showButton[i]) {
+                        if (hiddenBtnStart === -1) {
+                            hiddenBtnStart = i
+                        }
+                        continue
+                    }
+
+                    if (hiddenBtnStart !== -1) {
+                        pushHiddenRange(lines, "button", "buttons", hiddenBtnStart, i - 1)
+                        hiddenBtnStart = -1
+                    }
+
+                    const btn = buttons[i]
+                    const pressed = !!btn?.pressed
+                    const state = pressed ? "pressed" : "released"
+                    const value = typeof btn?.value === "number" ? btn.value : 0
+
+                    const marker = usedButtons[i] ? "*" : " "
+                    lines.push(` ${marker} ${L8N.get("debug.button", [i, L8N.get(`debug.${state}`)])} (value: ${fmtNum(value)})`)
+                }
+
+                if (hiddenBtnStart !== -1) {
+                    pushHiddenRange(lines, "button", "buttons", hiddenBtnStart, buttons.length - 1)
+                }
+
+                lastButtonsRef.current.set(key, nextButtons)
 
                 lines.push("")
             })
