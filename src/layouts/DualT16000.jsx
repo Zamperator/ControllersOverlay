@@ -137,6 +137,9 @@ export default function DualT16000() {
     const hasRight = modulesOrder.includes("right")
     const hasTwcs = modulesOrder.includes("twcs")
 
+    // ?swap=1 → swap left/right device assignment (first found T16000 becomes left)
+    const swapSticks = new URLSearchParams(window.location.search).get("swap") === "1"
+
     // T.16000M (left) refs
     const lStickInd = useRef(null)
     const lRudderInd = useRef(null)
@@ -189,21 +192,28 @@ export default function DualT16000() {
             }
 
             // ── Assign sticks ─────────────────────────────────────────────
-            // Device index 0 is typically the RIGHT stick (plugged in first),
-            // device index 1 is the LEFT stick.
-            // Single side: first found device = that side.
+            // Default (swap=0): first found T16000 = right, second = left.
+            // With ?swap=1:     first found T16000 = left,  second = right.
+            // Single side: first found device = that side (swap has no effect).
             let leftStick = null
             let rightStick = null
 
+            // Consistent assignment: swap=0 → [0]=right / [1]=left
+            //                        swap=1 → [0]=left  / [1]=right
+            // Fallback to [0] when only one device is connected.
+            const [dev0, dev1] = [t16000List[0] ?? null, t16000List[1] ?? null]
+            const assignedLeft  = swapSticks ? dev0 : (dev1 ?? dev0)
+            const assignedRight = swapSticks ? (dev1 ?? dev0) : dev0
+
             if (hasLeft && hasRight) {
-                rightStick = t16000List[0] ?? null
-                leftStick = t16000List[1] ?? null
+                leftStick  = assignedLeft
+                rightStick = assignedRight
             }
             else if (hasLeft) {
-                leftStick = t16000List[0] ?? null
+                leftStick = assignedLeft
             }
             else if (hasRight) {
-                rightStick = t16000List[0] ?? null
+                rightStick = assignedRight
             }
 
             // ── Connection indicators ─────────────────────────────────────
@@ -273,7 +283,7 @@ export default function DualT16000() {
 
         update()
         return () => raf && cancelAnimationFrame(raf)
-    }, [hasLeft, hasRight, hasTwcs])
+    }, [hasLeft, hasRight, hasTwcs, swapSticks])
 
     // ── JSX factories ─────────────────────────────────────────────────────────
 

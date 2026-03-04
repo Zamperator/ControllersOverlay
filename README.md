@@ -5,7 +5,7 @@
 > It's open-source and free to use for streamers who want to show their controller inputs on stream.\
 > Contains Joystick layouts for dual stick controllers, flight sticks, and classic gamepads.
 
-**Version:** <!--APP_VERSION-->0.3.3<!--/APP_VERSION-->\
+**Version:** <!--APP_VERSION-->0.3.4<!--/APP_VERSION-->\
 **Author:** Christian "ZAM" Zamora
 
 ## Running example
@@ -59,7 +59,7 @@ https://zamperia.de/controllers/?device=xbox
 ## Installation
 ```bash
 git clone git@github.com:Zamperator/ControllerOverlay.git
-cd ControllersOverlay
+cd ControllerOverlay
 yarn install
 ```
 

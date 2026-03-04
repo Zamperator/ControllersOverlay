@@ -33,8 +33,13 @@ export default function MenuPanel({
         return new URLSearchParams(window.location.search).get("modules") ?? ""
     }
 
+    const getInitialSwap = () => {
+        return new URLSearchParams(window.location.search).get("swap") === "1"
+    }
+
     const [theme, setTheme] = useState(() => getInitialTheme())
     const [currentModules, setCurrentModules] = useState(() => getInitialModules())
+    const [swapSticks, setSwapSticks] = useState(() => getInitialSwap())
     const [pinned, setPinned] = useState(() => getInitialPinned())
     const [visible, setVisible] = useState(() => getInitialPinned())
 
@@ -48,6 +53,10 @@ export default function MenuPanel({
 
     const allowTheme   = !!activeSetup && !!cfg?.themes
     const allowModules = !!activeSetup && !!cfg?.modules
+    const allowSwap    = allowModules && (() => {
+        const mods = currentModules.split(",")
+        return mods.includes("left") || mods.includes("right")
+    })()
     const showLeftLinks = (visible || pinned) && Array.isArray(leftLinks) && leftLinks.length > 0
 
     const replaceUrlParams = useCallback((mutate) => {
@@ -289,6 +298,19 @@ export default function MenuPanel({
         window.location.reload()
     }
 
+    function handleSwapChange(event) {
+        const checked = event.target.checked
+        setSwapSticks(checked)
+        replaceUrlParams((params) => {
+            if (checked) {
+                params.set("swap", "1")
+            } else {
+                params.delete("swap")
+            }
+        })
+        window.location.reload()
+    }
+
     function handleDeviceSelect(event) {
         const selected = event.target.value
 
@@ -438,6 +460,18 @@ export default function MenuPanel({
                                 <option key={key} value={key}>{label}</option>
                             ))}
                         </select>
+                    </div>
+                )}
+
+                {allowSwap && (
+                    <div className="menu-section">
+                        <label htmlFor="swapToggle">Sticks tauschen:</label>
+                        <input
+                            id="swapToggle"
+                            type="checkbox"
+                            checked={swapSticks}
+                            onChange={handleSwapChange}
+                        />
                     </div>
                 )}
 
