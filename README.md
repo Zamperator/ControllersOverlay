@@ -35,7 +35,7 @@ https://zamperia.de/controllers/?device=xbox
 
 ## Supported Controllers
 - HotasX
-- T16000 (Single) + TWS
+- T16000 (Single/Dual) + TWCS
 - SNES
 - NES
 - N64
