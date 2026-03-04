@@ -465,7 +465,7 @@ export default function MenuPanel({
 
                 {allowSwap && (
                     <div className="menu-section">
-                        <label htmlFor="swapToggle">Sticks tauschen:</label>
+                        <label htmlFor="swapToggle">{L8N.get('swap_sticks')}:</label>
                         <input
                             id="swapToggle"
                             type="checkbox"

@@ -8,6 +8,7 @@
   "choose_device": "Choose Device",
   "default": "Default",
   "always_pin_menu": "Always show menu",
+  "swap_sticks": "Swap sticks",
   "debug": {
     "title": "Debug Mode",
     "description": "Show additional debug information",
