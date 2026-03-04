@@ -27,7 +27,8 @@
     "debug_toggle": "Debug on/off in menu",
     "troubleshoot": "Troubleshooting",
     "browser_input": "Move a stick / press a button to detect the pad.",
-    "usb": "Change adapter/USB port, reload browser"
+    "usb": "Change adapter/USB port, reload browser",
+    "ctrl_extra": "Some controllers (e.g. T16000) provide additional settings. Those will appear in the menu after selecting the respective controller."
   },
   "error": {
     "no_devices_detected": "No devices detected",

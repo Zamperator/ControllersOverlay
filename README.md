@@ -1,7 +1,9 @@
 # Twitch Controller Support
 
-> Overlay & input visualizer for Twitch streams using the HTML5 Gamepad API.  
-> Built with React (JSX), styled with CSS3.
+> Overlay & input visualizer for Twitch streams using the HTML5 Gamepad API.\
+> Built with React (JSX), styled with CSS3.\
+> It's open-source and free to use for streamers who want to show their controller inputs on stream.\
+> Contains Joystick layouts for dual stick controllers, flight sticks, and classic gamepads.
 
 **Version:** <!--APP_VERSION-->0.3.3<!--/APP_VERSION-->\
 **Author:** Christian "ZAM" Zamora
@@ -56,7 +58,7 @@ https://zamperia.de/controllers/?device=xbox
 
 ## Installation
 ```bash
-git clone git@github.com:Zamperator/ControllersOverlay.git
+git clone git@github.com:Zamperator/ControllerOverlay.git
 cd ControllersOverlay
 yarn install
 ```
@@ -105,10 +107,11 @@ public/
 - [x] Add more controller layouts
 - [x] Improve UI/UX (skins/themes, options)
 - [x] Cleanup & refactor codebase and CSS
-- [ ] Provide button mapping (saved in localStorage)
-- [ ] Move config data per device to each device module
+- [ ] Add support for more devices (e.g., racing wheels)
 - [ ] Document OBS presets
 - [ ] Create a standalone Electron app
+- [ ] ~~Move config data per device to each device module~~
+- [ ] ~~Provide button mapping (saved in localStorage)~~
 
 ## Tips & Troubleshooting
 - **Gamepad not detected?**
@@ -126,7 +129,6 @@ public/
 ## Contributing
 Contributions welcome!
 - Open issues for bugs/feature requests
-- Submit PRs with clear descriptions
 - Follow project conventions (React/JSX, Yarn)
 
 ## Thanks

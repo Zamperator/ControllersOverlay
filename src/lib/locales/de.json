@@ -27,7 +27,8 @@
     "debug_toggle": "Debug im Menü an/aus",
     "troubleshoot": "Troubleshooting",
     "browser_input": "Bewege einen Stick / drücke eine Taste, damit das Pad erkannt wird.",
-    "usb": "Adapter/USB-Port wechseln, Browser neu laden"
+    "usb": "Adapter/USB-Port wechseln, Browser neu laden",
+    "ctrl_extra": "Einige Controller (z.B. T16000) bieten zusätzliche Einstellungen wie Themes oder Modes. Die tauchen nach Wahl des jeweiligen Controllers im Menü auf."
   },
   "error": {
     "no_devices_detected": "Keine Eingabegeräte erkannt",
